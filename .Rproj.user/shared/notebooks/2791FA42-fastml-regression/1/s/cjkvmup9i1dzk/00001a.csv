@@ -1,0 +1,6 @@
+"0","# Sample 5 new observations"
+"0","new_obs <- pima_reg %>% "
+"0","  slice_sample(n = 5) %>% "
+"0","  dplyr::select(-BMI) "
+"0",""
+"0","new_obs"
