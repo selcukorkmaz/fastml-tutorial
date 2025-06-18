@@ -5,7 +5,6 @@ format:
     toc: true
     toc-depth: 5
     code-link: false
-    css: styles.css
     page-layout: full
 ---
 
