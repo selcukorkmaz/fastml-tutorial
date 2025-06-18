@@ -12,12 +12,12 @@ website:
         text: Getting Started
       - text: "Tutorials"
         menu:
+          - text: Exploring Data
+            file: tutorials/fastexplore.qmd
           - text: Classification Workflows
             file: tutorials/fastml-classification.qmd
           - text: Regression Workflows
             file: tutorials/fastml-regression.qmd
-          - text: Exploring Data
-            file: tutorials/fastexplore.qmd
           - text: Model Explainability
             file: tutorials/fastexplain.qmd
       - href: reference/index.qmd
