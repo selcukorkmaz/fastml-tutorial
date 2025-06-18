@@ -28,7 +28,10 @@ format:
     theme: cosmo
     toc: true
     code-copy: true
-    css: styles.css
+    css:
+      - assets/css/style.css
+      - assets/css/custom_style.css
+      - assets/css/tutorial_style.css
 
 execute:
   warning: false
