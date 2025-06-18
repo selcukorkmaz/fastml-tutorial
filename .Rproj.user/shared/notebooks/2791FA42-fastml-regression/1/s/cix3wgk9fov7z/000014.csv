@@ -1,5 +1,0 @@
-"0","result <- fastml("
-"0","  data       = pima_reg,"
-"0","  label      = ""BMI"","
-"0","  algorithms = c(""linear_reg"", ""svm_rbf"", ""rand_forest"", ""lightgbm""),"
-"0",")"
