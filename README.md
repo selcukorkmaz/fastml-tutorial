@@ -1,4 +1,4 @@
-<img src="man/figures/fastml_hex.png" align="right" width="95"/>
+<img src="fastml_hex.png" align="right" width="95"/>
 
 
 # fastml: Fast Machine Learning Model Training and Evaluation
