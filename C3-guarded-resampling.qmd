@@ -122,4 +122,4 @@ The consequences of this choice are addressed in the next concept.
 
 This is the core idea behind **fastml**.
 
-*Next: [C4 — What fastml Deliberately Does Not Allow]*
+*Next: [C4 — What fastml Deliberately Does Not Allow](C4-what-fastml-does-not-allow.qmd)*

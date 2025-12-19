@@ -16,7 +16,6 @@ Yet leakage remains widespread in applied work.
 
 This is not a contradiction. It follows from how pipelines are designed and how methodological correctness is treated within those designs.
 
----
 
 ## Flexibility without constraints
 
@@ -33,7 +32,6 @@ Nothing in the default design prevents users from assembling pipelines in orders
 
 Such pipelines are typically syntactically valid and computationally successful, even when they are methodologically incorrect.
 
----
 
 ## Optional correctness is not correctness
 
@@ -56,7 +54,6 @@ The software generally permits these configurations to run without intervention.
 
 As a result, methodological correctness is advisory rather than enforced.
 
----
 
 ## Why warnings do not solve the problem
 
@@ -74,7 +71,6 @@ Static analysis can detect only narrow classes of problems, and comprehensive ru
 
 Most frameworks therefore favor permissiveness over enforcement.
 
----
 
 ## The expert-user fallacy
 
@@ -92,7 +88,6 @@ As workflows become more complex—nested resampling, grouped splits, tuning loo
 
 Expertise can reduce risk, but it does not eliminate it.
 
----
 
 ## Consequences for evaluation
 
@@ -106,7 +101,6 @@ When pipelines are unsafe by default:
 This is not primarily a failure of individual users.  
 It reflects limitations in pipeline architecture.
 
----
 
 ## What a safe default would require
 
@@ -121,7 +115,6 @@ It requires that:
 
 In other words, correctness must be enforced by construction rather than assumed.
 
----
 
 ## Summary
 
@@ -133,6 +126,5 @@ In other words, correctness must be enforced by construction rather than assumed
 
 This motivates the core idea behind **fastml**: **Guarded Resampling**.
 
----
 
-*Next: [C3 — Guarded Resampling]*
+*Next: [C3 — Guarded Resampling](C3-guarded-resampling.qmd)*

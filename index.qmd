@@ -1,0 +1,58 @@
+---
+title: "fastml Tutorials"
+format: html
+editor: visual
+---
+
+## What this site is about
+
+This site provides a structured introduction to **fastml**, an R package for training, evaluating, and comparing machine learning models under architecturally constrained, leakage-aware resampling.
+
+The emphasis is not on developing new modeling techniques or maximizing predictive performance. Instead, the focus is on methodologically sound performance evaluation under clearly defined assumptions.
+
+## Why this matters
+
+In applied machine learning, reported performance estimates are frequently optimistic due to subtle forms of data leakage and unsafe evaluation workflows.
+
+fastml is designed to reduce this risk by treating **Guarded Resampling** as a core design principle rather than as an optional recommendation.
+
+## How to read this site
+
+The material is organized into four sections.
+
+### Concepts
+
+These sections introduce the ideas that motivate fastml, including:
+
+- what data leakage is,
+- why many ML pipelines are unsafe by default,
+- what guarded resampling entails,
+- which classes of workflow configurations fastml deliberately restricts.
+
+The concepts establish the assumptions required to interpret the tutorials correctly.
+
+### Tutorials
+
+The tutorials apply the conceptual framework to concrete modeling tasks.
+
+They assume familiarity with the Concepts section and focus on demonstrating evaluation workflows rather than reintroducing theoretical material.
+
+### Advanced
+
+Advanced sections extend the framework to more complex settings, such as:
+
+- handling missing data,
+- survival analysis,
+- model interpretation and diagnostics.
+
+These sections build on the same evaluation principles under additional modeling constraints.
+
+### Comparisons
+
+Comparative sections discuss fastml in relation to other frameworks and common workflows, highlighting differences in design philosophy and evaluation guarantees.
+
+## Where to start
+
+Readers should begin with the **Concepts** section (**C1–C4**).
+
+The first hands-on example is **Tutorial 01: Basic Cl**

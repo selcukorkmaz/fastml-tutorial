@@ -31,7 +31,6 @@ Common examples include:
 
 In each case, the mechanism is the same: information from assessment data is incorporated into training.
 
----
 
 ## Why Leakage Is Hard to Detect
 
@@ -47,7 +46,6 @@ As a result, invalid pipelines may appear convincing.
 
 Even experienced practitioners can introduce leakage when workflows are assembled manually from modular components.
 
----
 
 ## A Minimal Example (Conceptual)
 
@@ -61,7 +59,6 @@ The resulting performance estimate is biased upward by construction.
 
 No explicit misuse of a held-out test set is required.
 
----
 
 ## Why “Best Practices” Are Not Enough
 
@@ -77,7 +74,6 @@ Incorrect pipelines are not generally prevented from executing.
 
 As a result, methodological validity often depends on user discipline rather than on structural guarantees.
 
----
 
 ## What Follows from This
 
@@ -93,7 +89,6 @@ It requires enforcement at the level of workflow design.
 
 This motivates **Guarded Resampling**, introduced in the next concept.
 
----
 
 ## Summary
 
@@ -103,6 +98,5 @@ This motivates **Guarded Resampling**, introduced in the next concept.
 - Optional safeguards are insufficient.
 - Preventing leakage requires architectural constraints, not user vigilance.
 
----
 
-*Next: [C2 — Why Most ML Pipelines Are Unsafe by Default]*
+*Next: [C2 — Why Most ML Pipelines Are Unsafe by Default](C2-why-most-ml-pipelines-are-unsafe-by-default.qmd)*
