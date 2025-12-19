@@ -1,0 +1,408 @@
+[
+  {
+    "objectID": "C2-why-most-ml-pipelines-are-unsafe-by-default.html",
+    "href": "C2-why-most-ml-pipelines-are-unsafe-by-default.html",
+    "title": "C2 — Why Most ML Pipelines Are Unsafe by Default",
+    "section": "",
+    "text": "Many modern machine learning frameworks provide components that can be assembled into leakage-safe workflows.\nYet leakage remains widespread in applied work.\nThis is not a contradiction. It follows from how pipelines are designed and how methodological correctness is treated within those designs."
+  },
+  {
+    "objectID": "C2-why-most-ml-pipelines-are-unsafe-by-default.html#the-paradox-of-modern-ml-tooling",
+    "href": "C2-why-most-ml-pipelines-are-unsafe-by-default.html#the-paradox-of-modern-ml-tooling",
+    "title": "C2 — Why Most ML Pipelines Are Unsafe by Default",
+    "section": "",
+    "text": "Many modern machine learning frameworks provide components that can be assembled into leakage-safe workflows.\nYet leakage remains widespread in applied work.\nThis is not a contradiction. It follows from how pipelines are designed and how methodological correctness is treated within those designs."
+  },
+  {
+    "objectID": "C2-why-most-ml-pipelines-are-unsafe-by-default.html#flexibility-without-constraints",
+    "href": "C2-why-most-ml-pipelines-are-unsafe-by-default.html#flexibility-without-constraints",
+    "title": "C2 — Why Most ML Pipelines Are Unsafe by Default",
+    "section": "Flexibility without constraints",
+    "text": "Flexibility without constraints\nContemporary ML frameworks emphasize modularity:\n\npreprocessing steps are independent components,\nmodels are interchangeable,\nresampling is optional and configurable,\nevaluation is often treated as a separable stage.\n\nThis flexibility is powerful, but it has consequences.\nNothing in the default design prevents users from assembling pipelines in orders that violate evaluation assumptions.\nSuch pipelines are typically syntactically valid and computationally successful, even when they are methodologically incorrect."
+  },
+  {
+    "objectID": "C2-why-most-ml-pipelines-are-unsafe-by-default.html#optional-correctness-is-not-correctness",
+    "href": "C2-why-most-ml-pipelines-are-unsafe-by-default.html#optional-correctness-is-not-correctness",
+    "title": "C2 — Why Most ML Pipelines Are Unsafe by Default",
+    "section": "Optional correctness is not correctness",
+    "text": "Optional correctness is not correctness\nMany frameworks provide mechanisms intended to reduce leakage risk:\n\nresampling-aware preprocessing tools,\nworkflow abstractions,\nhelper functions that encourage correct usage.\n\nHowever, these mechanisms are optional.\nUsers may still:\n\ncompute transformations using the full dataset,\nreuse or redefine resampling splits inconsistently,\napply preprocessing outside the resampling loop,\ntune models using data that later serve as assessment sets.\n\nThe software generally permits these configurations to run without intervention.\nAs a result, methodological correctness is advisory rather than enforced."
+  },
+  {
+    "objectID": "C2-why-most-ml-pipelines-are-unsafe-by-default.html#why-warnings-do-not-solve-the-problem",
+    "href": "C2-why-most-ml-pipelines-are-unsafe-by-default.html#why-warnings-do-not-solve-the-problem",
+    "title": "C2 — Why Most ML Pipelines Are Unsafe by Default",
+    "section": "Why warnings do not solve the problem",
+    "text": "Why warnings do not solve the problem\nOne might expect software to detect leakage and issue warnings.\nIn practice, this approach is limited.\nLeakage is often:\n\nsemantically ambiguous,\ndependent on context and intent,\nindistinguishable from valid workflows at runtime.\n\nStatic analysis can detect only narrow classes of problems, and comprehensive runtime checks are difficult without restricting flexibility.\nMost frameworks therefore favor permissiveness over enforcement."
+  },
+  {
+    "objectID": "C2-why-most-ml-pipelines-are-unsafe-by-default.html#the-expert-user-fallacy",
+    "href": "C2-why-most-ml-pipelines-are-unsafe-by-default.html#the-expert-user-fallacy",
+    "title": "C2 — Why Most ML Pipelines Are Unsafe by Default",
+    "section": "The expert-user fallacy",
+    "text": "The expert-user fallacy\nA common response is to place responsibility on user expertise.\nThis implicitly assumes that:\n\nexperienced users consistently assemble pipelines correctly,\nmistakes are rare or immediately obvious,\ndiscipline scales with workflow complexity.\n\nThese assumptions do not reliably hold.\nAs workflows become more complex—nested resampling, grouped splits, tuning loops—the space for subtle errors expands, even for experienced practitioners.\nExpertise can reduce risk, but it does not eliminate it."
+  },
+  {
+    "objectID": "C2-why-most-ml-pipelines-are-unsafe-by-default.html#consequences-for-evaluation",
+    "href": "C2-why-most-ml-pipelines-are-unsafe-by-default.html#consequences-for-evaluation",
+    "title": "C2 — Why Most ML Pipelines Are Unsafe by Default",
+    "section": "Consequences for evaluation",
+    "text": "Consequences for evaluation\nWhen pipelines are unsafe by default:\n\ninvalid evaluations may appear legitimate,\nperformance estimates tend to be optimistic,\nresults are harder to reproduce,\nreviewers and readers have limited visibility into evaluation correctness.\n\nThis is not primarily a failure of individual users.\nIt reflects limitations in pipeline architecture."
+  },
+  {
+    "objectID": "C2-why-most-ml-pipelines-are-unsafe-by-default.html#what-a-safe-default-would-require",
+    "href": "C2-why-most-ml-pipelines-are-unsafe-by-default.html#what-a-safe-default-would-require",
+    "title": "C2 — Why Most ML Pipelines Are Unsafe by Default",
+    "section": "What a safe default would require",
+    "text": "What a safe default would require\nA safe default requires more than recommendations or documentation.\nIt requires that:\n\nresampling encloses all data-dependent learning steps,\npreprocessing cannot be learned globally,\nevaluation cannot be detached from model fitting,\nunsafe configurations are restricted along the default execution path.\n\nIn other words, correctness must be enforced by construction rather than assumed."
+  },
+  {
+    "objectID": "C2-why-most-ml-pipelines-are-unsafe-by-default.html#summary",
+    "href": "C2-why-most-ml-pipelines-are-unsafe-by-default.html#summary",
+    "title": "C2 — Why Most ML Pipelines Are Unsafe by Default",
+    "section": "Summary",
+    "text": "Summary\n\nModern ML frameworks prioritize flexibility.\nMethodological correctness is typically optional.\nInvalid pipelines are often allowed to execute silently.\nExpertise alone does not prevent evaluation errors.\nSafe evaluation requires architectural constraints.\n\nThis motivates the core idea behind fastml: Guarded Resampling.\nNext: C3 — Guarded Resampling"
+  },
+  {
+    "objectID": "C4-what-fastml-does-not-allow.html",
+    "href": "C4-what-fastml-does-not-allow.html",
+    "title": "C4 — What fastml Deliberately Does Not Allow",
+    "section": "",
+    "text": "fastml adopts a deliberately constrained design.\nThese constraints are not the result of missing functionality or incomplete implementation.\nThey are a direct consequence of the guarantees described in C1–C3.\nTo support guarded resampling along the default execution path, certain classes of actions are intentionally restricted."
+  },
+  {
+    "objectID": "C4-what-fastml-does-not-allow.html#constraints-as-a-design-decision",
+    "href": "C4-what-fastml-does-not-allow.html#constraints-as-a-design-decision",
+    "title": "C4 — What fastml Deliberately Does Not Allow",
+    "section": "",
+    "text": "fastml adopts a deliberately constrained design.\nThese constraints are not the result of missing functionality or incomplete implementation.\nThey are a direct consequence of the guarantees described in C1–C3.\nTo support guarded resampling along the default execution path, certain classes of actions are intentionally restricted."
+  },
+  {
+    "objectID": "C4-what-fastml-does-not-allow.html#no-global-preprocessing",
+    "href": "C4-what-fastml-does-not-allow.html#no-global-preprocessing",
+    "title": "C4 — What fastml Deliberately Does Not Allow",
+    "section": "No global preprocessing",
+    "text": "No global preprocessing\nAlong the default execution path, fastml does not permit preprocessing steps to be estimated using the full dataset prior to resampling.\nUsers are not required—and are not encouraged—to:\n\nscale predictors globally,\nimpute missing values using global statistics,\nperform feature selection outside resampling,\nreuse preprocessing parameters across folds.\n\nInstead, preprocessing steps are estimated separately within each resampling split.\nThis design prevents backward information flow from assessment data into training by construction."
+  },
+  {
+    "objectID": "C4-what-fastml-does-not-allow.html#no-detached-evaluation",
+    "href": "C4-what-fastml-does-not-allow.html#no-detached-evaluation",
+    "title": "C4 — What fastml Deliberately Does Not Allow",
+    "section": "No detached evaluation",
+    "text": "No detached evaluation\nIn fastml, evaluation is not treated as a post hoc operation.\nUnder the standard execution model, users do not:\n\nfit a model once and later evaluate it using resampling,\nreuse a trained model across new or inconsistent folds,\ncompute performance metrics outside a resampling-aware context.\n\nModel fitting and evaluation are coupled within a single resampling-based procedure."
+  },
+  {
+    "objectID": "C4-what-fastml-does-not-allow.html#no-manual-fold-reuse-across-models",
+    "href": "C4-what-fastml-does-not-allow.html#no-manual-fold-reuse-across-models",
+    "title": "C4 — What fastml Deliberately Does Not Allow",
+    "section": "No manual fold reuse across models",
+    "text": "No manual fold reuse across models\nModel comparison in fastml is conducted using a shared resampling specification.\nUsers do not manually:\n\ndefine different folds for different models within the same comparison,\nselectively reuse folds,\nmix incompatible resampling schemes across models.\n\nThis ensures that observed performance differences arise from modeling choices rather than from differences in data partitioning."
+  },
+  {
+    "objectID": "C4-what-fastml-does-not-allow.html#no-implicit-tuning-loops",
+    "href": "C4-what-fastml-does-not-allow.html#no-implicit-tuning-loops",
+    "title": "C4 — What fastml Deliberately Does Not Allow",
+    "section": "No implicit tuning loops",
+    "text": "No implicit tuning loops\nWhen hyperparameter tuning is enabled, it is carried out within the resampling structure.\nUnder the default design, users do not:\n\ntune models on the full dataset and then evaluate them using resampling,\ntune once and reuse tuning results across folds,\ndecouple tuning from evaluation.\n\nThis restricts subtle leakage pathways that can arise when tuning is performed outside resampling."
+  },
+  {
+    "objectID": "C4-what-fastml-does-not-allow.html#no-partial-control-over-pipeline-order",
+    "href": "C4-what-fastml-does-not-allow.html#no-partial-control-over-pipeline-order",
+    "title": "C4 — What fastml Deliberately Does Not Allow",
+    "section": "No partial control over pipeline order",
+    "text": "No partial control over pipeline order\nfastml does not expose low-level hooks for rearranging the order of:\n\npreprocessing,\nmodel fitting,\nevaluation.\n\nThis ordering is fixed along the default execution path.\nUsers specify what is to be evaluated, not how the internal pipeline is assembled."
+  },
+  {
+    "objectID": "C4-what-fastml-does-not-allow.html#why-these-restrictions-exist",
+    "href": "C4-what-fastml-does-not-allow.html#why-these-restrictions-exist",
+    "title": "C4 — What fastml Deliberately Does Not Allow",
+    "section": "Why these restrictions exist",
+    "text": "Why these restrictions exist\nEach restriction removes a class of evaluation errors that are:\n\neasy to introduce,\ndifficult to detect,\nassociated with optimistic performance estimates,\nrarely flagged by software.\n\nReducing flexibility is the cost of enforcing methodological validity."
+  },
+  {
+    "objectID": "C4-what-fastml-does-not-allow.html#what-fastml-optimizes-for",
+    "href": "C4-what-fastml-does-not-allow.html#what-fastml-optimizes-for",
+    "title": "C4 — What fastml Deliberately Does Not Allow",
+    "section": "What fastml optimizes for",
+    "text": "What fastml optimizes for\nfastml is not designed to optimize for:\n\nmaximal procedural flexibility,\nunrestricted pipeline experimentation,\ninteractive trial-and-error workflow assembly.\n\nIt is designed to prioritize:\n\nevaluation correctness,\nreproducibility,\ncomparability across models,\ndefensible performance estimation."
+  },
+  {
+    "objectID": "C4-what-fastml-does-not-allow.html#when-fastml-may-not-be-appropriate",
+    "href": "C4-what-fastml-does-not-allow.html#when-fastml-may-not-be-appropriate",
+    "title": "C4 — What fastml Deliberately Does Not Allow",
+    "section": "When fastml may not be appropriate",
+    "text": "When fastml may not be appropriate\nfastml may not be well suited when:\n\nexploratory pipeline experimentation is the primary objective,\nhighly nonstandard evaluation schemes are required,\nfine-grained procedural control is essential.\n\nIn such settings, lower-level or more permissive frameworks may be more appropriate."
+  },
+  {
+    "objectID": "C4-what-fastml-does-not-allow.html#summary",
+    "href": "C4-what-fastml-does-not-allow.html#summary",
+    "title": "C4 — What fastml Deliberately Does Not Allow",
+    "section": "Summary",
+    "text": "Summary\n\nfastml is restrictive by design.\nRestrictions follow directly from guarded resampling principles.\nFlexibility is traded for methodological validity.\nIf a workflow feels constrained, the guard is functioning as intended."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "fastml Tutorials",
+    "section": "",
+    "text": "This site provides a structured introduction to fastml, an R package for training, evaluating, and comparing machine learning models under architecturally constrained, leakage-aware resampling.\nThe emphasis is not on developing new modeling techniques or maximizing predictive performance. Instead, the focus is on methodologically sound performance evaluation under clearly defined assumptions."
+  },
+  {
+    "objectID": "index.html#what-this-site-is-about",
+    "href": "index.html#what-this-site-is-about",
+    "title": "fastml Tutorials",
+    "section": "",
+    "text": "This site provides a structured introduction to fastml, an R package for training, evaluating, and comparing machine learning models under architecturally constrained, leakage-aware resampling.\nThe emphasis is not on developing new modeling techniques or maximizing predictive performance. Instead, the focus is on methodologically sound performance evaluation under clearly defined assumptions."
+  },
+  {
+    "objectID": "index.html#why-this-matters",
+    "href": "index.html#why-this-matters",
+    "title": "fastml Tutorials",
+    "section": "Why this matters",
+    "text": "Why this matters\nIn applied machine learning, reported performance estimates are frequently optimistic due to subtle forms of data leakage and unsafe evaluation workflows.\nfastml is designed to reduce this risk by treating Guarded Resampling as a core design principle rather than as an optional recommendation."
+  },
+  {
+    "objectID": "index.html#how-to-read-this-site",
+    "href": "index.html#how-to-read-this-site",
+    "title": "fastml Tutorials",
+    "section": "How to read this site",
+    "text": "How to read this site\nThe material is organized into four sections.\n\nConcepts\nThese sections introduce the ideas that motivate fastml, including:\n\nwhat data leakage is,\nwhy many ML pipelines are unsafe by default,\nwhat guarded resampling entails,\nwhich classes of workflow configurations fastml deliberately restricts.\n\nThe concepts establish the assumptions required to interpret the tutorials correctly.\n\n\nTutorials\nThe tutorials apply the conceptual framework to concrete modeling tasks.\nThey assume familiarity with the Concepts section and focus on demonstrating evaluation workflows rather than reintroducing theoretical material.\n\n\nAdvanced\nAdvanced sections extend the framework to more complex settings, such as:\n\nhandling missing data,\nsurvival analysis,\nmodel interpretation and diagnostics.\n\nThese sections build on the same evaluation principles under additional modeling constraints.\n\n\nComparisons\nComparative sections discuss fastml in relation to other frameworks and common workflows, highlighting differences in design philosophy and evaluation guarantees."
+  },
+  {
+    "objectID": "index.html#where-to-start",
+    "href": "index.html#where-to-start",
+    "title": "fastml Tutorials",
+    "section": "Where to start",
+    "text": "Where to start\nReaders should begin with the Concepts section (C1–C4).\nThe first hands-on example is Tutorial 01: Basic Cl"
+  },
+  {
+    "objectID": "C3-guarded-resampling.html",
+    "href": "C3-guarded-resampling.html",
+    "title": "C3 — Guarded Resampling",
+    "section": "",
+    "text": "C1 established that data leakage is a structural timing error.\nC2 showed that many machine learning pipelines permit such errors by default.\nA direct consequence is that methodological correctness cannot rely on user discipline alone.\nGuarded Resampling is an architectural response to this limitation."
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#from-advice-to-enforcement",
+    "href": "C3-guarded-resampling.html#from-advice-to-enforcement",
+    "title": "C3 — Guarded Resampling",
+    "section": "",
+    "text": "C1 established that data leakage is a structural timing error.\nC2 showed that many machine learning pipelines permit such errors by default.\nA direct consequence is that methodological correctness cannot rely on user discipline alone.\nGuarded Resampling is an architectural response to this limitation."
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#what-guarded-means",
+    "href": "C3-guarded-resampling.html#what-guarded-means",
+    "title": "C3 — Guarded Resampling",
+    "section": "What “Guarded” means",
+    "text": "What “Guarded” means\nIn guarded resampling, resampling is not treated as a downstream step in a workflow.\nInstead, it serves as the enclosing structure for all data-dependent operations.\nUnder this design, operations that involve learning from data are executed within each resampling split, including:\n\npreprocessing,\nmodel fitting,\nhyperparameter selection,\nperformance metric computation.\n\nOperations that cannot be executed safely within resampling are restricted along the default execution path.\nThis is not a usage convention.\nIt is a structural constraint."
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#resampling-as-the-primary-object",
+    "href": "C3-guarded-resampling.html#resampling-as-the-primary-object",
+    "title": "C3 — Guarded Resampling",
+    "section": "Resampling as the primary object",
+    "text": "Resampling as the primary object\nTraditional workflows often treat resampling as optional and external:\n\nprepare data,\nfit a model,\nevaluate using resampling.\n\nGuarded resampling reverses this relationship:\n\ndefine a resampling plan,\nfor each split:\n\nestimate preprocessing steps,\nfit the model,\ngenerate predictions,\n\naggregate results across splits.\n\nResampling defines the structure; learning steps operate within it."
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#why-enclosure-matters",
+    "href": "C3-guarded-resampling.html#why-enclosure-matters",
+    "title": "C3 — Guarded Resampling",
+    "section": "Why enclosure matters",
+    "text": "Why enclosure matters\nBy enclosing learning within resampling splits, guarded resampling ensures that:\n\nassessment data are isolated from training within each split,\npreprocessing parameters are estimated separately for each training set,\nmodel comparisons are conducted using identical resampling splits,\nperformance estimates correspond to resampling-based out-of-sample evaluation.\n\nThese properties do not depend on remembering rules or following best practices.\nThey arise from how the workflow is constructed."
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#guards-are-not-warnings",
+    "href": "C3-guarded-resampling.html#guards-are-not-warnings",
+    "title": "C3 — Guarded Resampling",
+    "section": "Guards are not warnings",
+    "text": "Guards are not warnings\nGuarded resampling does not attempt to identify leakage after it has occurred.\nInstead, it restricts the construction of workflows in which leakage-prone configurations would arise along the standard execution path.\nThis distinction is important:\n\nwarnings are advisory and can be ignored,\nstructural constraints limit what can be expressed.\n\nWorkflows that violate the principles of guarded resampling are therefore not part of the default design space."
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#what-this-enables",
+    "href": "C3-guarded-resampling.html#what-this-enables",
+    "title": "C3 — Guarded Resampling",
+    "section": "What this enables",
+    "text": "What this enables\nBecause resampling is treated as an enclosing structure:\n\npreprocessing is resampling-aware by default,\nresampling splits are applied consistently across models,\nevaluation remains coupled to model fitting,\nreported metrics reflect resampling-based estimates.\n\nThese properties hold independently of model class, algorithmic complexity, or user expertise, subject to the assumptions of the resampling procedure.\nMethodological correctness becomes a property of system design rather than of individual user choices."
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#what-this-does-not-do",
+    "href": "C3-guarded-resampling.html#what-this-does-not-do",
+    "title": "C3 — Guarded Resampling",
+    "section": "What this does not do",
+    "text": "What this does not do\nGuarded resampling does not:\n\nguarantee strong predictive performance,\nidentify a statistically optimal model,\nreplace careful study design or domain expertise,\neliminate all possible sources of bias.\n\nIt addresses a specific and well-defined failure mode: invalid evaluation arising from data leakage."
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#why-this-is-restrictive-by-design",
+    "href": "C3-guarded-resampling.html#why-this-is-restrictive-by-design",
+    "title": "C3 — Guarded Resampling",
+    "section": "Why this is restrictive by design",
+    "text": "Why this is restrictive by design\nEnforcing structural guards necessarily reduces flexibility.\nCertain actions that are technically possible in more permissive frameworks are intentionally restricted along the default execution path.\nThis is not a limitation to be worked around.\nIt is a deliberate design choice.\nThe consequences of this choice are addressed in the next concept."
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#summary",
+    "href": "C3-guarded-resampling.html#summary",
+    "title": "C3 — Guarded Resampling",
+    "section": "Summary",
+    "text": "Summary\n\nGuarded resampling treats resampling as the enclosing structure.\nData-dependent learning occurs within resampling splits.\nLeakage-prone configurations are restricted by design.\nEnforcement replaces advisory guidance.\n\nThis is the core idea behind fastml.\nNext: C4 — What fastml Deliberately Does Not Allow"
+  },
+  {
+    "objectID": "01-basic-classification.html",
+    "href": "01-basic-classification.html",
+    "title": "01. Basic Classification",
+    "section": "",
+    "text": "This tutorial builds on the following conceptual material:\n\nC1 — What is Data Leakage\nC2 — Why Most ML Pipelines Are Unsafe by Default\nC3 — Guarded Resampling\nC4 — What fastml Deliberately Does Not Allow\n\nReaders are expected to be familiar with these concepts before proceeding.\nThe workflow demonstrated here uses a deliberately constrained interface. These constraints are intentional and reflect the design philosophy of fastml: to reduce common sources of evaluation error by limiting user-facing degrees of freedom along the default execution path."
+  },
+  {
+    "objectID": "01-basic-classification.html#before-you-start",
+    "href": "01-basic-classification.html#before-you-start",
+    "title": "01. Basic Classification",
+    "section": "",
+    "text": "This tutorial builds on the following conceptual material:\n\nC1 — What is Data Leakage\nC2 — Why Most ML Pipelines Are Unsafe by Default\nC3 — Guarded Resampling\nC4 — What fastml Deliberately Does Not Allow\n\nReaders are expected to be familiar with these concepts before proceeding.\nThe workflow demonstrated here uses a deliberately constrained interface. These constraints are intentional and reflect the design philosophy of fastml: to reduce common sources of evaluation error by limiting user-facing degrees of freedom along the default execution path."
+  },
+  {
+    "objectID": "01-basic-classification.html#the-problem-we-are-solving",
+    "href": "01-basic-classification.html#the-problem-we-are-solving",
+    "title": "01. Basic Classification",
+    "section": "The problem we are solving",
+    "text": "The problem we are solving\nThe goal of this tutorial is to estimate the out-of-sample performance of a binary classifier.\nThe focus is not on maximizing predictive accuracy, tuning hyperparameters, or examining model internals. Instead, the objective is narrowly defined:\nWhat level of predictive performance can reasonably be expected on new, unseen data, given a fixed modeling specification?\nIn this setting, model fitting itself is straightforward. The primary challenge lies in performance evaluation.\nSpecifically, the difficulty is to obtain an estimate that is not biased by information leakage or other forms of contamination arising from reuse of the data during training and evaluation."
+  },
+  {
+    "objectID": "01-basic-classification.html#why-this-is-harder-than-it-sounds",
+    "href": "01-basic-classification.html#why-this-is-harder-than-it-sounds",
+    "title": "01. Basic Classification",
+    "section": "Why this is harder than it sounds",
+    "text": "Why this is harder than it sounds\nFrom C1 and C2, recall the following points:\n\nLeakage does not require obvious mistakes.\nPipelines that appear valid can still yield biased performance estimates.\nMost machine learning frameworks allow such pipelines to run without warnings.\n\nFrom C3, recall:\n\nCorrect evaluation requires resampling to enclose preprocessing and model fitting.\nThis enclosure must be structural, not procedural.\n\nFrom C4, recall:\n\nfastml enforces correctness by removing degrees of freedom rather than relying on user discipline.\n\nThis tutorial demonstrates what that enforcement looks like in practice."
+  },
+  {
+    "objectID": "01-basic-classification.html#the-data",
+    "href": "01-basic-classification.html#the-data",
+    "title": "01. Basic Classification",
+    "section": "The data",
+    "text": "The data\nThis tutorial uses a simple binary classification dataset from the modeldata package.\nThe dataset is characterized by:\n\na binary outcome variable (Class),\na small number of continuous predictors (A and B),\nthe absence of missing values.\n\nThis choice is intentional. The dataset is deliberately low-dimensional and clean, so that attention can remain on the evaluation procedure rather than on feature engineering, preprocessing decisions, or data-quality issues.\n\nlibrary(modeldata)\ndata(two_class_dat)\ntwo_class_dat\n\n# A tibble: 791 × 3\n       A     B Class \n   &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; \n 1  2.07 1.63  Class1\n 2  2.02 1.04  Class1\n 3  1.69 1.37  Class2\n 4  3.43 1.98  Class2\n 5  2.88 1.98  Class1\n 6  3.31 2.41  Class2\n 7  2.50 1.56  Class2\n 8  1.98 1.55  Class2\n 9  2.88 0.580 Class1\n10  3.74 2.74  Class2\n# ℹ 781 more rows\n\n\nThe purpose of this example is to illustrate evaluation mechanics rather than data preprocessing challenges. Although the dataset itself is simple, the evaluation principles demonstrated here extend to more complex datasets and other supported tasks in fastml, subject to their respective assumptions and constraints."
+  },
+  {
+    "objectID": "01-basic-classification.html#what-you-do-not-need-to-do-in-fastml",
+    "href": "01-basic-classification.html#what-you-do-not-need-to-do-in-fastml",
+    "title": "01. Basic Classification",
+    "section": "What you do not need to do in fastml",
+    "text": "What you do not need to do in fastml\nBefore showing the workflow, it is important to be explicit.\nIn fastml, users are not required to:\n\nmanually assemble train–test splits,\nexplicitly construct preprocessing recipes,\napply scaling or imputation outside the resampling loop,\ncompose workflows from loosely coupled components,\ncontrol when preprocessing is trained relative to resampling,\ndirectly manipulate resampling objects during model execution.\n\nThese steps are common entry points for data leakage.\nBy default, fastml executes preprocessing, model fitting, and evaluation within a single, resampling-aware structure. While advanced users may override specific components, the standard execution path is designed to preserve training–assessment isolation without relying on user discipline."
+  },
+  {
+    "objectID": "01-basic-classification.html#declaring-intent",
+    "href": "01-basic-classification.html#declaring-intent",
+    "title": "01. Basic Classification",
+    "section": "Declaring intent",
+    "text": "Declaring intent\nIn fastml, the user specifies what is to be evaluated rather than manually assembling the individual components of a modeling pipeline.\nAt a minimum, this specification includes:\n\nthe dataset,\nthe outcome variable,\nthe set of algorithms to be evaluated,\nthe intended resampling strategy.\n\n\nlibrary(fastml)\n\nfit &lt;- fastml(\n  data       = two_class_dat,\n  label      = \"Class\",\n  algorithms = c(\"rand_forest\", \"xgboost\"),\n  resampling = \"cv\",\n  folds      = 5,\n)\n\nThis call defines the full evaluation setup under the default execution path. Model fitting, preprocessing, and performance estimation are carried out internally according to the declared intent and the constraints imposed by fastml."
+  },
+  {
+    "objectID": "01-basic-classification.html#what-happens-internally",
+    "href": "01-basic-classification.html#what-happens-internally",
+    "title": "01. Basic Classification",
+    "section": "What happens internally",
+    "text": "What happens internally\nThe behavior described below reflects the default execution path in fastml and is not exposed for routine user configuration.\nFor each resampling split:\n\ntraining data are defined according to the resampling specification,\nany preprocessing steps are estimated using the training data only,\nmodels are fitted on the resulting training set,\npredictions are generated for the corresponding assessment set,\nperformance metrics are computed exclusively on assessment data.\n\nAs an additional safety measure, fastml performs internal checks on the resampling structure. If a resample is detected in which the training set coincides with the full dataset, execution is halted and the run is flagged as unsafe."
+  },
+  {
+    "objectID": "01-basic-classification.html#why-this-differs-from-typical-workflows",
+    "href": "01-basic-classification.html#why-this-differs-from-typical-workflows",
+    "title": "01. Basic Classification",
+    "section": "Why this differs from typical workflows",
+    "text": "Why this differs from typical workflows\nIn many machine learning frameworks:\n\npipelines that violate evaluation assumptions can be constructed,\ncorrect evaluation depends largely on user discipline and correct assembly of components,\nviolations such as preprocessing leakage may execute without explicit warnings.\n\nIn fastml:\n\ncommon classes of incorrect evaluation pipelines are restricted along the default execution path,\nmethodological correctness is less dependent on user assembly decisions,\nkey evaluation invariants are checked and enforced during execution.\n\nThis reflects a deliberate design trade-off: reducing flexibility in pipeline construction in order to lower the risk of undetected evaluation errors."
+  },
+  {
+    "objectID": "01-basic-classification.html#inspecting-results",
+    "href": "01-basic-classification.html#inspecting-results",
+    "title": "01. Basic Classification",
+    "section": "Inspecting results",
+    "text": "Inspecting results\nOnce execution is complete, performance estimates can be accessed directly from the fitted object.\n\nfit$performance$rand_forest$ranger\n\n# A tibble: 7 × 3\n  .metric   .estimator .estimate\n  &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;\n1 accuracy  binary         0.824\n2 kap       binary         0.643\n3 sens      binary         0.852\n4 spec      binary         0.789\n5 precision binary         0.833\n6 f_meas    binary         0.843\n7 roc_auc   binary         0.873\n\nfit$performance$xgboost$xgboost\n\n# A tibble: 7 × 3\n  .metric   .estimator .estimate\n  &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;\n1 accuracy  binary         0.824\n2 kap       binary         0.643\n3 sens      binary         0.852\n4 spec      binary         0.789\n5 precision binary         0.833\n6 f_meas    binary         0.843\n7 roc_auc   binary         0.881\n\n\nThe reported metrics summarize performance estimates obtained under 5-fold cross-validation for each model.\nFor both the random forest and xgboost models, these estimates are computed on assessment data that are held out from model fitting within each resampling split. They therefore differ from training-set performance and are not derived from post-hoc adjustments or recalibration.\nIn this example, the random forest model attains slightly higher average performance across most metrics, including accuracy, Cohen’s kappa, F1 score, and ROC AUC. However, the differences relative to xgboost are modest, and both models display a similar balance between sensitivity and specificity. These results indicate comparable overall performance with small differences in error structure rather than a clear dominance of one model over the other.\nAll reported values arise directly from the resampling-based evaluation procedure used by fastml, in which preprocessing, model fitting, and performance estimation are executed within a single, resampling-aware structure. The metrics therefore represent cross-validated performance summaries under the declared evaluation setup, subject to the usual variability and limitations inherent to resampling-based estimates."
+  },
+  {
+    "objectID": "01-basic-classification.html#fold-level-variability",
+    "href": "01-basic-classification.html#fold-level-variability",
+    "title": "01. Basic Classification",
+    "section": "Fold-Level variability",
+    "text": "Fold-Level variability\n\nfit$resampling_results$`rand_forest (ranger)`$folds\n\nNULL\n\nfit$resampling_results$`xgboost (xgboost)`$folds\n\nNULL\n\n\nPerformance estimates vary across resampling folds, across metrics, and across models.\nIn this example, both the random forest and xgboost models exhibit noticeable but moderate fold-to-fold variability. Accuracy, sensitivity, specificity, and agreement-based measures such as Cohen’s kappa fluctuate across folds for both models, reflecting differences in class composition and difficulty across resampling splits.\nAcross folds, the two models show broadly comparable behavior. The random forest model attains slightly higher values in some folds, while the xgboost model matches or closely tracks its performance in others. For both models, sensitivity and specificity remain relatively balanced across folds, and no systematic metric asymmetry or degenerate behavior is observed. Variation in kappa and accuracy remains within a range consistent with expected resampling variability rather than indicating instability.\nThis pattern illustrates that, even when aggregated summaries suggest similar overall performance, fold-level inspection remains necessary to assess stability, class-wise trade-offs, and the influence of individual resampling splits. Such variability is an inherent feature of resampling-based evaluation and cannot be fully characterized by a single averaged estimate."
+  },
+  {
+    "objectID": "01-basic-classification.html#model-comparison",
+    "href": "01-basic-classification.html#model-comparison",
+    "title": "01. Basic Classification",
+    "section": "Model comparison",
+    "text": "Model comparison\n\nsummary(fit)\n\n\n===== fastml Model Summary =====\nTask: classification \nNumber of Models Trained: 2 \nBest Model(s): rand_forest (ranger) xgboost (xgboost) (accuracy: 0.8238994) \n\nPerformance Metrics (Sorted by accuracy):\n\n---------------------------------------------------------------------------------------------- \nModel         Engine   Accuracy  F1 Score  Kappa  Precision  Sensitivity  Specificity  ROC AUC \n---------------------------------------------------------------------------------------------- \nrand_forest*  ranger   0.824     0.843     0.643  0.833      0.852        0.789        0.873   \nxgboost*      xgboost  0.824     0.843     0.643  0.833      0.852        0.789        0.881   \n---------------------------------------------------------------------------------------------- \n(*Best model)\n\nBest Model hyperparameters:\n\nModel: rand_forest (ranger) \n  mtry: 1\n  trees: 500\n  min_n: 10\n\nModel: xgboost (xgboost) \n  mtry: 2\n  trees: 15\n  min_n: 2\n  tree_depth: 6\n  learn_rate: 0.1\n  loss_reduction: 0\n  sample_size: 0.5\n  stop_iter: \n\n\n===========================\nConfusion Matrices by Model\n===========================\n\nModel: rand_forest (ranger) \n---------------------------\n          Truth\nPrediction Class1 Class2\n    Class1     75     15\n    Class2     13     56\n\nModel: xgboost (xgboost) \n---------------------------\n          Truth\nPrediction Class1 Class2\n    Class1     75     15\n    Class2     13     56\n\n\nThe summary output compares models evaluated under an identical resampling specification.\nIn this example, the random forest model attains slightly higher average performance across all reported metrics, including accuracy, F1 score, Cohen’s kappa, sensitivity, specificity, and ROC AUC. The xgboost model shows closely comparable performance, with modestly lower values across the same metrics. The differences between models are small and reflect incremental variations in error rates rather than qualitatively distinct error profiles.\nBecause all models are evaluated using the same resampling splits, observed performance differences can be attributed to the modeling approaches rather than to variation in data partitioning. This consistency is not merely a convenience; it is a methodological requirement for meaningful model comparison under resampling-based evaluation."
+  },
+  {
+    "objectID": "01-basic-classification.html#what-is-guaranteed-here",
+    "href": "01-basic-classification.html#what-is-guaranteed-here",
+    "title": "01. Basic Classification",
+    "section": "What is guaranteed here",
+    "text": "What is guaranteed here\nSubject to the constraints accepted along the default execution path, fastml provides the following assurances:\n\npreprocessing steps are estimated separately within each resampling split, preventing information flow across folds,\nmodel training and evaluation are carried out on disjoint data subsets within each split,\nall algorithms are evaluated using an identical resampling structure,\nreported performance metrics correspond to resampling-based estimates of out-of-sample performance.\n\nThese properties arise from the architectural design of fastml rather than from user-enforced conventions. They reflect enforced evaluation invariants under standard usage, not informal best-practice recommendations."
+  },
+  {
+    "objectID": "01-basic-classification.html#what-fastml-cannot-guarantee",
+    "href": "01-basic-classification.html#what-fastml-cannot-guarantee",
+    "title": "01. Basic Classification",
+    "section": "What fastml cannot guarantee",
+    "text": "What fastml cannot guarantee\nAs emphasized in the accompanying manuscript, fastml does not and cannot guarantee:\n\nthat outcome variables are correctly defined or scientifically meaningful,\nthat the raw features are free from prior leakage, measurement artifacts, or target contamination,\nthat the learning task itself addresses a scientifically relevant question,\nthat the chosen performance metrics are appropriate for the scientific or clinical context.\n\nMethodological safeguards can reduce certain classes of technical error, but they cannot substitute for domain expertise, sound study design, or scientific judgment."
+  },
+  {
+    "objectID": "01-basic-classification.html#summary",
+    "href": "01-basic-classification.html#summary",
+    "title": "01. Basic Classification",
+    "section": "Summary",
+    "text": "Summary\nThis tutorial did not focus on constructing highly flexible modeling pipelines.\nInstead, it demonstrated how fastml limits common pathways to invalid evaluation by constraining how models are trained, evaluated, and compared along the default execution path.\nThe distinguishing characteristic of fastml is therefore not automation for its own sake, but the enforcement of evaluation invariants intended to reduce methodological errors in performance estimation."
+  },
+  {
+    "objectID": "01-basic-classification.html#what-comes-next",
+    "href": "01-basic-classification.html#what-comes-next",
+    "title": "01. Basic Classification",
+    "section": "What comes next",
+    "text": "What comes next\n02. Multiple Models and Fair Comparison\nWhy comparing models is statistically invalid without shared resampling.\nConcept: Guarded Resampling (Revisited)\nA deeper look at how fastml enforces evaluation invariants."
+  },
+  {
+    "objectID": "C1-what-is-data-leakage.html",
+    "href": "C1-what-is-data-leakage.html",
+    "title": "C1 — What Is Data Leakage",
+    "section": "",
+    "text": "Data leakage occurs when information outside the data available at training time influences model fitting or evaluation in a way that would not be available at prediction time.\nThis definition is intentionally structural. Leakage is not about intent, carelessness, or misconduct. It is about when information is used.\nA model can be trained in good faith and still be invalidly evaluated.\nLeakage is a timing error, not a data error.\nMany descriptions frame leakage as a problem of using the test set. This framing is incomplete.\nLeakage occurs whenever a transformation, decision, or parameter is learned outside the resampling procedure, rather than within each resampling split.\nCommon examples include:\n\nscaling predictors using the full dataset prior to cross-validation,\nimputing missing values using global statistics,\nselecting features using all observations,\ntuning hyperparameters outside the resampling loop.\n\nIn each case, the mechanism is the same: information from assessment data is incorporated into training."
+  },
+  {
+    "objectID": "C1-what-is-data-leakage.html#the-problem-fastml-is-built-to-address",
+    "href": "C1-what-is-data-leakage.html#the-problem-fastml-is-built-to-address",
+    "title": "C1 — What Is Data Leakage",
+    "section": "",
+    "text": "Data leakage occurs when information outside the data available at training time influences model fitting or evaluation in a way that would not be available at prediction time.\nThis definition is intentionally structural. Leakage is not about intent, carelessness, or misconduct. It is about when information is used.\nA model can be trained in good faith and still be invalidly evaluated.\nLeakage is a timing error, not a data error.\nMany descriptions frame leakage as a problem of using the test set. This framing is incomplete.\nLeakage occurs whenever a transformation, decision, or parameter is learned outside the resampling procedure, rather than within each resampling split.\nCommon examples include:\n\nscaling predictors using the full dataset prior to cross-validation,\nimputing missing values using global statistics,\nselecting features using all observations,\ntuning hyperparameters outside the resampling loop.\n\nIn each case, the mechanism is the same: information from assessment data is incorporated into training."
+  },
+  {
+    "objectID": "C1-what-is-data-leakage.html#why-leakage-is-hard-to-detect",
+    "href": "C1-what-is-data-leakage.html#why-leakage-is-hard-to-detect",
+    "title": "C1 — What Is Data Leakage",
+    "section": "Why Leakage Is Hard to Detect",
+    "text": "Why Leakage Is Hard to Detect\nLeakage rarely produces errors or warnings.\nPipelines that contain leakage often:\n\nrun without failure,\nproduce stable estimates,\nyield optimistic performance values.\n\nAs a result, invalid pipelines may appear convincing.\nEven experienced practitioners can introduce leakage when workflows are assembled manually from modular components."
+  },
+  {
+    "objectID": "C1-what-is-data-leakage.html#a-minimal-example-conceptual",
+    "href": "C1-what-is-data-leakage.html#a-minimal-example-conceptual",
+    "title": "C1 — What Is Data Leakage",
+    "section": "A Minimal Example (Conceptual)",
+    "text": "A Minimal Example (Conceptual)\nConsider a dataset ( D ) evaluated using 5-fold cross-validation.\nIf a preprocessing step is estimated once using ( D ) and then applied within each fold, the model trained in Fold 1 has already been influenced by data from Folds 2–5.\nThis violates the independence assumption underlying cross-validation.\nThe resulting performance estimate is biased upward by construction.\nNo explicit misuse of a held-out test set is required."
+  },
+  {
+    "objectID": "C1-what-is-data-leakage.html#why-best-practices-are-not-enough",
+    "href": "C1-what-is-data-leakage.html#why-best-practices-are-not-enough",
+    "title": "C1 — What Is Data Leakage",
+    "section": "Why “Best Practices” Are Not Enough",
+    "text": "Why “Best Practices” Are Not Enough\nModern machine learning frameworks provide tools that can help avoid leakage. However, these safeguards are typically optional.\nCorrect evaluation therefore depends on users:\n\nidentifying which steps must be resampling-aware,\nassembling components in the correct order,\navoiding convenience-driven shortcuts.\n\nIncorrect pipelines are not generally prevented from executing.\nAs a result, methodological validity often depends on user discipline rather than on structural guarantees."
+  },
+  {
+    "objectID": "C1-what-is-data-leakage.html#what-follows-from-this",
+    "href": "C1-what-is-data-leakage.html#what-follows-from-this",
+    "title": "C1 — What Is Data Leakage",
+    "section": "What Follows from This",
+    "text": "What Follows from This\nIf leakage is:\n\neasy to introduce,\ndifficult to detect,\nand rarely signaled by software,\n\nthen preventing it cannot rely on guidelines alone.\nIt requires enforcement at the level of workflow design.\nThis motivates Guarded Resampling, introduced in the next concept."
+  },
+  {
+    "objectID": "C1-what-is-data-leakage.html#summary",
+    "href": "C1-what-is-data-leakage.html#summary",
+    "title": "C1 — What Is Data Leakage",
+    "section": "Summary",
+    "text": "Summary\n\nData leakage is a structural timing error.\nIt does not require misuse of a held-out test set.\nIt can produce stable but invalid results.\nOptional safeguards are insufficient.\nPreventing leakage requires architectural constraints, not user vigilance.\n\nNext: C2 — Why Most ML Pipelines Are Unsafe by Default"
+  }
+]

@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>fastml Tutorials - C4 — What fastml Deliberately Does Not Allow</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./C1-what-is-data-leakage.html">Concepts</a></li><li class="breadcrumb-item"><a href="./C4-what-fastml-does-not-allow.html">C4 — What fastml Deliberately Does Not Allow</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">fastml Tutorials</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">fastml Tutorials</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Concepts</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./C1-what-is-data-leakage.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">C1 — What Is Data Leakage</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+ <span class="menu-text">C2-why-most-ml-pipelines-are-unsafe.qmd</span>
+  </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./C3-guarded-resampling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">C3 — Guarded Resampling</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./C4-what-fastml-does-not-allow.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">C4 — What fastml Deliberately Does Not Allow</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Tutorials</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-basic-classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">01. Basic Classification</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#constraints-as-a-design-decision" id="toc-constraints-as-a-design-decision" class="nav-link active" data-scroll-target="#constraints-as-a-design-decision">Constraints as a design decision</a></li>
+  <li><a href="#no-global-preprocessing" id="toc-no-global-preprocessing" class="nav-link" data-scroll-target="#no-global-preprocessing">No global preprocessing</a></li>
+  <li><a href="#no-detached-evaluation" id="toc-no-detached-evaluation" class="nav-link" data-scroll-target="#no-detached-evaluation">No detached evaluation</a></li>
+  <li><a href="#no-manual-fold-reuse-across-models" id="toc-no-manual-fold-reuse-across-models" class="nav-link" data-scroll-target="#no-manual-fold-reuse-across-models">No manual fold reuse across models</a></li>
+  <li><a href="#no-implicit-tuning-loops" id="toc-no-implicit-tuning-loops" class="nav-link" data-scroll-target="#no-implicit-tuning-loops">No implicit tuning loops</a></li>
+  <li><a href="#no-partial-control-over-pipeline-order" id="toc-no-partial-control-over-pipeline-order" class="nav-link" data-scroll-target="#no-partial-control-over-pipeline-order">No partial control over pipeline order</a></li>
+  <li><a href="#why-these-restrictions-exist" id="toc-why-these-restrictions-exist" class="nav-link" data-scroll-target="#why-these-restrictions-exist">Why these restrictions exist</a></li>
+  <li><a href="#what-fastml-optimizes-for" id="toc-what-fastml-optimizes-for" class="nav-link" data-scroll-target="#what-fastml-optimizes-for">What fastml optimizes for</a></li>
+  <li><a href="#when-fastml-may-not-be-appropriate" id="toc-when-fastml-may-not-be-appropriate" class="nav-link" data-scroll-target="#when-fastml-may-not-be-appropriate">When fastml may not be appropriate</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">C4 — What fastml Deliberately Does Not Allow</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="constraints-as-a-design-decision" class="level2">
+<h2 class="anchored" data-anchor-id="constraints-as-a-design-decision">Constraints as a design decision</h2>
+<p><strong>fastml</strong> adopts a deliberately constrained design.</p>
+<p>These constraints are not the result of missing functionality or incomplete implementation.<br>
+They are a direct consequence of the guarantees described in <strong>C1–C3</strong>.</p>
+<p>To support guarded resampling along the default execution path, certain classes of actions are intentionally restricted.</p>
+</section>
+<section id="no-global-preprocessing" class="level2">
+<h2 class="anchored" data-anchor-id="no-global-preprocessing">No global preprocessing</h2>
+<p>Along the default execution path, fastml does not permit preprocessing steps to be estimated using the full dataset prior to resampling.</p>
+<p>Users are not required—and are not encouraged—to:</p>
+<ul>
+<li>scale predictors globally,</li>
+<li>impute missing values using global statistics,</li>
+<li>perform feature selection outside resampling,</li>
+<li>reuse preprocessing parameters across folds.</li>
+</ul>
+<p>Instead, preprocessing steps are estimated separately within each resampling split.</p>
+<p>This design prevents backward information flow from assessment data into training by construction.</p>
+</section>
+<section id="no-detached-evaluation" class="level2">
+<h2 class="anchored" data-anchor-id="no-detached-evaluation">No detached evaluation</h2>
+<p>In fastml, evaluation is not treated as a post hoc operation.</p>
+<p>Under the standard execution model, users do not:</p>
+<ul>
+<li>fit a model once and later evaluate it using resampling,</li>
+<li>reuse a trained model across new or inconsistent folds,</li>
+<li>compute performance metrics outside a resampling-aware context.</li>
+</ul>
+<p>Model fitting and evaluation are coupled within a single resampling-based procedure.</p>
+</section>
+<section id="no-manual-fold-reuse-across-models" class="level2">
+<h2 class="anchored" data-anchor-id="no-manual-fold-reuse-across-models">No manual fold reuse across models</h2>
+<p>Model comparison in fastml is conducted using a shared resampling specification.</p>
+<p>Users do not manually:</p>
+<ul>
+<li>define different folds for different models within the same comparison,</li>
+<li>selectively reuse folds,</li>
+<li>mix incompatible resampling schemes across models.</li>
+</ul>
+<p>This ensures that observed performance differences arise from modeling choices rather than from differences in data partitioning.</p>
+</section>
+<section id="no-implicit-tuning-loops" class="level2">
+<h2 class="anchored" data-anchor-id="no-implicit-tuning-loops">No implicit tuning loops</h2>
+<p>When hyperparameter tuning is enabled, it is carried out within the resampling structure.</p>
+<p>Under the default design, users do not:</p>
+<ul>
+<li>tune models on the full dataset and then evaluate them using resampling,</li>
+<li>tune once and reuse tuning results across folds,</li>
+<li>decouple tuning from evaluation.</li>
+</ul>
+<p>This restricts subtle leakage pathways that can arise when tuning is performed outside resampling.</p>
+</section>
+<section id="no-partial-control-over-pipeline-order" class="level2">
+<h2 class="anchored" data-anchor-id="no-partial-control-over-pipeline-order">No partial control over pipeline order</h2>
+<p>fastml does not expose low-level hooks for rearranging the order of:</p>
+<ul>
+<li>preprocessing,</li>
+<li>model fitting,</li>
+<li>evaluation.</li>
+</ul>
+<p>This ordering is fixed along the default execution path.</p>
+<p>Users specify <em>what</em> is to be evaluated, not <em>how</em> the internal pipeline is assembled.</p>
+</section>
+<section id="why-these-restrictions-exist" class="level2">
+<h2 class="anchored" data-anchor-id="why-these-restrictions-exist">Why these restrictions exist</h2>
+<p>Each restriction removes a class of evaluation errors that are:</p>
+<ul>
+<li>easy to introduce,</li>
+<li>difficult to detect,</li>
+<li>associated with optimistic performance estimates,</li>
+<li>rarely flagged by software.</li>
+</ul>
+<p>Reducing flexibility is the cost of enforcing methodological validity.</p>
+</section>
+<section id="what-fastml-optimizes-for" class="level2">
+<h2 class="anchored" data-anchor-id="what-fastml-optimizes-for">What fastml optimizes for</h2>
+<p>fastml is not designed to optimize for:</p>
+<ul>
+<li>maximal procedural flexibility,</li>
+<li>unrestricted pipeline experimentation,</li>
+<li>interactive trial-and-error workflow assembly.</li>
+</ul>
+<p>It is designed to prioritize:</p>
+<ul>
+<li>evaluation correctness,</li>
+<li>reproducibility,</li>
+<li>comparability across models,</li>
+<li>defensible performance estimation.</li>
+</ul>
+</section>
+<section id="when-fastml-may-not-be-appropriate" class="level2">
+<h2 class="anchored" data-anchor-id="when-fastml-may-not-be-appropriate">When fastml may not be appropriate</h2>
+<p>fastml may not be well suited when:</p>
+<ul>
+<li>exploratory pipeline experimentation is the primary objective,</li>
+<li>highly nonstandard evaluation schemes are required,</li>
+<li>fine-grained procedural control is essential.</li>
+</ul>
+<p>In such settings, lower-level or more permissive frameworks may be more appropriate.</p>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<ul>
+<li>fastml is restrictive by design.</li>
+<li>Restrictions follow directly from guarded resampling principles.</li>
+<li>Flexibility is traded for methodological validity.</li>
+<li>If a workflow feels constrained, the guard is functioning as intended.</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
