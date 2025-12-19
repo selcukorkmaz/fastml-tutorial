@@ -1,0 +1,138 @@
+---
+title: "C2 — Why Most ML Pipelines Are Unsafe by Default"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+execute:
+  echo: false
+---
+
+## The paradox of modern ML tooling
+
+Many modern machine learning frameworks provide components that can be assembled into leakage-safe workflows.
+
+Yet leakage remains widespread in applied work.
+
+This is not a contradiction. It follows from how pipelines are designed and how methodological correctness is treated within those designs.
+
+---
+
+## Flexibility without constraints
+
+Contemporary ML frameworks emphasize modularity:
+
+- preprocessing steps are independent components,
+- models are interchangeable,
+- resampling is optional and configurable,
+- evaluation is often treated as a separable stage.
+
+This flexibility is powerful, but it has consequences.
+
+Nothing in the default design prevents users from assembling pipelines in orders that violate evaluation assumptions.
+
+Such pipelines are typically syntactically valid and computationally successful, even when they are methodologically incorrect.
+
+---
+
+## Optional correctness is not correctness
+
+Many frameworks provide mechanisms intended to reduce leakage risk:
+
+- resampling-aware preprocessing tools,
+- workflow abstractions,
+- helper functions that encourage correct usage.
+
+However, these mechanisms are optional.
+
+Users may still:
+
+- compute transformations using the full dataset,
+- reuse or redefine resampling splits inconsistently,
+- apply preprocessing outside the resampling loop,
+- tune models using data that later serve as assessment sets.
+
+The software generally permits these configurations to run without intervention.
+
+As a result, methodological correctness is advisory rather than enforced.
+
+---
+
+## Why warnings do not solve the problem
+
+One might expect software to detect leakage and issue warnings.
+
+In practice, this approach is limited.
+
+Leakage is often:
+
+- semantically ambiguous,
+- dependent on context and intent,
+- indistinguishable from valid workflows at runtime.
+
+Static analysis can detect only narrow classes of problems, and comprehensive runtime checks are difficult without restricting flexibility.
+
+Most frameworks therefore favor permissiveness over enforcement.
+
+---
+
+## The expert-user fallacy
+
+A common response is to place responsibility on user expertise.
+
+This implicitly assumes that:
+
+- experienced users consistently assemble pipelines correctly,
+- mistakes are rare or immediately obvious,
+- discipline scales with workflow complexity.
+
+These assumptions do not reliably hold.
+
+As workflows become more complex—nested resampling, grouped splits, tuning loops—the space for subtle errors expands, even for experienced practitioners.
+
+Expertise can reduce risk, but it does not eliminate it.
+
+---
+
+## Consequences for evaluation
+
+When pipelines are unsafe by default:
+
+- invalid evaluations may appear legitimate,
+- performance estimates tend to be optimistic,
+- results are harder to reproduce,
+- reviewers and readers have limited visibility into evaluation correctness.
+
+This is not primarily a failure of individual users.  
+It reflects limitations in pipeline architecture.
+
+---
+
+## What a safe default would require
+
+A safe default requires more than recommendations or documentation.
+
+It requires that:
+
+- resampling encloses all data-dependent learning steps,
+- preprocessing cannot be learned globally,
+- evaluation cannot be detached from model fitting,
+- unsafe configurations are restricted along the default execution path.
+
+In other words, correctness must be enforced by construction rather than assumed.
+
+---
+
+## Summary
+
+- Modern ML frameworks prioritize flexibility.
+- Methodological correctness is typically optional.
+- Invalid pipelines are often allowed to execute silently.
+- Expertise alone does not prevent evaluation errors.
+- Safe evaluation requires architectural constraints.
+
+This motivates the core idea behind **fastml**: **Guarded Resampling**.
+
+---
+
+*Next: [C3 — Guarded Resampling]*

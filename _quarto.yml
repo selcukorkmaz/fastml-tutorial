@@ -1,0 +1,21 @@
+project:
+  type: website
+
+website:
+  title: "fastml Tutorials"
+  sidebar:
+    contents:
+      - index.qmd
+      - section: "Concepts"
+        contents: concepts/*
+      - section: "Tutorials"
+        contents: tutorials/*
+      - section: "Advanced"
+        contents: advanced/*
+      - section: "Comparisons"
+        contents: comparisons/*
+
+format:
+  html:
+    theme: cosmo
+    toc: true

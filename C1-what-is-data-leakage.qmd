@@ -1,0 +1,108 @@
+---
+title: "C1 — What Is Data Leakage"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+execute:
+  echo: false
+---
+
+## The Problem fastml Is Built to Address
+
+Data leakage occurs when information outside the data available at training time influences model fitting or evaluation in a way that would not be available at prediction time.
+
+This definition is intentionally structural. Leakage is not about intent, carelessness, or misconduct. It is about *when* information is used.
+
+A model can be trained in good faith and still be invalidly evaluated.
+
+Leakage is a **timing error**, not a data error.
+
+Many descriptions frame leakage as a problem of using the test set. This framing is incomplete.
+
+Leakage occurs whenever a transformation, decision, or parameter is learned **outside the resampling procedure**, rather than within each resampling split.
+
+Common examples include:
+
+- scaling predictors using the full dataset prior to cross-validation,
+- imputing missing values using global statistics,
+- selecting features using all observations,
+- tuning hyperparameters outside the resampling loop.
+
+In each case, the mechanism is the same: information from assessment data is incorporated into training.
+
+---
+
+## Why Leakage Is Hard to Detect
+
+Leakage rarely produces errors or warnings.
+
+Pipelines that contain leakage often:
+
+- run without failure,
+- produce stable estimates,
+- yield optimistic performance values.
+
+As a result, invalid pipelines may appear convincing.
+
+Even experienced practitioners can introduce leakage when workflows are assembled manually from modular components.
+
+---
+
+## A Minimal Example (Conceptual)
+
+Consider a dataset \( D \) evaluated using 5-fold cross-validation.
+
+If a preprocessing step is estimated once using \( D \) and then applied within each fold, the model trained in Fold 1 has already been influenced by data from Folds 2–5.
+
+This violates the independence assumption underlying cross-validation.
+
+The resulting performance estimate is biased upward by construction.
+
+No explicit misuse of a held-out test set is required.
+
+---
+
+## Why “Best Practices” Are Not Enough
+
+Modern machine learning frameworks provide tools that can help avoid leakage. However, these safeguards are typically optional.
+
+Correct evaluation therefore depends on users:
+
+- identifying which steps must be resampling-aware,
+- assembling components in the correct order,
+- avoiding convenience-driven shortcuts.
+
+Incorrect pipelines are not generally prevented from executing.
+
+As a result, methodological validity often depends on user discipline rather than on structural guarantees.
+
+---
+
+## What Follows from This
+
+If leakage is:
+
+- easy to introduce,
+- difficult to detect,
+- and rarely signaled by software,
+
+then preventing it cannot rely on guidelines alone.
+
+It requires enforcement at the level of workflow design.
+
+This motivates **Guarded Resampling**, introduced in the next concept.
+
+---
+
+## Summary
+
+- Data leakage is a structural timing error.
+- It does not require misuse of a held-out test set.
+- It can produce stable but invalid results.
+- Optional safeguards are insufficient.
+- Preventing leakage requires architectural constraints, not user vigilance.
+
+---
+
+*Next: [C2 — Why Most ML Pipelines Are Unsafe by Default]*

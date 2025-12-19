@@ -1,0 +1,255 @@
+---
+title: "01. Basic Classification"
+subtitle: "Declaring intent under guarded resampling"
+execute:
+  warning: false
+  message: false
+---
+
+## Before you start
+
+This tutorial builds on the following conceptual material:
+
+-   **C1 — What is Data Leakage**
+-   **C2 — Why Most ML Pipelines Are Unsafe by Default**
+-   **C3 — Guarded Resampling**
+-   **C4 — What fastml Deliberately Does Not Allow**
+
+Readers are expected to be familiar with these concepts before proceeding.
+
+The workflow demonstrated here uses a deliberately constrained interface. These constraints are intentional and reflect the design philosophy of fastml: to reduce common sources of evaluation error by limiting user-facing degrees of freedom along the default execution path.
+
+------------------------------------------------------------------------
+
+## The problem we are solving
+
+The goal of this tutorial is to estimate the **out-of-sample performance** of a binary classifier.
+
+The focus is not on maximizing predictive accuracy, tuning hyperparameters, or examining model internals. Instead, the objective is narrowly defined:
+
+**What level of predictive performance can reasonably be expected on new, unseen data, given a fixed modeling specification?**
+
+In this setting, model fitting itself is straightforward. The primary challenge lies in performance evaluation.
+
+Specifically, the difficulty is to obtain an estimate that is not biased by information leakage or other forms of contamination arising from reuse of the data during training and evaluation.
+
+------------------------------------------------------------------------
+
+## Why this is harder than it sounds
+
+From **C1** and **C2**, recall the following points:
+
+-   Leakage does not require obvious mistakes.
+-   Pipelines that appear valid can still yield biased performance estimates.
+-   Most machine learning frameworks allow such pipelines to run without warnings.
+
+From **C3**, recall:
+
+-   Correct evaluation requires resampling to *enclose* preprocessing and model fitting.
+-   This enclosure must be structural, not procedural.
+
+From **C4**, recall:
+
+-   fastml enforces correctness by removing degrees of freedom rather than relying on user discipline.
+
+This tutorial demonstrates what that enforcement looks like in practice.
+
+------------------------------------------------------------------------
+
+## The data
+
+This tutorial uses a simple binary classification dataset from the **modeldata** package.
+
+The dataset is characterized by:
+
+- a binary outcome variable (`Class`),
+- a small number of continuous predictors (`A` and `B`),
+- the absence of missing values.
+
+This choice is intentional. The dataset is deliberately low-dimensional and clean, so that attention can remain on the evaluation procedure rather than on feature engineering, preprocessing decisions, or data-quality issues.
+
+
+```{r}
+library(modeldata)
+data(two_class_dat)
+two_class_dat
+```
+
+The purpose of this example is to illustrate evaluation mechanics rather than data preprocessing challenges. Although the dataset itself is simple, the evaluation principles demonstrated here extend to more complex datasets and other supported tasks in fastml, subject to their respective assumptions and constraints.
+
+------------------------------------------------------------------------
+
+## What you do not need to do in fastml
+
+Before showing the workflow, it is important to be explicit.
+
+In **fastml**, users are not required to:
+
+-   manually assemble train–test splits,
+-   explicitly construct preprocessing recipes,
+-   apply scaling or imputation outside the resampling loop,
+-   compose workflows from loosely coupled components,
+-   control when preprocessing is trained relative to resampling,
+-   directly manipulate resampling objects during model execution.
+
+These steps are common entry points for data leakage.
+
+By default, fastml executes preprocessing, model fitting, and evaluation within a single, resampling-aware structure. While advanced users may override specific components, the standard execution path is designed to preserve training–assessment isolation without relying on user discipline.
+
+------------------------------------------------------------------------
+
+## Declaring intent
+
+In **fastml**, the user specifies *what is to be evaluated* rather than manually assembling the individual components of a modeling pipeline.
+
+At a minimum, this specification includes:
+
+-   the dataset,
+-   the outcome variable,
+-   the set of algorithms to be evaluated,
+-   the intended resampling strategy.
+
+```{r}
+library(fastml)
+
+fit <- fastml(
+  data       = two_class_dat,
+  label      = "Class",
+  algorithms = c("rand_forest", "xgboost"),
+  resampling = "cv",
+  folds      = 5,
+)
+```
+
+This call defines the full evaluation setup under the default execution path. Model fitting, preprocessing, and performance estimation are carried out internally according to the declared intent and the constraints imposed by fastml.
+
+------------------------------------------------------------------------
+
+## What happens internally
+
+The behavior described below reflects the default execution path in **fastml** and is not exposed for routine user configuration.
+
+For each resampling split:
+
+-   training data are defined according to the resampling specification,
+-   any preprocessing steps are estimated using the training data only,
+-   models are fitted on the resulting training set,
+-   predictions are generated for the corresponding assessment set,
+-   performance metrics are computed exclusively on assessment data.
+
+As an additional safety measure, fastml performs internal checks on the resampling structure. If a resample is detected in which the training set coincides with the full dataset, execution is halted and the run is flagged as unsafe.
+
+------------------------------------------------------------------------
+
+## Why this differs from typical workflows
+
+In many machine learning frameworks:
+
+-   pipelines that violate evaluation assumptions can be constructed,
+-   correct evaluation depends largely on user discipline and correct assembly of components,
+-   violations such as preprocessing leakage may execute without explicit warnings.
+
+In **fastml**:
+
+-   common classes of incorrect evaluation pipelines are restricted along the default execution path,
+-   methodological correctness is less dependent on user assembly decisions,
+-   key evaluation invariants are checked and enforced during execution.
+
+This reflects a deliberate design trade-off: reducing flexibility in pipeline construction in order to lower the risk of undetected evaluation errors.
+
+------------------------------------------------------------------------
+
+## Inspecting results
+
+Once execution is complete, performance estimates can be accessed directly from the fitted object.
+
+```{r}
+fit$performance$rand_forest$ranger
+fit$performance$xgboost$xgboost
+```
+
+The reported metrics summarize performance estimates obtained under 5-fold cross-validation for each model.
+
+For both the random forest and xgboost models, these estimates are computed on assessment data that are held out from model fitting within each resampling split. They therefore differ from training-set performance and are not derived from post-hoc adjustments or recalibration.
+
+In this example, the random forest model attains slightly higher average performance across most metrics, including accuracy, Cohen’s kappa, F1 score, and ROC AUC. However, the differences relative to xgboost are modest, and both models display a similar balance between sensitivity and specificity. These results indicate comparable overall performance with small differences in error structure rather than a clear dominance of one model over the other.
+
+All reported values arise directly from the resampling-based evaluation procedure used by fastml, in which preprocessing, model fitting, and performance estimation are executed within a single, resampling-aware structure. The metrics therefore represent cross-validated performance summaries under the declared evaluation setup, subject to the usual variability and limitations inherent to resampling-based estimates.
+
+------------------------------------------------------------------------
+
+## Fold-Level variability
+
+```{r}
+fit$resampling_results$`rand_forest (ranger)`$folds
+fit$resampling_results$`xgboost (xgboost)`$folds
+```
+
+Performance estimates vary across resampling folds, across metrics, and across models.
+
+In this example, both the random forest and xgboost models exhibit noticeable but moderate fold-to-fold variability. Accuracy, sensitivity, specificity, and agreement-based measures such as Cohen’s kappa fluctuate across folds for both models, reflecting differences in class composition and difficulty across resampling splits.
+
+Across folds, the two models show broadly comparable behavior. The random forest model attains slightly higher values in some folds, while the xgboost model matches or closely tracks its performance in others. For both models, sensitivity and specificity remain relatively balanced across folds, and no systematic metric asymmetry or degenerate behavior is observed. Variation in kappa and accuracy remains within a range consistent with expected resampling variability rather than indicating instability.
+
+This pattern illustrates that, even when aggregated summaries suggest similar overall performance, fold-level inspection remains necessary to assess stability, class-wise trade-offs, and the influence of individual resampling splits. Such variability is an inherent feature of resampling-based evaluation and cannot be fully characterized by a single averaged estimate.
+
+------------------------------------------------------------------------
+
+## Model comparison
+
+```{r}
+summary(fit)
+```
+
+The summary output compares models evaluated under an identical resampling specification.
+
+In this example, the random forest model attains slightly higher average performance across all reported metrics, including accuracy, F1 score, Cohen’s kappa, sensitivity, specificity, and ROC AUC. The xgboost model shows closely comparable performance, with modestly lower values across the same metrics. The differences between models are small and reflect incremental variations in error rates rather than qualitatively distinct error profiles.
+
+Because all models are evaluated using the same resampling splits, observed performance differences can be attributed to the modeling approaches rather than to variation in data partitioning. This consistency is not merely a convenience; it is a methodological requirement for meaningful model comparison under resampling-based evaluation.
+
+------------------------------------------------------------------------
+
+
+## What is guaranteed here
+
+Subject to the constraints accepted along the default execution path, **fastml** provides the following assurances:
+
+- preprocessing steps are estimated separately within each resampling split, preventing information flow across folds,
+- model training and evaluation are carried out on disjoint data subsets within each split,
+- all algorithms are evaluated using an identical resampling structure,
+- reported performance metrics correspond to resampling-based estimates of out-of-sample performance.
+
+These properties arise from the architectural design of fastml rather than from user-enforced conventions. They reflect enforced evaluation invariants under standard usage, not informal best-practice recommendations.
+
+------------------------------------------------------------------------
+
+## What fastml cannot guarantee
+
+As emphasized in the accompanying manuscript, **fastml** does not and cannot guarantee:
+
+- that outcome variables are correctly defined or scientifically meaningful,
+- that the raw features are free from prior leakage, measurement artifacts, or target contamination,
+- that the learning task itself addresses a scientifically relevant question,
+- that the chosen performance metrics are appropriate for the scientific or clinical context.
+
+Methodological safeguards can reduce certain classes of technical error, but they cannot substitute for domain expertise, sound study design, or scientific judgment.
+
+------------------------------------------------------------------------
+
+## Summary
+
+This tutorial did not focus on constructing highly flexible modeling pipelines.
+
+Instead, it demonstrated how fastml limits common pathways to invalid evaluation by constraining how models are trained, evaluated, and compared along the default execution path.
+
+The distinguishing characteristic of fastml is therefore not automation for its own sake, but the enforcement of evaluation invariants intended to reduce methodological errors in performance estimation.
+
+------------------------------------------------------------------------
+
+## What comes next
+
+**02. Multiple Models and Fair Comparison**  
+Why comparing models is statistically invalid without shared resampling.
+
+**Concept: Guarded Resampling (Revisited)**  
+A deeper look at how fastml enforces evaluation invariants.

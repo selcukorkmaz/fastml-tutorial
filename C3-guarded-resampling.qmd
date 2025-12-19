@@ -1,0 +1,125 @@
+---
+title: "C3 — Guarded Resampling"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+execute:
+  echo: false
+---
+
+## From advice to enforcement
+
+**C1** established that data leakage is a structural timing error.  
+**C2** showed that many machine learning pipelines permit such errors by default.
+
+A direct consequence is that methodological correctness cannot rely on user discipline alone.
+
+**Guarded Resampling** is an architectural response to this limitation.
+
+## What “Guarded” means
+
+In guarded resampling, resampling is not treated as a downstream step in a workflow.  
+Instead, it serves as the enclosing structure for all data-dependent operations.
+
+Under this design, operations that involve learning from data are executed within each resampling split, including:
+
+- preprocessing,
+- model fitting,
+- hyperparameter selection,
+- performance metric computation.
+
+Operations that cannot be executed safely within resampling are restricted along the default execution path.
+
+This is not a usage convention.  
+It is a structural constraint.
+
+## Resampling as the primary object
+
+Traditional workflows often treat resampling as optional and external:
+
+- prepare data,
+- fit a model,
+- evaluate using resampling.
+
+Guarded resampling reverses this relationship:
+
+- define a resampling plan,
+- for each split:
+  - estimate preprocessing steps,
+  - fit the model,
+  - generate predictions,
+- aggregate results across splits.
+
+Resampling defines the structure; learning steps operate within it.
+
+## Why enclosure matters
+
+By enclosing learning within resampling splits, guarded resampling ensures that:
+
+- assessment data are isolated from training within each split,
+- preprocessing parameters are estimated separately for each training set,
+- model comparisons are conducted using identical resampling splits,
+- performance estimates correspond to resampling-based out-of-sample evaluation.
+
+These properties do not depend on remembering rules or following best practices.  
+They arise from how the workflow is constructed.
+
+## Guards are not warnings
+
+Guarded resampling does not attempt to identify leakage after it has occurred.
+
+Instead, it restricts the construction of workflows in which leakage-prone configurations would arise along the standard execution path.
+
+This distinction is important:
+
+- warnings are advisory and can be ignored,
+- structural constraints limit what can be expressed.
+
+Workflows that violate the principles of guarded resampling are therefore not part of the default design space.
+
+## What this enables
+
+Because resampling is treated as an enclosing structure:
+
+- preprocessing is resampling-aware by default,
+- resampling splits are applied consistently across models,
+- evaluation remains coupled to model fitting,
+- reported metrics reflect resampling-based estimates.
+
+These properties hold independently of model class, algorithmic complexity, or user expertise, subject to the assumptions of the resampling procedure.
+
+Methodological correctness becomes a property of system design rather than of individual user choices.
+
+## What this does not do
+
+Guarded resampling does not:
+
+- guarantee strong predictive performance,
+- identify a statistically optimal model,
+- replace careful study design or domain expertise,
+- eliminate all possible sources of bias.
+
+It addresses a specific and well-defined failure mode: invalid evaluation arising from data leakage.
+
+## Why this is restrictive by design
+
+Enforcing structural guards necessarily reduces flexibility.
+
+Certain actions that are technically possible in more permissive frameworks are intentionally restricted along the default execution path.
+
+This is not a limitation to be worked around.  
+It is a deliberate design choice.
+
+The consequences of this choice are addressed in the next concept.
+
+## Summary
+
+- Guarded resampling treats resampling as the enclosing structure.
+- Data-dependent learning occurs within resampling splits.
+- Leakage-prone configurations are restricted by design.
+- Enforcement replaces advisory guidance.
+
+This is the core idea behind **fastml**.
+
+*Next: [C4 — What fastml Deliberately Does Not Allow]*

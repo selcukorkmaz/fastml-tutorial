@@ -1,0 +1,124 @@
+---
+title: "C4 — What fastml Deliberately Does Not Allow"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+execute:
+  echo: false
+---
+
+## Constraints as a design decision
+
+**fastml** adopts a deliberately constrained design.
+
+These constraints are not the result of missing functionality or incomplete implementation.  
+They are a direct consequence of the guarantees described in **C1–C3**.
+
+To support guarded resampling along the default execution path, certain classes of actions are intentionally restricted.
+
+## No global preprocessing
+
+Along the default execution path, fastml does not permit preprocessing steps to be estimated using the full dataset prior to resampling.
+
+Users are not required—and are not encouraged—to:
+
+- scale predictors globally,
+- impute missing values using global statistics,
+- perform feature selection outside resampling,
+- reuse preprocessing parameters across folds.
+
+Instead, preprocessing steps are estimated separately within each resampling split.
+
+This design prevents backward information flow from assessment data into training by construction.
+
+## No detached evaluation
+
+In fastml, evaluation is not treated as a post hoc operation.
+
+Under the standard execution model, users do not:
+
+- fit a model once and later evaluate it using resampling,
+- reuse a trained model across new or inconsistent folds,
+- compute performance metrics outside a resampling-aware context.
+
+Model fitting and evaluation are coupled within a single resampling-based procedure.
+
+## No manual fold reuse across models
+
+Model comparison in fastml is conducted using a shared resampling specification.
+
+Users do not manually:
+
+- define different folds for different models within the same comparison,
+- selectively reuse folds,
+- mix incompatible resampling schemes across models.
+
+This ensures that observed performance differences arise from modeling choices rather than from differences in data partitioning.
+
+## No implicit tuning loops
+
+When hyperparameter tuning is enabled, it is carried out within the resampling structure.
+
+Under the default design, users do not:
+
+- tune models on the full dataset and then evaluate them using resampling,
+- tune once and reuse tuning results across folds,
+- decouple tuning from evaluation.
+
+This restricts subtle leakage pathways that can arise when tuning is performed outside resampling.
+
+## No partial control over pipeline order
+
+fastml does not expose low-level hooks for rearranging the order of:
+
+- preprocessing,
+- model fitting,
+- evaluation.
+
+This ordering is fixed along the default execution path.
+
+Users specify *what* is to be evaluated, not *how* the internal pipeline is assembled.
+
+## Why these restrictions exist
+
+Each restriction removes a class of evaluation errors that are:
+
+- easy to introduce,
+- difficult to detect,
+- associated with optimistic performance estimates,
+- rarely flagged by software.
+
+Reducing flexibility is the cost of enforcing methodological validity.
+
+## What fastml optimizes for
+
+fastml is not designed to optimize for:
+
+- maximal procedural flexibility,
+- unrestricted pipeline experimentation,
+- interactive trial-and-error workflow assembly.
+
+It is designed to prioritize:
+
+- evaluation correctness,
+- reproducibility,
+- comparability across models,
+- defensible performance estimation.
+
+## When fastml may not be appropriate
+
+fastml may not be well suited when:
+
+- exploratory pipeline experimentation is the primary objective,
+- highly nonstandard evaluation schemes are required,
+- fine-grained procedural control is essential.
+
+In such settings, lower-level or more permissive frameworks may be more appropriate.
+
+## Summary
+
+- fastml is restrictive by design.
+- Restrictions follow directly from guarded resampling principles.
+- Flexibility is traded for methodological validity.
+- If a workflow feels constrained, the guard is functioning as intended.
