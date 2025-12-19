@@ -1,5 +1,20 @@
 {
+  "C3-guarded-resampling.qmd": {
+    "C3-guarded-resampling.html": "a77d9309"
+  },
+  "index.qmd": {
+    "index.html": "eba3be70"
+  },
   "01-basic-classification.qmd": {
-    "01-basic-classification.html": "34700400"
+    "01-basic-classification.html": "4ba4c522"
+  },
+  "C4-what-fastml-does-not-allow.qmd": {
+    "C4-what-fastml-does-not-allow.html": "909e34ca"
+  },
+  "C1-what-is-data-leakage.qmd": {
+    "C1-what-is-data-leakage.html": "293e0476"
+  },
+  "C2-why-most-ml-pipelines-are-unsafe-by-default.qmd": {
+    "C2-why-most-ml-pipelines-are-unsafe-by-default.html": "f595afd7"
   }
 }

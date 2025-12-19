@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>fastml Tutorials - 01. Basic Classification</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-basic-classification.html">Tutorials</a></li><li class="breadcrumb-item"><a href="./01-basic-classification.html">01. Basic Classification</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">fastml Tutorials</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">fastml Tutorials</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Concepts</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./C1-what-is-data-leakage.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">C1 — What Is Data Leakage</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+ <span class="menu-text">C2-why-most-ml-pipelines-are-unsafe.qmd</span>
+  </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./C3-guarded-resampling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">C3 — Guarded Resampling</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./C4-what-fastml-does-not-allow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">C4 — What fastml Deliberately Does Not Allow</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Tutorials</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-basic-classification.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">01. Basic Classification</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#before-you-start" id="toc-before-you-start" class="nav-link active" data-scroll-target="#before-you-start">Before you start</a></li>
+  <li><a href="#the-problem-we-are-solving" id="toc-the-problem-we-are-solving" class="nav-link" data-scroll-target="#the-problem-we-are-solving">The problem we are solving</a></li>
+  <li><a href="#why-this-is-harder-than-it-sounds" id="toc-why-this-is-harder-than-it-sounds" class="nav-link" data-scroll-target="#why-this-is-harder-than-it-sounds">Why this is harder than it sounds</a></li>
+  <li><a href="#the-data" id="toc-the-data" class="nav-link" data-scroll-target="#the-data">The data</a></li>
+  <li><a href="#what-you-do-not-need-to-do-in-fastml" id="toc-what-you-do-not-need-to-do-in-fastml" class="nav-link" data-scroll-target="#what-you-do-not-need-to-do-in-fastml">What you do not need to do in fastml</a></li>
+  <li><a href="#declaring-intent" id="toc-declaring-intent" class="nav-link" data-scroll-target="#declaring-intent">Declaring intent</a></li>
+  <li><a href="#what-happens-internally" id="toc-what-happens-internally" class="nav-link" data-scroll-target="#what-happens-internally">What happens internally</a></li>
+  <li><a href="#why-this-differs-from-typical-workflows" id="toc-why-this-differs-from-typical-workflows" class="nav-link" data-scroll-target="#why-this-differs-from-typical-workflows">Why this differs from typical workflows</a></li>
+  <li><a href="#inspecting-results" id="toc-inspecting-results" class="nav-link" data-scroll-target="#inspecting-results">Inspecting results</a></li>
+  <li><a href="#fold-level-variability" id="toc-fold-level-variability" class="nav-link" data-scroll-target="#fold-level-variability">Fold-Level variability</a></li>
+  <li><a href="#model-comparison" id="toc-model-comparison" class="nav-link" data-scroll-target="#model-comparison">Model comparison</a></li>
+  <li><a href="#what-is-guaranteed-here" id="toc-what-is-guaranteed-here" class="nav-link" data-scroll-target="#what-is-guaranteed-here">What is guaranteed here</a></li>
+  <li><a href="#what-fastml-cannot-guarantee" id="toc-what-fastml-cannot-guarantee" class="nav-link" data-scroll-target="#what-fastml-cannot-guarantee">What fastml cannot guarantee</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#what-comes-next" id="toc-what-comes-next" class="nav-link" data-scroll-target="#what-comes-next">What comes next</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">01. Basic Classification</h1>
+<p class="subtitle lead">Declaring intent under guarded resampling</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="before-you-start" class="level2">
+<h2 class="anchored" data-anchor-id="before-you-start">Before you start</h2>
+<p>This tutorial builds on the following conceptual material:</p>
+<ul>
+<li><strong>C1 — What is Data Leakage</strong></li>
+<li><strong>C2 — Why Most ML Pipelines Are Unsafe by Default</strong></li>
+<li><strong>C3 — Guarded Resampling</strong></li>
+<li><strong>C4 — What fastml Deliberately Does Not Allow</strong></li>
+</ul>
+<p>Readers are expected to be familiar with these concepts before proceeding.</p>
+<p>The workflow demonstrated here uses a deliberately constrained interface. These constraints are intentional and reflect the design philosophy of fastml: to reduce common sources of evaluation error by limiting user-facing degrees of freedom along the default execution path.</p>
+<hr>
+</section>
+<section id="the-problem-we-are-solving" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem-we-are-solving">The problem we are solving</h2>
+<p>The goal of this tutorial is to estimate the <strong>out-of-sample performance</strong> of a binary classifier.</p>
+<p>The focus is not on maximizing predictive accuracy, tuning hyperparameters, or examining model internals. Instead, the objective is narrowly defined:</p>
+<p><strong>What level of predictive performance can reasonably be expected on new, unseen data, given a fixed modeling specification?</strong></p>
+<p>In this setting, model fitting itself is straightforward. The primary challenge lies in performance evaluation.</p>
+<p>Specifically, the difficulty is to obtain an estimate that is not biased by information leakage or other forms of contamination arising from reuse of the data during training and evaluation.</p>
+<hr>
+</section>
+<section id="why-this-is-harder-than-it-sounds" class="level2">
+<h2 class="anchored" data-anchor-id="why-this-is-harder-than-it-sounds">Why this is harder than it sounds</h2>
+<p>From <strong>C1</strong> and <strong>C2</strong>, recall the following points:</p>
+<ul>
+<li>Leakage does not require obvious mistakes.</li>
+<li>Pipelines that appear valid can still yield biased performance estimates.</li>
+<li>Most machine learning frameworks allow such pipelines to run without warnings.</li>
+</ul>
+<p>From <strong>C3</strong>, recall:</p>
+<ul>
+<li>Correct evaluation requires resampling to <em>enclose</em> preprocessing and model fitting.</li>
+<li>This enclosure must be structural, not procedural.</li>
+</ul>
+<p>From <strong>C4</strong>, recall:</p>
+<ul>
+<li>fastml enforces correctness by removing degrees of freedom rather than relying on user discipline.</li>
+</ul>
+<p>This tutorial demonstrates what that enforcement looks like in practice.</p>
+<hr>
+</section>
+<section id="the-data" class="level2">
+<h2 class="anchored" data-anchor-id="the-data">The data</h2>
+<p>This tutorial uses a simple binary classification dataset from the <strong>modeldata</strong> package.</p>
+<p>The dataset is characterized by:</p>
+<ul>
+<li>a binary outcome variable (<code>Class</code>),</li>
+<li>a small number of continuous predictors (<code>A</code> and <code>B</code>),</li>
+<li>the absence of missing values.</li>
+</ul>
+<p>This choice is intentional. The dataset is deliberately low-dimensional and clean, so that attention can remain on the evaluation procedure rather than on feature engineering, preprocessing decisions, or data-quality issues.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modeldata)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(two_class_dat)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>two_class_dat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 791 × 3
+       A     B Class 
+   &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; 
+ 1  2.07 1.63  Class1
+ 2  2.02 1.04  Class1
+ 3  1.69 1.37  Class2
+ 4  3.43 1.98  Class2
+ 5  2.88 1.98  Class1
+ 6  3.31 2.41  Class2
+ 7  2.50 1.56  Class2
+ 8  1.98 1.55  Class2
+ 9  2.88 0.580 Class1
+10  3.74 2.74  Class2
+# ℹ 781 more rows</code></pre>
+</div>
+</div>
+<p>The purpose of this example is to illustrate evaluation mechanics rather than data preprocessing challenges. Although the dataset itself is simple, the evaluation principles demonstrated here extend to more complex datasets and other supported tasks in fastml, subject to their respective assumptions and constraints.</p>
+<hr>
+</section>
+<section id="what-you-do-not-need-to-do-in-fastml" class="level2">
+<h2 class="anchored" data-anchor-id="what-you-do-not-need-to-do-in-fastml">What you do not need to do in fastml</h2>
+<p>Before showing the workflow, it is important to be explicit.</p>
+<p>In <strong>fastml</strong>, users are not required to:</p>
+<ul>
+<li>manually assemble train–test splits,</li>
+<li>explicitly construct preprocessing recipes,</li>
+<li>apply scaling or imputation outside the resampling loop,</li>
+<li>compose workflows from loosely coupled components,</li>
+<li>control when preprocessing is trained relative to resampling,</li>
+<li>directly manipulate resampling objects during model execution.</li>
+</ul>
+<p>These steps are common entry points for data leakage.</p>
+<p>By default, fastml executes preprocessing, model fitting, and evaluation within a single, resampling-aware structure. While advanced users may override specific components, the standard execution path is designed to preserve training–assessment isolation without relying on user discipline.</p>
+<hr>
+</section>
+<section id="declaring-intent" class="level2">
+<h2 class="anchored" data-anchor-id="declaring-intent">Declaring intent</h2>
+<p>In <strong>fastml</strong>, the user specifies <em>what is to be evaluated</em> rather than manually assembling the individual components of a modeling pipeline.</p>
+<p>At a minimum, this specification includes:</p>
+<ul>
+<li>the dataset,</li>
+<li>the outcome variable,</li>
+<li>the set of algorithms to be evaluated,</li>
+<li>the intended resampling strategy.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fastml)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">fastml</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data       =</span> two_class_dat,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">label      =</span> <span class="st">"Class"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">algorithms =</span> <span class="fu">c</span>(<span class="st">"rand_forest"</span>, <span class="st">"xgboost"</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">resampling =</span> <span class="st">"cv"</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">folds      =</span> <span class="dv">5</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This call defines the full evaluation setup under the default execution path. Model fitting, preprocessing, and performance estimation are carried out internally according to the declared intent and the constraints imposed by fastml.</p>
+<hr>
+</section>
+<section id="what-happens-internally" class="level2">
+<h2 class="anchored" data-anchor-id="what-happens-internally">What happens internally</h2>
+<p>The behavior described below reflects the default execution path in <strong>fastml</strong> and is not exposed for routine user configuration.</p>
+<p>For each resampling split:</p>
+<ul>
+<li>training data are defined according to the resampling specification,</li>
+<li>any preprocessing steps are estimated using the training data only,</li>
+<li>models are fitted on the resulting training set,</li>
+<li>predictions are generated for the corresponding assessment set,</li>
+<li>performance metrics are computed exclusively on assessment data.</li>
+</ul>
+<p>As an additional safety measure, fastml performs internal checks on the resampling structure. If a resample is detected in which the training set coincides with the full dataset, execution is halted and the run is flagged as unsafe.</p>
+<hr>
+</section>
+<section id="why-this-differs-from-typical-workflows" class="level2">
+<h2 class="anchored" data-anchor-id="why-this-differs-from-typical-workflows">Why this differs from typical workflows</h2>
+<p>In many machine learning frameworks:</p>
+<ul>
+<li>pipelines that violate evaluation assumptions can be constructed,</li>
+<li>correct evaluation depends largely on user discipline and correct assembly of components,</li>
+<li>violations such as preprocessing leakage may execute without explicit warnings.</li>
+</ul>
+<p>In <strong>fastml</strong>:</p>
+<ul>
+<li>common classes of incorrect evaluation pipelines are restricted along the default execution path,</li>
+<li>methodological correctness is less dependent on user assembly decisions,</li>
+<li>key evaluation invariants are checked and enforced during execution.</li>
+</ul>
+<p>This reflects a deliberate design trade-off: reducing flexibility in pipeline construction in order to lower the risk of undetected evaluation errors.</p>
+<hr>
+</section>
+<section id="inspecting-results" class="level2">
+<h2 class="anchored" data-anchor-id="inspecting-results">Inspecting results</h2>
+<p>Once execution is complete, performance estimates can be accessed directly from the fitted object.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>performance<span class="sc">$</span>rand_forest<span class="sc">$</span>ranger</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 3
+  .metric   .estimator .estimate
+  &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;
+1 accuracy  binary         0.824
+2 kap       binary         0.643
+3 sens      binary         0.852
+4 spec      binary         0.789
+5 precision binary         0.833
+6 f_meas    binary         0.843
+7 roc_auc   binary         0.873</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>performance<span class="sc">$</span>xgboost<span class="sc">$</span>xgboost</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 3
+  .metric   .estimator .estimate
+  &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;
+1 accuracy  binary         0.824
+2 kap       binary         0.643
+3 sens      binary         0.852
+4 spec      binary         0.789
+5 precision binary         0.833
+6 f_meas    binary         0.843
+7 roc_auc   binary         0.881</code></pre>
+</div>
+</div>
+<p>The reported metrics summarize performance estimates obtained under 5-fold cross-validation for each model.</p>
+<p>For both the random forest and xgboost models, these estimates are computed on assessment data that are held out from model fitting within each resampling split. They therefore differ from training-set performance and are not derived from post-hoc adjustments or recalibration.</p>
+<p>In this example, the random forest model attains slightly higher average performance across most metrics, including accuracy, Cohen’s kappa, F1 score, and ROC AUC. However, the differences relative to xgboost are modest, and both models display a similar balance between sensitivity and specificity. These results indicate comparable overall performance with small differences in error structure rather than a clear dominance of one model over the other.</p>
+<p>All reported values arise directly from the resampling-based evaluation procedure used by fastml, in which preprocessing, model fitting, and performance estimation are executed within a single, resampling-aware structure. The metrics therefore represent cross-validated performance summaries under the declared evaluation setup, subject to the usual variability and limitations inherent to resampling-based estimates.</p>
+<hr>
+</section>
+<section id="fold-level-variability" class="level2">
+<h2 class="anchored" data-anchor-id="fold-level-variability">Fold-Level variability</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>resampling_results<span class="sc">$</span><span class="st">`</span><span class="at">rand_forest (ranger)</span><span class="st">`</span><span class="sc">$</span>folds</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>NULL</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>resampling_results<span class="sc">$</span><span class="st">`</span><span class="at">xgboost (xgboost)</span><span class="st">`</span><span class="sc">$</span>folds</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>NULL</code></pre>
+</div>
+</div>
+<p>Performance estimates vary across resampling folds, across metrics, and across models.</p>
+<p>In this example, both the random forest and xgboost models exhibit noticeable but moderate fold-to-fold variability. Accuracy, sensitivity, specificity, and agreement-based measures such as Cohen’s kappa fluctuate across folds for both models, reflecting differences in class composition and difficulty across resampling splits.</p>
+<p>Across folds, the two models show broadly comparable behavior. The random forest model attains slightly higher values in some folds, while the xgboost model matches or closely tracks its performance in others. For both models, sensitivity and specificity remain relatively balanced across folds, and no systematic metric asymmetry or degenerate behavior is observed. Variation in kappa and accuracy remains within a range consistent with expected resampling variability rather than indicating instability.</p>
+<p>This pattern illustrates that, even when aggregated summaries suggest similar overall performance, fold-level inspection remains necessary to assess stability, class-wise trade-offs, and the influence of individual resampling splits. Such variability is an inherent feature of resampling-based evaluation and cannot be fully characterized by a single averaged estimate.</p>
+<hr>
+</section>
+<section id="model-comparison" class="level2">
+<h2 class="anchored" data-anchor-id="model-comparison">Model comparison</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+===== fastml Model Summary =====
+Task: classification 
+Number of Models Trained: 2 
+Best Model(s): rand_forest (ranger) xgboost (xgboost) (accuracy: 0.8238994) 
+
+Performance Metrics (Sorted by accuracy):
+
+---------------------------------------------------------------------------------------------- 
+Model         Engine   Accuracy  F1 Score  Kappa  Precision  Sensitivity  Specificity  ROC AUC 
+---------------------------------------------------------------------------------------------- 
+rand_forest*  ranger   0.824     0.843     0.643  0.833      0.852        0.789        0.873   
+xgboost*      xgboost  0.824     0.843     0.643  0.833      0.852        0.789        0.881   
+---------------------------------------------------------------------------------------------- 
+(*Best model)
+
+Best Model hyperparameters:
+
+Model: rand_forest (ranger) 
+  mtry: 1
+  trees: 500
+  min_n: 10
+
+Model: xgboost (xgboost) 
+  mtry: 2
+  trees: 15
+  min_n: 2
+  tree_depth: 6
+  learn_rate: 0.1
+  loss_reduction: 0
+  sample_size: 0.5
+  stop_iter: 
+
+
+===========================
+Confusion Matrices by Model
+===========================
+
+Model: rand_forest (ranger) 
+---------------------------
+          Truth
+Prediction Class1 Class2
+    Class1     75     15
+    Class2     13     56
+
+Model: xgboost (xgboost) 
+---------------------------
+          Truth
+Prediction Class1 Class2
+    Class1     75     15
+    Class2     13     56</code></pre>
+</div>
+</div>
+<p>The summary output compares models evaluated under an identical resampling specification.</p>
+<p>In this example, the random forest model attains slightly higher average performance across all reported metrics, including accuracy, F1 score, Cohen’s kappa, sensitivity, specificity, and ROC AUC. The xgboost model shows closely comparable performance, with modestly lower values across the same metrics. The differences between models are small and reflect incremental variations in error rates rather than qualitatively distinct error profiles.</p>
+<p>Because all models are evaluated using the same resampling splits, observed performance differences can be attributed to the modeling approaches rather than to variation in data partitioning. This consistency is not merely a convenience; it is a methodological requirement for meaningful model comparison under resampling-based evaluation.</p>
+<hr>
+</section>
+<section id="what-is-guaranteed-here" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-guaranteed-here">What is guaranteed here</h2>
+<p>Subject to the constraints accepted along the default execution path, <strong>fastml</strong> provides the following assurances:</p>
+<ul>
+<li>preprocessing steps are estimated separately within each resampling split, preventing information flow across folds,</li>
+<li>model training and evaluation are carried out on disjoint data subsets within each split,</li>
+<li>all algorithms are evaluated using an identical resampling structure,</li>
+<li>reported performance metrics correspond to resampling-based estimates of out-of-sample performance.</li>
+</ul>
+<p>These properties arise from the architectural design of fastml rather than from user-enforced conventions. They reflect enforced evaluation invariants under standard usage, not informal best-practice recommendations.</p>
+<hr>
+</section>
+<section id="what-fastml-cannot-guarantee" class="level2">
+<h2 class="anchored" data-anchor-id="what-fastml-cannot-guarantee">What fastml cannot guarantee</h2>
+<p>As emphasized in the accompanying manuscript, <strong>fastml</strong> does not and cannot guarantee:</p>
+<ul>
+<li>that outcome variables are correctly defined or scientifically meaningful,</li>
+<li>that the raw features are free from prior leakage, measurement artifacts, or target contamination,</li>
+<li>that the learning task itself addresses a scientifically relevant question,</li>
+<li>that the chosen performance metrics are appropriate for the scientific or clinical context.</li>
+</ul>
+<p>Methodological safeguards can reduce certain classes of technical error, but they cannot substitute for domain expertise, sound study design, or scientific judgment.</p>
+<hr>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>This tutorial did not focus on constructing highly flexible modeling pipelines.</p>
+<p>Instead, it demonstrated how fastml limits common pathways to invalid evaluation by constraining how models are trained, evaluated, and compared along the default execution path.</p>
+<p>The distinguishing characteristic of fastml is therefore not automation for its own sake, but the enforcement of evaluation invariants intended to reduce methodological errors in performance estimation.</p>
+<hr>
+</section>
+<section id="what-comes-next" class="level2">
+<h2 class="anchored" data-anchor-id="what-comes-next">What comes next</h2>
+<p><strong>02. Multiple Models and Fair Comparison</strong><br>
+Why comparing models is statistically invalid without shared resampling.</p>
+<p><strong>Concept: Guarded Resampling (Revisited)</strong><br>
+A deeper look at how fastml enforces evaluation invariants.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
