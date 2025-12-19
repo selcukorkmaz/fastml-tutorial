@@ -7,13 +7,14 @@ website:
     contents:
       - index.qmd
       - section: "Concepts"
-        contents: concepts/*
+        contents:
+          - C1-what-is-data-leakage.qmd
+          - C2-why-most-ml-pipelines-are-unsafe.qmd
+          - C3-guarded-resampling.qmd
+          - C4-what-fastml-does-not-allow.qmd
       - section: "Tutorials"
-        contents: tutorials/*
-      - section: "Advanced"
-        contents: advanced/*
-      - section: "Comparisons"
-        contents: comparisons/*
+        contents:
+          - 01-basic-classification.qmd
 
 format:
   html:
