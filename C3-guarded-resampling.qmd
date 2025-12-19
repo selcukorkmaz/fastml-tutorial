@@ -19,30 +19,32 @@ A direct consequence is that methodological correctness cannot rely on user disc
 
 ## What “Guarded” means
 
-In guarded resampling, resampling is not treated as a downstream step in a workflow.  
-Instead, it serves as the enclosing structure for all data-dependent operations.
+In guarded resampling, resampling is not treated as a downstream step in a workflow.
+Instead, it provides the enclosing structure for all operations that learn parameters from the data.
 
-Under this design, operations that involve learning from data are executed within each resampling split, including:
+Under this design, any operation whose results depend on estimated quantities is executed separately within each resampling split, including:
 
-- preprocessing,
+- preprocessing steps that estimate statistics from the data,
 - model fitting,
 - hyperparameter selection,
 - performance metric computation.
 
-Operations that cannot be executed safely within resampling are restricted along the default execution path.
+Operations that would require access to information outside the analysis set, or that would induce backward information flow from assessment data, are restricted along the default execution path.
 
-This is not a usage convention.  
+This is not a usage convention.
 It is a structural constraint.
 
 ## Resampling as the primary object
 
-Traditional workflows often treat resampling as optional and external:
+In many applied machine learning workflows, resampling is effectively treated as an external evaluation step, rather than as a structural component of the learning procedure. A common pattern is:
 
 - prepare data,
 - fit a model,
-- evaluate using resampling.
+- evaluate performance using resampling.
 
-Guarded resampling reverses this relationship:
+Although widely used, this organization obscures the fact that valid performance estimation requires strict separation between training and assessment data at all stages of model construction.
+
+Guarded resampling reverses this relationship. Instead of attaching resampling post hoc, the workflow is defined by the resampling scheme itself:
 
 - define a resampling plan,
 - for each split:
@@ -51,7 +53,7 @@ Guarded resampling reverses this relationship:
   - generate predictions,
 - aggregate results across splits.
 
-Resampling defines the structure; learning steps operate within it.
+Under this formulation, resampling defines the experimental structure, and all learning steps operate conditionally within it.
 
 ## Why enclosure matters
 
