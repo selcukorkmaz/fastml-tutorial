@@ -25,5 +25,8 @@
   },
   "03-metrics-variability-and-uncertainty.qmd": {
     "03-metrics-variability-and-uncertainty.html": "f40c8eb8"
+  },
+  "04-missing-data-and-guarded-imputation.qmd": {
+    "04-missing-data-and-guarded-imputation.html": "e8c5abce"
   }
 }

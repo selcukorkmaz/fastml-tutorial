@@ -33,7 +33,6 @@ data(BreastCancer)
 
 breastCancer <- BreastCancer %>%
   select(-Id) %>%
-  filter(!is.na(Class)) %>%
   na.omit() %>%
   mutate(Class = factor(Class, levels = c("benign", "malignant")))
 
@@ -161,5 +160,6 @@ Bootstrap methods provide uncertainty estimates.
 
 ## What comes next
 
-**[04. Missing Data and Guarded Imputation]()**  
+**[04. Missing Data and Guarded Imputation](04-missing-data-and-guarded-imputation.qmd)**  
+Handling missing data under guarded resampling.
 

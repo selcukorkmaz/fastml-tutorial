@@ -1,0 +1,168 @@
+---
+title: "04. Missing Data and Guarded Imputation"
+execute:
+  warning: false
+  message: false
+---
+
+## Motivation
+
+In the earlier tutorials, we restricted the analysis to complete cases using `na.omit()`.
+
+This choice was intentional and explicitly justified as a pedagogical simplification.
+
+However, complete-case analysis is rarely appropriate in applied biomedical settings.  
+Missing data are the rule, not the exception.
+
+This tutorial shows how **missing data can be handled under guarded resampling**, without re-introducing leakage.
+
+---
+
+## Why missing data are dangerous for evaluation
+
+Imputation is a data-dependent operation.
+
+If imputation parameters (means, medians, model-based estimates) are learned using the full dataset **before resampling**, then information from assessment folds leaks into training folds.
+
+This is a textbook example of the timing problem described in [**C1 — What Is Data Leakage**](C1-what-is-data-leakage.qmd).
+
+The solution is not “better imputation”, but **correct placement of imputation inside resampling**.
+
+---
+
+## The key constraint
+
+Under **guarded resampling** (C3):
+
+- imputation must be learned **within each resampling split**
+- imputation parameters must never be shared across folds
+- assessment data must not influence imputation
+
+fastml enforces this automatically.
+
+---
+
+## Data with missing values
+
+We return to the original Breast Cancer dataset **without** removing incomplete rows.
+
+```{r}
+library(fastml)
+library(mlbench)
+library(dplyr)
+
+data(BreastCancer)
+
+breastCancer <- BreastCancer %>%
+  select(-"Id") %>%
+  mutate(Class = factor(Class, levels = c("benign", "malignant")))
+
+head(breastCancer)
+```
+
+At this stage, missing values are present in several predictors.
+
+## Specifying guarded imputation
+
+Imputation is specified declaratively.
+
+Here we use median imputation for numeric predictors.
+
+```{r}
+fit <- fastml(
+  data          = breastCancer,
+  label         = "Class",
+  algorithms    = c("rand_forest", "xgboost"),
+  impute_method = "medianImpute",
+)
+```
+
+No imputation is performed at this point.
+
+The imputation strategy is recorded and applied **inside each resampling split.**
+
+## What Happens Under the Hood (Conceptual)
+
+For each resampling fold:
+
+- training data are isolated,
+- imputation parameters are estimated using the training data only,
+- the same parameters are applied to the corresponding assessment data,
+- the model is trained and evaluated within that fold.
+
+Under the guarded resampling execution path, assessment observations are not used when estimating imputation parameters.
+
+This behavior is not a convention assumed of the user.  
+It is implemented structurally within the guarded resampling workflow.
+
+## Examining performance
+
+```{r}
+fit$resampling_results$`rand_forest (ranger)`$aggregated
+```
+
+These metrics are now based on:
+
+- incomplete data
+- fold-specific imputation
+- leakage-safe evaluation
+
+Performance differences relative to complete-case analysis are expected and interpretable.
+
+## Fold-level behavior
+
+```{r}
+fit$resampling_results$`rand_forest (ranger)`$folds
+```
+
+Missingness can increase variability across resampling folds.
+
+This variability is expected under resampling-based evaluation and reflects uncertainty induced by incomplete data and finite sample size, rather than a failure of the modeling procedure.
+
+## What fastml Does Not Allow Here
+
+Consistent with [**C4. What fastml Deliberately Does Not Allow**](C4-what-fastml-does-not-allow.qmd), users cannot:
+
+- impute the full dataset prior to resampling,
+- reuse imputation parameters across folds,
+- mix imputation strategies across models,
+- detach imputation from evaluation.
+
+Any such workflow would invalidate the evaluation.
+
+## What This Tutorial Does Not Cover
+
+This tutorial intentionally does not cover:
+
+- multiple imputation (MICE),
+- missing-not-at-random (MNAR) modeling,
+- sensitivity analyses,
+- causal assumptions about missingness.
+
+These require additional assumptions and belong to advanced workflows.
+
+## Responsible Interpretation
+
+When missing data are present:
+
+- performance estimates typically decrease,
+- variability typically increases,
+- small model differences become less meaningful.
+
+These are not failures of the model or the framework.  
+They are consequences of reduced information.
+
+## Summary
+
+- Missing data handling is a common source of leakage.  
+- Imputation must be learned within resampling splits.  
+- `fastml` enforces guarded imputation by design.  
+- Increased uncertainty is expected and informative.  
+- Complete-case analysis is a convenience, not a default.
+
+## What comes next
+
+**[05. Survival Analysis and Time-to-Event Outcomes]()**  
+Survival outcomes and time-to-event evaluation under guarded resampling.
+
+

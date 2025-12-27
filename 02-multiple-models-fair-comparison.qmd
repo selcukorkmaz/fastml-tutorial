@@ -38,13 +38,14 @@ library(mlbench)
 library(dplyr)
 
 data(BreastCancer)
+dim(BreastCancer)
 
 breastCancer <- BreastCancer %>%
   select(-Id) %>%
-  filter(!is.na(Class)) %>%
   na.omit() %>%
   mutate(Class = factor(Class, levels = c("benign", "malignant")))
   
+dim(breastCancer)
 head(breastCancer)
 ```
 

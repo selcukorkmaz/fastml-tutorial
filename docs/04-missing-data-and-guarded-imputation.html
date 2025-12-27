@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>C2. Why Most ML Pipelines Are Unsafe by Default – fastml Tutorials</title>
+<title>04. Missing Data and Guarded Imputation – fastml Tutorials</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -81,7 +116,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./C1-what-is-data-leakage.html">Concepts</a></li><li class="breadcrumb-item"><a href="./C2-why-most-ml-pipelines-are-unsafe-by-default.html">C2. Why Most ML Pipelines Are Unsafe by Default</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-basic-classification.html">Tutorials</a></li><li class="breadcrumb-item"><a href="./04-missing-data-and-guarded-imputation.html">04. Missing Data and Guarded Imputation</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -129,7 +164,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./C2-why-most-ml-pipelines-are-unsafe-by-default.html" class="sidebar-item-text sidebar-link active">
+  <a href="./C2-why-most-ml-pipelines-are-unsafe-by-default.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">C2. Why Most ML Pipelines Are Unsafe by Default</span></a>
   </div>
 </li>
@@ -176,7 +211,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04-missing-data-and-guarded-imputation.html" class="sidebar-item-text sidebar-link">
+  <a href="./04-missing-data-and-guarded-imputation.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">04. Missing Data and Guarded Imputation</span></a>
   </div>
 </li>
@@ -191,24 +226,29 @@ ul.task-list li input[type="checkbox"] {
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul class="collapse">
-  <li><a href="#the-paradox-of-modern-ml-tooling" id="toc-the-paradox-of-modern-ml-tooling" class="nav-link active" data-scroll-target="#the-paradox-of-modern-ml-tooling">The paradox of modern ML tooling</a></li>
-  <li><a href="#flexibility-without-constraints" id="toc-flexibility-without-constraints" class="nav-link" data-scroll-target="#flexibility-without-constraints">Flexibility without constraints</a></li>
-  <li><a href="#optional-correctness-is-not-correctness" id="toc-optional-correctness-is-not-correctness" class="nav-link" data-scroll-target="#optional-correctness-is-not-correctness">Optional correctness is not correctness</a></li>
-  <li><a href="#why-warnings-do-not-solve-the-problem" id="toc-why-warnings-do-not-solve-the-problem" class="nav-link" data-scroll-target="#why-warnings-do-not-solve-the-problem">Why warnings do not solve the problem</a></li>
-  <li><a href="#the-expert-user-fallacy" id="toc-the-expert-user-fallacy" class="nav-link" data-scroll-target="#the-expert-user-fallacy">The expert-user fallacy</a></li>
-  <li><a href="#consequences-for-evaluation" id="toc-consequences-for-evaluation" class="nav-link" data-scroll-target="#consequences-for-evaluation">Consequences for evaluation</a></li>
-  <li><a href="#what-a-safe-default-would-require" id="toc-what-a-safe-default-would-require" class="nav-link" data-scroll-target="#what-a-safe-default-would-require">What a safe default would require</a></li>
+  <ul>
+  <li><a href="#motivation" id="toc-motivation" class="nav-link active" data-scroll-target="#motivation">Motivation</a></li>
+  <li><a href="#why-missing-data-are-dangerous-for-evaluation" id="toc-why-missing-data-are-dangerous-for-evaluation" class="nav-link" data-scroll-target="#why-missing-data-are-dangerous-for-evaluation">Why missing data are dangerous for evaluation</a></li>
+  <li><a href="#the-key-constraint" id="toc-the-key-constraint" class="nav-link" data-scroll-target="#the-key-constraint">The key constraint</a></li>
+  <li><a href="#data-with-missing-values" id="toc-data-with-missing-values" class="nav-link" data-scroll-target="#data-with-missing-values">Data with missing values</a></li>
+  <li><a href="#specifying-guarded-imputation" id="toc-specifying-guarded-imputation" class="nav-link" data-scroll-target="#specifying-guarded-imputation">Specifying guarded imputation</a></li>
+  <li><a href="#what-happens-under-the-hood-conceptual" id="toc-what-happens-under-the-hood-conceptual" class="nav-link" data-scroll-target="#what-happens-under-the-hood-conceptual">What Happens Under the Hood (Conceptual)</a></li>
+  <li><a href="#examining-performance" id="toc-examining-performance" class="nav-link" data-scroll-target="#examining-performance">Examining performance</a></li>
+  <li><a href="#fold-level-behavior" id="toc-fold-level-behavior" class="nav-link" data-scroll-target="#fold-level-behavior">Fold-level behavior</a></li>
+  <li><a href="#what-fastml-does-not-allow-here" id="toc-what-fastml-does-not-allow-here" class="nav-link" data-scroll-target="#what-fastml-does-not-allow-here">What fastml Does Not Allow Here</a></li>
+  <li><a href="#what-this-tutorial-does-not-cover" id="toc-what-this-tutorial-does-not-cover" class="nav-link" data-scroll-target="#what-this-tutorial-does-not-cover">What This Tutorial Does Not Cover</a></li>
+  <li><a href="#responsible-interpretation" id="toc-responsible-interpretation" class="nav-link" data-scroll-target="#responsible-interpretation">Responsible Interpretation</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#what-comes-next" id="toc-what-comes-next" class="nav-link" data-scroll-target="#what-comes-next">What comes next</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./C1-what-is-data-leakage.html">Concepts</a></li><li class="breadcrumb-item"><a href="./C2-why-most-ml-pipelines-are-unsafe-by-default.html">C2. Why Most ML Pipelines Are Unsafe by Default</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-basic-classification.html">Tutorials</a></li><li class="breadcrumb-item"><a href="./04-missing-data-and-guarded-imputation.html">04. Missing Data and Guarded Imputation</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">C2. Why Most ML Pipelines Are Unsafe by Default</h1>
+<h1 class="title">04. Missing Data and Guarded Imputation</h1>
 </div>
 
 
@@ -225,105 +265,196 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="the-paradox-of-modern-ml-tooling" class="level2">
-<h2 class="anchored" data-anchor-id="the-paradox-of-modern-ml-tooling">The paradox of modern ML tooling</h2>
-<p>Many modern machine learning frameworks provide components that can be assembled into leakage-safe workflows.</p>
-<p>Yet leakage remains widespread in applied work.</p>
-<p>This is not a contradiction. It follows from how pipelines are designed and how methodological correctness is treated within those designs.</p>
+<section id="motivation" class="level2">
+<h2 class="anchored" data-anchor-id="motivation">Motivation</h2>
+<p>In the earlier tutorials, we restricted the analysis to complete cases using <code>na.omit()</code>.</p>
+<p>This choice was intentional and explicitly justified as a pedagogical simplification.</p>
+<p>However, complete-case analysis is rarely appropriate in applied biomedical settings.<br>
+Missing data are the rule, not the exception.</p>
+<p>This tutorial shows how <strong>missing data can be handled under guarded resampling</strong>, without re-introducing leakage.</p>
+<hr>
 </section>
-<section id="flexibility-without-constraints" class="level2">
-<h2 class="anchored" data-anchor-id="flexibility-without-constraints">Flexibility without constraints</h2>
-<p>Contemporary ML frameworks emphasize modularity:</p>
-<ul>
-<li>preprocessing steps are independent components,</li>
-<li>models are interchangeable,</li>
-<li>resampling is optional and configurable,</li>
-<li>evaluation is often treated as a separable stage.</li>
-</ul>
-<p>This flexibility is powerful, but it has consequences.</p>
-<p>In most frameworks, nothing in the default execution path prevents users from assembling pipelines in orders that violate evaluation assumptions.</p>
-<p>Such pipelines are typically syntactically valid and computationally successful, even when they are methodologically incorrect.</p>
+<section id="why-missing-data-are-dangerous-for-evaluation" class="level2">
+<h2 class="anchored" data-anchor-id="why-missing-data-are-dangerous-for-evaluation">Why missing data are dangerous for evaluation</h2>
+<p>Imputation is a data-dependent operation.</p>
+<p>If imputation parameters (means, medians, model-based estimates) are learned using the full dataset <strong>before resampling</strong>, then information from assessment folds leaks into training folds.</p>
+<p>This is a textbook example of the timing problem described in <strong>C1 — What Is Data Leakage</strong>.</p>
+<p>The solution is not “better imputation”, but <strong>correct placement of imputation inside resampling</strong>.</p>
+<hr>
 </section>
-<section id="optional-correctness-is-not-correctness" class="level2">
-<h2 class="anchored" data-anchor-id="optional-correctness-is-not-correctness">Optional correctness is not correctness</h2>
-<p>Many frameworks provide mechanisms intended to reduce leakage risk:</p>
+<section id="the-key-constraint" class="level2">
+<h2 class="anchored" data-anchor-id="the-key-constraint">The key constraint</h2>
+<p>Under <strong>guarded resampling</strong> (C3):</p>
 <ul>
-<li>resampling-aware preprocessing tools,</li>
-<li>workflow abstractions,</li>
-<li>helper functions that encourage correct usage.</li>
+<li>imputation must be learned <strong>within each resampling split</strong></li>
+<li>imputation parameters must never be shared across folds</li>
+<li>assessment data must not influence imputation</li>
 </ul>
-<p>However, these mechanisms are optional.</p>
-<p>Users may still:</p>
-<ul>
-<li>compute transformations using the full dataset,</li>
-<li>reuse or redefine resampling splits inconsistently,</li>
-<li>apply preprocessing outside the resampling loop,</li>
-<li>tune models using data that later serve as assessment sets.</li>
-</ul>
-<p>In most cases, the software permits these configurations to execute without intervention.</p>
-<p>As a result, methodological correctness depends on how components are assembled, not on guarantees provided by the execution model.</p>
+<p>fastml enforces this automatically.</p>
+<hr>
 </section>
-<section id="why-warnings-do-not-solve-the-problem" class="level2">
-<h2 class="anchored" data-anchor-id="why-warnings-do-not-solve-the-problem">Why warnings do not solve the problem</h2>
-<p>One might expect software to detect leakage and issue warnings.</p>
-<p>In practice, this approach is limited.</p>
-<p>Leakage is often:</p>
-<ul>
-<li>semantically ambiguous,</li>
-<li>dependent on context and intent,</li>
-<li>indistinguishable from valid workflows at runtime.</li>
-</ul>
-<p>Static analysis can detect only narrow classes of problems, and comprehensive runtime checks are difficult without constraining flexibility or expressiveness.</p>
-<p>Most frameworks therefore favor permissiveness and composability over strict enforcement.</p>
+<section id="data-with-missing-values" class="level2">
+<h2 class="anchored" data-anchor-id="data-with-missing-values">Data with missing values</h2>
+<p>We return to the original Breast Cancer dataset <strong>without</strong> removing incomplete rows.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fastml)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlbench)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(BreastCancer)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>breastCancer <span class="ot">&lt;-</span> BreastCancer <span class="sc">%&gt;%</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="st">"Id"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Class =</span> <span class="fu">factor</span>(Class, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"benign"</span>, <span class="st">"malignant"</span>)))</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(breastCancer)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Cl.thickness Cell.size Cell.shape Marg.adhesion Epith.c.size Bare.nuclei
+1            5         1          1             1            2           1
+2            5         4          4             5            7          10
+3            3         1          1             1            2           2
+4            6         8          8             1            3           4
+5            4         1          1             3            2           1
+6            8        10         10             8            7          10
+  Bl.cromatin Normal.nucleoli Mitoses     Class
+1           3               1       1    benign
+2           3               2       1    benign
+3           3               1       1    benign
+4           3               7       1    benign
+5           3               1       1    benign
+6           9               7       1 malignant</code></pre>
+</div>
+</div>
+<p>At this stage, missing values are present in several predictors.</p>
 </section>
-<section id="the-expert-user-fallacy" class="level2">
-<h2 class="anchored" data-anchor-id="the-expert-user-fallacy">The expert-user fallacy</h2>
-<p>A common response is to place responsibility on user expertise.</p>
-<p>This implicitly assumes that:</p>
-<ul>
-<li>experienced users consistently assemble pipelines correctly,</li>
-<li>mistakes are rare or immediately obvious,</li>
-<li>discipline scales with workflow complexity.</li>
-</ul>
-<p>These assumptions do not reliably hold.</p>
-<p>As workflows become more complex, for example nested resampling, grouped splits, or tuning loops, the space for subtle errors expands, even for experienced practitioners.</p>
-<p>Expertise can reduce risk, but it does not eliminate it.</p>
+<section id="specifying-guarded-imputation" class="level2">
+<h2 class="anchored" data-anchor-id="specifying-guarded-imputation">Specifying guarded imputation</h2>
+<p>Imputation is specified declaratively.</p>
+<p>Here we use median imputation for numeric predictors.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">fastml</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data          =</span> breastCancer,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">label         =</span> <span class="st">"Class"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">algorithms    =</span> <span class="fu">c</span>(<span class="st">"rand_forest"</span>, <span class="st">"xgboost"</span>),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">impute_method =</span> <span class="st">"medianImpute"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>No imputation is performed at this point.</p>
+<p>The imputation strategy is recorded and applied <strong>inside each resampling split.</strong></p>
 </section>
-<section id="consequences-for-evaluation" class="level2">
-<h2 class="anchored" data-anchor-id="consequences-for-evaluation">Consequences for evaluation</h2>
-<p>When pipelines are unsafe by default:</p>
+<section id="what-happens-under-the-hood-conceptual" class="level2">
+<h2 class="anchored" data-anchor-id="what-happens-under-the-hood-conceptual">What Happens Under the Hood (Conceptual)</h2>
+<p>For each resampling fold:</p>
 <ul>
-<li>invalid evaluations may appear legitimate,</li>
-<li>performance estimates tend to be optimistic,</li>
-<li>results are harder to reproduce,</li>
-<li>reviewers and readers have limited visibility into evaluation correctness.</li>
+<li>training data are isolated,</li>
+<li>imputation parameters are estimated using the training data only,</li>
+<li>the same parameters are applied to the corresponding assessment data,</li>
+<li>the model is trained and evaluated within that fold.</li>
 </ul>
-<p>This is not primarily a failure of individual users.<br>
-It reflects limitations in pipeline architecture.</p>
+<p>Under the guarded resampling execution path, assessment observations are not used when estimating imputation parameters.</p>
+<p>This behavior is not a convention assumed of the user.<br>
+It is implemented structurally within the guarded resampling workflow.</p>
 </section>
-<section id="what-a-safe-default-would-require" class="level2">
-<h2 class="anchored" data-anchor-id="what-a-safe-default-would-require">What a safe default would require</h2>
-<p>A safe default requires more than recommendations or documentation.</p>
-<p>It requires that, along the default execution path:</p>
+<section id="examining-performance" class="level2">
+<h2 class="anchored" data-anchor-id="examining-performance">Examining performance</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>resampling_results<span class="sc">$</span><span class="st">`</span><span class="at">rand_forest (ranger)</span><span class="st">`</span><span class="sc">$</span>aggregated</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 3
+  .metric   .estimator .estimate
+  &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;
+1 accuracy  binary         0.959
+2 f_meas    binary         0.968
+3 kap       binary         0.911
+4 precision binary         0.981
+5 roc_auc   binary         0.989
+6 sens      binary         0.956
+7 spec      binary         0.963</code></pre>
+</div>
+</div>
+<p>These metrics are now based on:</p>
 <ul>
-<li>resampling encloses all data-dependent learning steps,</li>
-<li>preprocessing is not learned globally,</li>
-<li>evaluation is not detachable from model fitting,</li>
-<li>unsafe configurations are restricted or redirected.</li>
+<li>incomplete data</li>
+<li>fold-specific imputation</li>
+<li>leakage-safe evaluation</li>
 </ul>
-<p>In other words, correctness must be enforced by construction within the execution model, rather than assumed.</p>
+<p>Performance differences relative to complete-case analysis are expected and interpretable.</p>
+</section>
+<section id="fold-level-behavior" class="level2">
+<h2 class="anchored" data-anchor-id="fold-level-behavior">Fold-level behavior</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>resampling_results<span class="sc">$</span><span class="st">`</span><span class="at">rand_forest (ranger)</span><span class="st">`</span><span class="sc">$</span>folds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 70 × 4
+   fold  .metric   .estimator .estimate
+   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;
+ 1 1     accuracy  binary         0.965
+ 2 1     kap       binary         0.925
+ 3 1     sens      binary         0.946
+ 4 1     spec      binary         1    
+ 5 1     precision binary         1    
+ 6 1     f_meas    binary         0.972
+ 7 1     roc_auc   binary         0.989
+ 8 2     accuracy  binary         0.912
+ 9 2     kap       binary         0.818
+10 2     sens      binary         0.865
+# ℹ 60 more rows</code></pre>
+</div>
+</div>
+<p>Missingness can increase variability across resampling folds.</p>
+<p>This variability is expected under resampling-based evaluation and reflects uncertainty induced by incomplete data and finite sample size, rather than a failure of the modeling procedure.</p>
+</section>
+<section id="what-fastml-does-not-allow-here" class="level2">
+<h2 class="anchored" data-anchor-id="what-fastml-does-not-allow-here">What fastml Does Not Allow Here</h2>
+<p>Consistent with <a href="./C4-what-fastml-does-not-allow.html"><strong>C4. What fastml Deliberately Does Not Allow</strong></a>, users cannot:</p>
+<ul>
+<li>impute the full dataset prior to resampling,</li>
+<li>reuse imputation parameters across folds,</li>
+<li>mix imputation strategies across models,</li>
+<li>detach imputation from evaluation.</li>
+</ul>
+<p>Any such workflow would invalidate the evaluation.</p>
+</section>
+<section id="what-this-tutorial-does-not-cover" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-tutorial-does-not-cover">What This Tutorial Does Not Cover</h2>
+<p>This tutorial intentionally does not cover:</p>
+<ul>
+<li>multiple imputation (MICE),</li>
+<li>missing-not-at-random (MNAR) modeling,</li>
+<li>sensitivity analyses,</li>
+<li>causal assumptions about missingness.</li>
+</ul>
+<p>These require additional assumptions and belong to advanced workflows.</p>
+</section>
+<section id="responsible-interpretation" class="level2">
+<h2 class="anchored" data-anchor-id="responsible-interpretation">Responsible Interpretation</h2>
+<p>When missing data are present:</p>
+<ul>
+<li>performance estimates typically decrease,</li>
+<li>variability typically increases,</li>
+<li>small model differences become less meaningful.</li>
+</ul>
+<p>These are not failures of the model or the framework.<br>
+They are consequences of reduced information.</p>
 </section>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
 <ul>
-<li>Modern ML frameworks prioritize flexibility and composability.</li>
-<li>Methodological correctness is usually supported but not enforced.</li>
-<li>Invalid pipelines can execute without warnings.</li>
-<li>Expertise alone does not prevent evaluation errors.</li>
-<li>Safer evaluation requires architectural constraints.</li>
+<li>Missing data handling is a common source of leakage.<br>
+</li>
+<li>Imputation must be learned within resampling splits.<br>
+</li>
+<li><code>fastml</code> enforces guarded imputation by design.<br>
+</li>
+<li>Increased uncertainty is expected and informative.<br>
+</li>
+<li>Complete-case analysis is a convenience, not a default.</li>
 </ul>
-<p>This motivates the core idea behind <strong>fastml</strong>: <strong>Guarded Resampling</strong>.</p>
-<p><em>Next: <a href="./C3-guarded-resampling.html">C3 — Guarded Resampling</a></em></p>
+</section>
+<section id="what-comes-next" class="level2">
+<h2 class="anchored" data-anchor-id="what-comes-next">What comes next</h2>
+<p><strong><a href="">05. Survival Analysis and Time-to-Event Outcomes</a></strong><br>
+Survival outcomes and time-to-event evaluation under guarded resampling.</p>
 
 
 </section>

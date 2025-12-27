@@ -352,113 +352,157 @@
     ]
   },
   {
-    "objectID": "C3-guarded-resampling.html",
-    "href": "C3-guarded-resampling.html",
-    "title": "C3. Guarded Resampling",
+    "objectID": "04-missing-data-and-guarded-imputation.html",
+    "href": "04-missing-data-and-guarded-imputation.html",
+    "title": "04. Missing Data and Guarded Imputation",
     "section": "",
-    "text": "C1 established that data leakage is a structural timing error.\nC2 showed that many machine learning pipelines permit such errors by default.\nA direct consequence is that methodological correctness cannot rely on user discipline alone.\nGuarded Resampling is an architectural response to this limitation.",
+    "text": "In the earlier tutorials, we restricted the analysis to complete cases using na.omit().\nThis choice was intentional and explicitly justified as a pedagogical simplification.\nHowever, complete-case analysis is rarely appropriate in applied biomedical settings.\nMissing data are the rule, not the exception.\nThis tutorial shows how missing data can be handled under guarded resampling, without re-introducing leakage.",
     "crumbs": [
-      "Concepts",
-      "C3. Guarded Resampling"
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
     ]
   },
   {
-    "objectID": "C3-guarded-resampling.html#from-advice-to-enforcement",
-    "href": "C3-guarded-resampling.html#from-advice-to-enforcement",
-    "title": "C3. Guarded Resampling",
+    "objectID": "04-missing-data-and-guarded-imputation.html#motivation",
+    "href": "04-missing-data-and-guarded-imputation.html#motivation",
+    "title": "04. Missing Data and Guarded Imputation",
     "section": "",
-    "text": "C1 established that data leakage is a structural timing error.\nC2 showed that many machine learning pipelines permit such errors by default.\nA direct consequence is that methodological correctness cannot rely on user discipline alone.\nGuarded Resampling is an architectural response to this limitation.",
+    "text": "In the earlier tutorials, we restricted the analysis to complete cases using na.omit().\nThis choice was intentional and explicitly justified as a pedagogical simplification.\nHowever, complete-case analysis is rarely appropriate in applied biomedical settings.\nMissing data are the rule, not the exception.\nThis tutorial shows how missing data can be handled under guarded resampling, without re-introducing leakage.",
     "crumbs": [
-      "Concepts",
-      "C3. Guarded Resampling"
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
     ]
   },
   {
-    "objectID": "C3-guarded-resampling.html#what-guarded-means",
-    "href": "C3-guarded-resampling.html#what-guarded-means",
-    "title": "C3. Guarded Resampling",
-    "section": "What “Guarded” means",
-    "text": "What “Guarded” means\nIn guarded resampling, resampling is not treated as a downstream step in a workflow. Instead, it provides the enclosing structure for all operations that learn parameters from the data.\nUnder this design, any operation whose results depend on estimated quantities is executed separately within each resampling split, including:\n\npreprocessing steps that estimate statistics from the data,\nmodel fitting,\nhyperparameter selection,\nperformance metric computation.\n\nOperations that would require access to information outside the analysis set, or that would induce backward information flow from assessment data, are restricted along the default execution path.\nThis is not a usage convention. It is a structural constraint.",
+    "objectID": "04-missing-data-and-guarded-imputation.html#why-missing-data-are-dangerous-for-evaluation",
+    "href": "04-missing-data-and-guarded-imputation.html#why-missing-data-are-dangerous-for-evaluation",
+    "title": "04. Missing Data and Guarded Imputation",
+    "section": "Why missing data are dangerous for evaluation",
+    "text": "Why missing data are dangerous for evaluation\nImputation is a data-dependent operation.\nIf imputation parameters (means, medians, model-based estimates) are learned using the full dataset before resampling, then information from assessment folds leaks into training folds.\nThis is a textbook example of the timing problem described in C1 — What Is Data Leakage.\nThe solution is not “better imputation”, but correct placement of imputation inside resampling.",
     "crumbs": [
-      "Concepts",
-      "C3. Guarded Resampling"
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
     ]
   },
   {
-    "objectID": "C3-guarded-resampling.html#resampling-as-the-primary-object",
-    "href": "C3-guarded-resampling.html#resampling-as-the-primary-object",
-    "title": "C3. Guarded Resampling",
-    "section": "Resampling as the primary object",
-    "text": "Resampling as the primary object\nIn many applied machine learning workflows, resampling is effectively treated as an external evaluation step, rather than as a structural component of the learning procedure. A common pattern is:\n\nprepare data,\nfit a model,\nevaluate performance using resampling.\n\nAlthough widely used, this organization obscures the fact that valid performance estimation requires strict separation between training and assessment data at all stages of model construction.\nGuarded resampling reverses this relationship. Instead of attaching resampling post hoc, the workflow is defined by the resampling scheme itself:\n\ndefine a resampling plan,\nfor each split:\n\nestimate preprocessing steps,\nfit the model,\ngenerate predictions,\n\naggregate results across splits.\n\nUnder this formulation, resampling defines the experimental structure, and all learning steps operate conditionally within it.",
+    "objectID": "04-missing-data-and-guarded-imputation.html#the-key-constraint",
+    "href": "04-missing-data-and-guarded-imputation.html#the-key-constraint",
+    "title": "04. Missing Data and Guarded Imputation",
+    "section": "The key constraint",
+    "text": "The key constraint\nUnder guarded resampling (C3):\n\nimputation must be learned within each resampling split\nimputation parameters must never be shared across folds\nassessment data must not influence imputation\n\nfastml enforces this automatically.",
     "crumbs": [
-      "Concepts",
-      "C3. Guarded Resampling"
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
     ]
   },
   {
-    "objectID": "C3-guarded-resampling.html#why-enclosure-matters",
-    "href": "C3-guarded-resampling.html#why-enclosure-matters",
-    "title": "C3. Guarded Resampling",
-    "section": "Why enclosure matters",
-    "text": "Why enclosure matters\nBy enclosing learning within resampling splits, guarded resampling ensures that:\n\nassessment data are isolated from training within each split,\npreprocessing parameters are estimated separately for each training set,\nmodel comparisons are conducted using identical resampling splits,\nperformance estimates correspond to resampling-based out-of-sample evaluation.\n\nThese properties do not depend on remembering rules or following best practices.\nThey arise from how the workflow is constructed.",
+    "objectID": "04-missing-data-and-guarded-imputation.html#data-with-missing-values",
+    "href": "04-missing-data-and-guarded-imputation.html#data-with-missing-values",
+    "title": "04. Missing Data and Guarded Imputation",
+    "section": "Data with missing values",
+    "text": "Data with missing values\nWe return to the original Breast Cancer dataset without removing incomplete rows.\n\nlibrary(fastml)\nlibrary(mlbench)\nlibrary(dplyr)\n\ndata(BreastCancer)\n\nbreastCancer &lt;- BreastCancer %&gt;%\n  select(-\"Id\") %&gt;%\n  mutate(Class = factor(Class, levels = c(\"benign\", \"malignant\")))\n\nhead(breastCancer)\n\n  Cl.thickness Cell.size Cell.shape Marg.adhesion Epith.c.size Bare.nuclei\n1            5         1          1             1            2           1\n2            5         4          4             5            7          10\n3            3         1          1             1            2           2\n4            6         8          8             1            3           4\n5            4         1          1             3            2           1\n6            8        10         10             8            7          10\n  Bl.cromatin Normal.nucleoli Mitoses     Class\n1           3               1       1    benign\n2           3               2       1    benign\n3           3               1       1    benign\n4           3               7       1    benign\n5           3               1       1    benign\n6           9               7       1 malignant\n\n\nAt this stage, missing values are present in several predictors.",
     "crumbs": [
-      "Concepts",
-      "C3. Guarded Resampling"
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
     ]
   },
   {
-    "objectID": "C3-guarded-resampling.html#guards-are-not-warnings",
-    "href": "C3-guarded-resampling.html#guards-are-not-warnings",
-    "title": "C3. Guarded Resampling",
-    "section": "Guards are not warnings",
-    "text": "Guards are not warnings\nGuarded resampling does not attempt to identify leakage after it has occurred.\nInstead, it restricts the construction of workflows in which leakage-prone configurations would arise along the standard execution path.\nThis distinction is important:\n\nwarnings are advisory and can be ignored,\nstructural constraints limit what can be expressed.\n\nWorkflows that violate the principles of guarded resampling are therefore not part of the default design space.",
+    "objectID": "04-missing-data-and-guarded-imputation.html#specifying-guarded-imputation",
+    "href": "04-missing-data-and-guarded-imputation.html#specifying-guarded-imputation",
+    "title": "04. Missing Data and Guarded Imputation",
+    "section": "Specifying guarded imputation",
+    "text": "Specifying guarded imputation\nImputation is specified declaratively.\nHere we use median imputation for numeric predictors.\n\nfit &lt;- fastml(\n  data          = breastCancer,\n  label         = \"Class\",\n  algorithms    = c(\"rand_forest\", \"xgboost\"),\n  impute_method = \"medianImpute\",\n)\n\nNo imputation is performed at this point.\nThe imputation strategy is recorded and applied inside each resampling split.",
     "crumbs": [
-      "Concepts",
-      "C3. Guarded Resampling"
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
     ]
   },
   {
-    "objectID": "C3-guarded-resampling.html#what-this-enables",
-    "href": "C3-guarded-resampling.html#what-this-enables",
-    "title": "C3. Guarded Resampling",
-    "section": "What this enables",
-    "text": "What this enables\nBecause resampling is treated as an enclosing structure:\n\npreprocessing is resampling-aware by default,\nresampling splits are applied consistently across models,\nevaluation remains coupled to model fitting,\nreported metrics reflect resampling-based estimates.\n\nThese properties hold independently of model class, algorithmic complexity, or user expertise, subject to the assumptions of the resampling procedure.\nMethodological correctness becomes a property of system design rather than of individual user choices.",
+    "objectID": "04-missing-data-and-guarded-imputation.html#what-happens-under-the-hood-conceptual",
+    "href": "04-missing-data-and-guarded-imputation.html#what-happens-under-the-hood-conceptual",
+    "title": "04. Missing Data and Guarded Imputation",
+    "section": "What Happens Under the Hood (Conceptual)",
+    "text": "What Happens Under the Hood (Conceptual)\nFor each resampling fold:\n\ntraining data are isolated,\nimputation parameters are estimated using the training data only,\nthe same parameters are applied to the corresponding assessment data,\nthe model is trained and evaluated within that fold.\n\nUnder the guarded resampling execution path, assessment observations are not used when estimating imputation parameters.\nThis behavior is not a convention assumed of the user.\nIt is implemented structurally within the guarded resampling workflow.",
     "crumbs": [
-      "Concepts",
-      "C3. Guarded Resampling"
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
     ]
   },
   {
-    "objectID": "C3-guarded-resampling.html#what-this-does-not-do",
-    "href": "C3-guarded-resampling.html#what-this-does-not-do",
-    "title": "C3. Guarded Resampling",
-    "section": "What this does not do",
-    "text": "What this does not do\nGuarded resampling does not:\n\nguarantee strong predictive performance,\nidentify a statistically optimal model,\nreplace careful study design or domain expertise,\neliminate all possible sources of bias.\n\nIt addresses a specific and well-defined failure mode: invalid evaluation arising from data leakage.",
+    "objectID": "04-missing-data-and-guarded-imputation.html#examining-performance",
+    "href": "04-missing-data-and-guarded-imputation.html#examining-performance",
+    "title": "04. Missing Data and Guarded Imputation",
+    "section": "Examining performance",
+    "text": "Examining performance\n\nfit$resampling_results$`rand_forest (ranger)`$aggregated\n\n# A tibble: 7 × 3\n  .metric   .estimator .estimate\n  &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;\n1 accuracy  binary         0.959\n2 f_meas    binary         0.968\n3 kap       binary         0.911\n4 precision binary         0.981\n5 roc_auc   binary         0.989\n6 sens      binary         0.956\n7 spec      binary         0.963\n\n\nThese metrics are now based on:\n\nincomplete data\nfold-specific imputation\nleakage-safe evaluation\n\nPerformance differences relative to complete-case analysis are expected and interpretable.",
     "crumbs": [
-      "Concepts",
-      "C3. Guarded Resampling"
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
     ]
   },
   {
-    "objectID": "C3-guarded-resampling.html#why-this-is-restrictive-by-design",
-    "href": "C3-guarded-resampling.html#why-this-is-restrictive-by-design",
-    "title": "C3. Guarded Resampling",
-    "section": "Why this is restrictive by design",
-    "text": "Why this is restrictive by design\nEnforcing structural guards necessarily reduces flexibility.\nCertain actions that are technically possible in more permissive frameworks are intentionally restricted along the default execution path.\nThis is not a limitation to be worked around.\nIt is a deliberate design choice.\nThe consequences of this choice are addressed in the next concept.",
+    "objectID": "04-missing-data-and-guarded-imputation.html#fold-level-behavior",
+    "href": "04-missing-data-and-guarded-imputation.html#fold-level-behavior",
+    "title": "04. Missing Data and Guarded Imputation",
+    "section": "Fold-level behavior",
+    "text": "Fold-level behavior\n\nfit$resampling_results$`rand_forest (ranger)`$folds\n\n# A tibble: 70 × 4\n   fold  .metric   .estimator .estimate\n   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;\n 1 1     accuracy  binary         0.965\n 2 1     kap       binary         0.925\n 3 1     sens      binary         0.946\n 4 1     spec      binary         1    \n 5 1     precision binary         1    \n 6 1     f_meas    binary         0.972\n 7 1     roc_auc   binary         0.989\n 8 2     accuracy  binary         0.912\n 9 2     kap       binary         0.818\n10 2     sens      binary         0.865\n# ℹ 60 more rows\n\n\nMissingness can increase variability across resampling folds.\nThis variability is expected under resampling-based evaluation and reflects uncertainty induced by incomplete data and finite sample size, rather than a failure of the modeling procedure.",
     "crumbs": [
-      "Concepts",
-      "C3. Guarded Resampling"
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
     ]
   },
   {
-    "objectID": "C3-guarded-resampling.html#summary",
-    "href": "C3-guarded-resampling.html#summary",
-    "title": "C3. Guarded Resampling",
+    "objectID": "04-missing-data-and-guarded-imputation.html#what-fastml-does-not-allow-here",
+    "href": "04-missing-data-and-guarded-imputation.html#what-fastml-does-not-allow-here",
+    "title": "04. Missing Data and Guarded Imputation",
+    "section": "What fastml Does Not Allow Here",
+    "text": "What fastml Does Not Allow Here\nConsistent with C4. What fastml Deliberately Does Not Allow, users cannot:\n\nimpute the full dataset prior to resampling,\nreuse imputation parameters across folds,\nmix imputation strategies across models,\ndetach imputation from evaluation.\n\nAny such workflow would invalidate the evaluation.",
+    "crumbs": [
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
+    ]
+  },
+  {
+    "objectID": "04-missing-data-and-guarded-imputation.html#what-this-tutorial-does-not-cover",
+    "href": "04-missing-data-and-guarded-imputation.html#what-this-tutorial-does-not-cover",
+    "title": "04. Missing Data and Guarded Imputation",
+    "section": "What This Tutorial Does Not Cover",
+    "text": "What This Tutorial Does Not Cover\nThis tutorial intentionally does not cover:\n\nmultiple imputation (MICE),\nmissing-not-at-random (MNAR) modeling,\nsensitivity analyses,\ncausal assumptions about missingness.\n\nThese require additional assumptions and belong to advanced workflows.",
+    "crumbs": [
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
+    ]
+  },
+  {
+    "objectID": "04-missing-data-and-guarded-imputation.html#responsible-interpretation",
+    "href": "04-missing-data-and-guarded-imputation.html#responsible-interpretation",
+    "title": "04. Missing Data and Guarded Imputation",
+    "section": "Responsible Interpretation",
+    "text": "Responsible Interpretation\nWhen missing data are present:\n\nperformance estimates typically decrease,\nvariability typically increases,\nsmall model differences become less meaningful.\n\nThese are not failures of the model or the framework.\nThey are consequences of reduced information.",
+    "crumbs": [
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
+    ]
+  },
+  {
+    "objectID": "04-missing-data-and-guarded-imputation.html#summary",
+    "href": "04-missing-data-and-guarded-imputation.html#summary",
+    "title": "04. Missing Data and Guarded Imputation",
     "section": "Summary",
-    "text": "Summary\n\nGuarded resampling treats resampling as the enclosing structure.\nData-dependent learning occurs within resampling splits.\nLeakage-prone configurations are restricted by design.\nEnforcement replaces advisory guidance.\n\nThis is the core idea behind fastml.\nNext: C4 — What fastml Deliberately Does Not Allow",
+    "text": "Summary\n\nMissing data handling is a common source of leakage.\n\nImputation must be learned within resampling splits.\n\nfastml enforces guarded imputation by design.\n\nIncreased uncertainty is expected and informative.\n\nComplete-case analysis is a convenience, not a default.",
     "crumbs": [
-      "Concepts",
-      "C3. Guarded Resampling"
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
+    ]
+  },
+  {
+    "objectID": "04-missing-data-and-guarded-imputation.html#what-comes-next",
+    "href": "04-missing-data-and-guarded-imputation.html#what-comes-next",
+    "title": "04. Missing Data and Guarded Imputation",
+    "section": "What comes next",
+    "text": "What comes next\n05. Survival Analysis and Time-to-Event Outcomes\nSurvival outcomes and time-to-event evaluation under guarded resampling.",
+    "crumbs": [
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
     ]
   },
   {
@@ -488,7 +532,7 @@
     "href": "03-metrics-variability-and-uncertainty.html#recreating-the-analysis",
     "title": "03. Metrics, Variability, and Uncertainty",
     "section": "Recreating the analysis",
-    "text": "Recreating the analysis\nEach tutorial in this series is designed to be fully self-contained.\nWe therefore recreate the analysis from Tutorials 01–02 before examining metric behavior.\n\nlibrary(fastml)\nlibrary(mlbench)\nlibrary(dplyr)\n\ndata(BreastCancer)\n\nbreastCancer &lt;- BreastCancer %&gt;%\n  select(-Id) %&gt;%\n  filter(!is.na(Class)) %&gt;%\n  na.omit() %&gt;%\n  mutate(Class = factor(Class, levels = c(\"benign\", \"malignant\")))\n\nfit &lt;- fastml(\n  data       = breastCancer,\n  label      = \"Class\",\n  algorithms = c(\"rand_forest\", \"xgboost\"),\n)",
+    "text": "Recreating the analysis\nEach tutorial in this series is designed to be fully self-contained.\nWe therefore recreate the analysis from Tutorials 01–02 before examining metric behavior.\n\nlibrary(fastml)\nlibrary(mlbench)\nlibrary(dplyr)\n\ndata(BreastCancer)\n\nbreastCancer &lt;- BreastCancer %&gt;%\n  select(-Id) %&gt;%\n  na.omit() %&gt;%\n  mutate(Class = factor(Class, levels = c(\"benign\", \"malignant\")))\n\nfit &lt;- fastml(\n  data       = breastCancer,\n  label      = \"Class\",\n  algorithms = c(\"rand_forest\", \"xgboost\"),\n)",
     "crumbs": [
       "Tutorials",
       "03. Metrics, Variability, and Uncertainty"
@@ -598,10 +642,120 @@
     "href": "03-metrics-variability-and-uncertainty.html#what-comes-next",
     "title": "03. Metrics, Variability, and Uncertainty",
     "section": "What comes next",
-    "text": "What comes next\n04. Missing Data and Guarded Imputation",
+    "text": "What comes next\n04. Missing Data and Guarded Imputation\nHandling missing data under guarded resampling.",
     "crumbs": [
       "Tutorials",
       "03. Metrics, Variability, and Uncertainty"
+    ]
+  },
+  {
+    "objectID": "C3-guarded-resampling.html",
+    "href": "C3-guarded-resampling.html",
+    "title": "C3. Guarded Resampling",
+    "section": "",
+    "text": "C1 established that data leakage is a structural timing error.\nC2 showed that many machine learning pipelines permit such errors by default.\nA direct consequence is that methodological correctness cannot rely on user discipline alone.\nGuarded Resampling is an architectural response to this limitation.",
+    "crumbs": [
+      "Concepts",
+      "C3. Guarded Resampling"
+    ]
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#from-advice-to-enforcement",
+    "href": "C3-guarded-resampling.html#from-advice-to-enforcement",
+    "title": "C3. Guarded Resampling",
+    "section": "",
+    "text": "C1 established that data leakage is a structural timing error.\nC2 showed that many machine learning pipelines permit such errors by default.\nA direct consequence is that methodological correctness cannot rely on user discipline alone.\nGuarded Resampling is an architectural response to this limitation.",
+    "crumbs": [
+      "Concepts",
+      "C3. Guarded Resampling"
+    ]
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#what-guarded-means",
+    "href": "C3-guarded-resampling.html#what-guarded-means",
+    "title": "C3. Guarded Resampling",
+    "section": "What “Guarded” means",
+    "text": "What “Guarded” means\nIn guarded resampling, resampling is not treated as a downstream step in a workflow. Instead, it provides the enclosing structure for all operations that learn parameters from the data.\nUnder this design, any operation whose results depend on estimated quantities is executed separately within each resampling split, including:\n\npreprocessing steps that estimate statistics from the data,\nmodel fitting,\nhyperparameter selection,\nperformance metric computation.\n\nOperations that would require access to information outside the analysis set, or that would induce backward information flow from assessment data, are restricted along the default execution path.\nThis is not a usage convention. It is a structural constraint.",
+    "crumbs": [
+      "Concepts",
+      "C3. Guarded Resampling"
+    ]
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#resampling-as-the-primary-object",
+    "href": "C3-guarded-resampling.html#resampling-as-the-primary-object",
+    "title": "C3. Guarded Resampling",
+    "section": "Resampling as the primary object",
+    "text": "Resampling as the primary object\nIn many applied machine learning workflows, resampling is effectively treated as an external evaluation step, rather than as a structural component of the learning procedure. A common pattern is:\n\nprepare data,\nfit a model,\nevaluate performance using resampling.\n\nAlthough widely used, this organization obscures the fact that valid performance estimation requires strict separation between training and assessment data at all stages of model construction.\nGuarded resampling reverses this relationship. Instead of attaching resampling post hoc, the workflow is defined by the resampling scheme itself:\n\ndefine a resampling plan,\nfor each split:\n\nestimate preprocessing steps,\nfit the model,\ngenerate predictions,\n\naggregate results across splits.\n\nUnder this formulation, resampling defines the experimental structure, and all learning steps operate conditionally within it.",
+    "crumbs": [
+      "Concepts",
+      "C3. Guarded Resampling"
+    ]
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#why-enclosure-matters",
+    "href": "C3-guarded-resampling.html#why-enclosure-matters",
+    "title": "C3. Guarded Resampling",
+    "section": "Why enclosure matters",
+    "text": "Why enclosure matters\nBy enclosing learning within resampling splits, guarded resampling ensures that:\n\nassessment data are isolated from training within each split,\npreprocessing parameters are estimated separately for each training set,\nmodel comparisons are conducted using identical resampling splits,\nperformance estimates correspond to resampling-based out-of-sample evaluation.\n\nThese properties do not depend on remembering rules or following best practices.\nThey arise from how the workflow is constructed.",
+    "crumbs": [
+      "Concepts",
+      "C3. Guarded Resampling"
+    ]
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#guards-are-not-warnings",
+    "href": "C3-guarded-resampling.html#guards-are-not-warnings",
+    "title": "C3. Guarded Resampling",
+    "section": "Guards are not warnings",
+    "text": "Guards are not warnings\nGuarded resampling does not attempt to identify leakage after it has occurred.\nInstead, it restricts the construction of workflows in which leakage-prone configurations would arise along the standard execution path.\nThis distinction is important:\n\nwarnings are advisory and can be ignored,\nstructural constraints limit what can be expressed.\n\nWorkflows that violate the principles of guarded resampling are therefore not part of the default design space.",
+    "crumbs": [
+      "Concepts",
+      "C3. Guarded Resampling"
+    ]
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#what-this-enables",
+    "href": "C3-guarded-resampling.html#what-this-enables",
+    "title": "C3. Guarded Resampling",
+    "section": "What this enables",
+    "text": "What this enables\nBecause resampling is treated as an enclosing structure:\n\npreprocessing is resampling-aware by default,\nresampling splits are applied consistently across models,\nevaluation remains coupled to model fitting,\nreported metrics reflect resampling-based estimates.\n\nThese properties hold independently of model class, algorithmic complexity, or user expertise, subject to the assumptions of the resampling procedure.\nMethodological correctness becomes a property of system design rather than of individual user choices.",
+    "crumbs": [
+      "Concepts",
+      "C3. Guarded Resampling"
+    ]
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#what-this-does-not-do",
+    "href": "C3-guarded-resampling.html#what-this-does-not-do",
+    "title": "C3. Guarded Resampling",
+    "section": "What this does not do",
+    "text": "What this does not do\nGuarded resampling does not:\n\nguarantee strong predictive performance,\nidentify a statistically optimal model,\nreplace careful study design or domain expertise,\neliminate all possible sources of bias.\n\nIt addresses a specific and well-defined failure mode: invalid evaluation arising from data leakage.",
+    "crumbs": [
+      "Concepts",
+      "C3. Guarded Resampling"
+    ]
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#why-this-is-restrictive-by-design",
+    "href": "C3-guarded-resampling.html#why-this-is-restrictive-by-design",
+    "title": "C3. Guarded Resampling",
+    "section": "Why this is restrictive by design",
+    "text": "Why this is restrictive by design\nEnforcing structural guards necessarily reduces flexibility.\nCertain actions that are technically possible in more permissive frameworks are intentionally restricted along the default execution path.\nThis is not a limitation to be worked around.\nIt is a deliberate design choice.\nThe consequences of this choice are addressed in the next concept.",
+    "crumbs": [
+      "Concepts",
+      "C3. Guarded Resampling"
+    ]
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#summary",
+    "href": "C3-guarded-resampling.html#summary",
+    "title": "C3. Guarded Resampling",
+    "section": "Summary",
+    "text": "Summary\n\nGuarded resampling treats resampling as the enclosing structure.\nData-dependent learning occurs within resampling splits.\nLeakage-prone configurations are restricted by design.\nEnforcement replaces advisory guidance.\n\nThis is the core idea behind fastml.\nNext: C4 — What fastml Deliberately Does Not Allow",
+    "crumbs": [
+      "Concepts",
+      "C3. Guarded Resampling"
     ]
   },
   {
@@ -813,7 +967,7 @@
     "href": "02-multiple-models-fair-comparison.html#data",
     "title": "02. Multiple Models and Fair Comparison",
     "section": "Data",
-    "text": "Data\nWe use a complete-case version of the BreastCancer dataset after removing the identifier column and excluding observations with missing values. This complete-case strategy is used for simplicity in this tutorial; in real applications, missingness should be handled explicitly (e.g., via guarded imputation) when it is nontrivial or informative.\n\nlibrary(fastml)\nlibrary(mlbench)\nlibrary(dplyr)\n\ndata(BreastCancer)\n\nbreastCancer &lt;- BreastCancer %&gt;%\n  select(-Id) %&gt;%\n  filter(!is.na(Class)) %&gt;%\n  na.omit() %&gt;%\n  mutate(Class = factor(Class, levels = c(\"benign\", \"malignant\")))\n  \nhead(breastCancer)\n\n  Cl.thickness Cell.size Cell.shape Marg.adhesion Epith.c.size Bare.nuclei\n1            5         1          1             1            2           1\n2            5         4          4             5            7          10\n3            3         1          1             1            2           2\n4            6         8          8             1            3           4\n5            4         1          1             3            2           1\n6            8        10         10             8            7          10\n  Bl.cromatin Normal.nucleoli Mitoses     Class\n1           3               1       1    benign\n2           3               2       1    benign\n3           3               1       1    benign\n4           3               7       1    benign\n5           3               1       1    benign\n6           9               7       1 malignant",
+    "text": "Data\nWe use a complete-case version of the BreastCancer dataset after removing the identifier column and excluding observations with missing values. This complete-case strategy is used for simplicity in this tutorial; in real applications, missingness should be handled explicitly (e.g., via guarded imputation) when it is nontrivial or informative.\n\nlibrary(fastml)\nlibrary(mlbench)\nlibrary(dplyr)\n\ndata(BreastCancer)\ndim(BreastCancer)\n\n[1] 699  11\n\nbreastCancer &lt;- BreastCancer %&gt;%\n  select(-Id) %&gt;%\n  na.omit() %&gt;%\n  mutate(Class = factor(Class, levels = c(\"benign\", \"malignant\")))\n  \ndim(breastCancer)\n\n[1] 683  10\n\nhead(breastCancer)\n\n  Cl.thickness Cell.size Cell.shape Marg.adhesion Epith.c.size Bare.nuclei\n1            5         1          1             1            2           1\n2            5         4          4             5            7          10\n3            3         1          1             1            2           2\n4            6         8          8             1            3           4\n5            4         1          1             3            2           1\n6            8        10         10             8            7          10\n  Bl.cromatin Normal.nucleoli Mitoses     Class\n1           3               1       1    benign\n2           3               2       1    benign\n3           3               1       1    benign\n4           3               7       1    benign\n5           3               1       1    benign\n6           9               7       1 malignant",
     "crumbs": [
       "Tutorials",
       "02. Multiple Models and Fair Comparison"

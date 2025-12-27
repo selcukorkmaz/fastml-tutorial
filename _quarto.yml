@@ -18,6 +18,7 @@ website:
           - 01-basic-classification.qmd
           - 02-multiple-models-fair-comparison.qmd
           - 03-metrics-variability-and-uncertainty.qmd
+          - 04-missing-data-and-guarded-imputation.qmd
 
 format:
   html:
