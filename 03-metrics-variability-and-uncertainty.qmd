@@ -117,7 +117,8 @@ For this reason, `fastml` supports uncertainty-aware performance summaries.
 When enabled, `fastml` computes bootstrap distributions of evaluation metrics.
 
 ```{r}
-fit$metric_bootstrap
+fit$performance$rand_forest
+fit$performance$xgboost
 ```
 
 Bootstrapping provides:
