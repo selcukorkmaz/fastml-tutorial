@@ -1,0 +1,174 @@
+---
+title: "06. Regression and Continuous Outcomes"
+execute:
+  warning: false
+  message: false
+---
+
+## Motivation
+
+Regression problems involve **continuous outcomes** rather than class labels.
+
+This difference is not cosmetic.  
+It changes how performance is measured, how preprocessing affects results, and how evaluation errors arise.
+
+Many applied workflows treat regression as a simpler case than classification.  
+In practice, regression is often **more fragile** under improper evaluation.
+
+## Why regression requires separate treatment
+
+In regression:
+
+- outcomes have a natural scale
+- errors are measured in outcome units
+- preprocessing directly affects metric values
+- comparisons across datasets are rarely meaningful
+
+Metrics such as RMSE and MAE are **scale-dependent**.  
+A “good” RMSE cannot be interpreted without context.
+
+## Leakage risks in regression workflows
+
+Regression pipelines are particularly sensitive to leakage because:
+
+- scaling affects both predictors and outcome interpretation
+- imputation alters the outcome–predictor relationship
+- feature engineering often uses outcome-adjacent information
+- residual structure is easily distorted
+
+As in earlier tutorials, leakage arises from **when** information is learned, not from model choice.
+
+## Data
+
+We use a medical dataset with a continuous outcome.
+
+```{r}
+library(fastml)
+library(mlbench)
+library(dplyr)
+
+data(BostonHousing, package = "mlbench")
+
+reg_data <- BostonHousing %>%
+  select(medv, everything())
+
+head(reg_data)
+```
+
+The outcome `medv` represents median home value and is treated here as a continuous response for regression illustration.
+
+## Defining a regression task
+
+Regression is specified explicitly in fastml.
+
+```{r}
+fit <- fastml(
+  data       = reg_data,
+  label      = "medv",
+  algorithms = c("linear_reg", "rand_forest"),
+)
+```
+
+This declaration ensures that:
+
+- regression-specific loss functions are used,
+- metrics are computed on continuous predictions,
+- evaluation respects guarded resampling.
+
+## Regression Metrics
+
+Unlike classification, regression metrics quantify the magnitude of prediction error.
+
+Typical metrics include:
+
+- RMSE (root mean squared error),
+- MAE (mean absolute error),
+- R² (variance explained).
+
+```{r}
+fit$resampling_results$`linear_reg (lm)`$aggregated
+```
+
+Each metric answers a different question and encodes different assumptions about error structure.
+
+## Scale Dependence and Interpretation
+
+RMSE is expressed in the same units as the outcome.
+
+As a result:
+
+- RMSE values cannot be compared across datasets,
+- small numerical differences may be practically irrelevant,
+- preprocessing choices directly affect metric magnitude.
+
+This makes contextual interpretation essential.
+
+
+## Fold-Level Variability
+
+As in previous tutorials, aggregated metrics hide variability.
+
+```{r}
+fit$resampling_results$`linear_reg (lm)`$folds
+```
+
+Fold-level results reveal:
+
+- instability due to limited sample size,
+- sensitivity to data partitioning,
+- overlap between competing models.
+
+Regression performance often varies more across folds than classification accuracy.
+
+## Model Comparison in Regression
+
+Comparing regression models requires:
+
+- identical resampling splits,
+- identical preprocessing,
+- identical outcome scaling.
+
+`fastml` enforces these conditions automatically.
+
+Observed performance differences therefore reflect model behavior rather than evaluation artifacts.
+
+## What fastml Does Not Claim
+
+`fastml` does not:
+
+- identify a “true” model,
+- guarantee optimal predictive accuracy,
+- justify causal interpretation of coefficients,
+- standardize outcomes for cross-study comparison.
+
+Regression metrics describe predictive error under a specific evaluation design, nothing more.
+
+## Responsible Reporting
+
+For regression analyses, a defensible report should include:
+
+- the outcome definition and scale,
+- the chosen evaluation metrics,
+- the resampling scheme,
+- aggregated performance estimates,
+- variability across folds.
+
+Reporting a single RMSE without context is insufficient.
+
+## Summary
+
+Regression introduces scale-dependent evaluation.  
+Metrics are sensitive to preprocessing and leakage.  
+Guarded resampling is essential for valid regression evaluation.  
+Variability across folds is informative.  
+
+Interpretation requires domain context.
+
+## What comes next
+
+**[07. Regression Metrics, Scale, and Interpretation](07-regression-metrics-scale-and-interpretation.qmd)**  
+Regression metrics, scale, and why RMSE is often misleading.
+
+
+
+

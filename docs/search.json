@@ -297,53 +297,278 @@
     ]
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "fastml Tutorials",
+    "objectID": "07-regression-metrics-scale-and-interpretation.html",
+    "href": "07-regression-metrics-scale-and-interpretation.html",
+    "title": "07. Regression Metrics, Scale, and Interpretation",
     "section": "",
-    "text": "This site provides a structured introduction to fastml, an R package for training, evaluating, and comparing machine learning models under architecturally constrained, leakage-aware resampling.\nThe emphasis is not on developing new modeling techniques or maximizing predictive performance. Instead, the focus is on methodologically sound performance evaluation under clearly defined assumptions.",
+    "text": "Regression results are often reported as a single number:\n\nRMSE = 3.38\nMAE = 4.80\n\nR² = 0.737\n\nThese numbers look precise, but without context they are frequently meaningless.\nThis tutorial explains what regression metrics do and do not tell us, and how guarded resampling changes their interpretation.",
     "crumbs": [
-      "fastml Tutorials"
+      "Tutorials",
+      "07. Regression Metrics, Scale, and Interpretation"
     ]
   },
   {
-    "objectID": "index.html#what-this-site-is-about",
-    "href": "index.html#what-this-site-is-about",
-    "title": "fastml Tutorials",
+    "objectID": "07-regression-metrics-scale-and-interpretation.html#motivation",
+    "href": "07-regression-metrics-scale-and-interpretation.html#motivation",
+    "title": "07. Regression Metrics, Scale, and Interpretation",
     "section": "",
-    "text": "This site provides a structured introduction to fastml, an R package for training, evaluating, and comparing machine learning models under architecturally constrained, leakage-aware resampling.\nThe emphasis is not on developing new modeling techniques or maximizing predictive performance. Instead, the focus is on methodologically sound performance evaluation under clearly defined assumptions.",
+    "text": "Regression results are often reported as a single number:\n\nRMSE = 3.38\nMAE = 4.80\n\nR² = 0.737\n\nThese numbers look precise, but without context they are frequently meaningless.\nThis tutorial explains what regression metrics do and do not tell us, and how guarded resampling changes their interpretation.",
     "crumbs": [
-      "fastml Tutorials"
+      "Tutorials",
+      "07. Regression Metrics, Scale, and Interpretation"
     ]
   },
   {
-    "objectID": "index.html#why-this-matters",
-    "href": "index.html#why-this-matters",
-    "title": "fastml Tutorials",
-    "section": "Why this matters",
-    "text": "Why this matters\nIn applied machine learning, reported performance estimates are frequently optimistic due to subtle forms of data leakage and unsafe evaluation workflows.\nfastml is designed to reduce this risk by treating Guarded Resampling as a core design principle rather than as an optional recommendation.",
+    "objectID": "07-regression-metrics-scale-and-interpretation.html#metrics-encode-assumptions",
+    "href": "07-regression-metrics-scale-and-interpretation.html#metrics-encode-assumptions",
+    "title": "07. Regression Metrics, Scale, and Interpretation",
+    "section": "Metrics encode assumptions",
+    "text": "Metrics encode assumptions\nRegression metrics are not interchangeable.\nEach metric encodes an implicit assumption about error structure.\n\nRMSE penalizes large errors more heavily\n\nMAE treats all errors linearly\n\nR² measures variance explained relative to a baseline\n\nChoosing a metric is a modeling decision, not a reporting formality.",
     "crumbs": [
-      "fastml Tutorials"
+      "Tutorials",
+      "07. Regression Metrics, Scale, and Interpretation"
     ]
   },
   {
-    "objectID": "index.html#how-to-read-this-site",
-    "href": "index.html#how-to-read-this-site",
-    "title": "fastml Tutorials",
-    "section": "How to read this site",
-    "text": "How to read this site\nThe material is organized into four sections.\n\nConcepts\nThese sections introduce the ideas that motivate fastml, including:\n\nwhat data leakage is,\nwhy many ML pipelines are unsafe by default,\nwhat guarded resampling entails,\nwhich classes of workflow configurations fastml deliberately restricts.\n\nThe concepts establish the assumptions required to interpret the tutorials correctly.\n\n\nTutorials\nThe tutorials apply the conceptual framework to concrete modeling tasks.\nThey assume familiarity with the Concepts section and focus on demonstrating evaluation workflows rather than reintroducing theoretical material.\n\n\nAdvanced\nAdvanced sections extend the framework to more complex settings, such as:\n\nhandling missing data,\nsurvival analysis,\nmodel interpretation and diagnostics.\n\nThese sections build on the same evaluation principles under additional modeling constraints.\n\n\nComparisons\nComparative sections discuss fastml in relation to other frameworks and common workflows, highlighting differences in design philosophy and evaluation guarantees.",
+    "objectID": "07-regression-metrics-scale-and-interpretation.html#rmse-scale-dependence",
+    "href": "07-regression-metrics-scale-and-interpretation.html#rmse-scale-dependence",
+    "title": "07. Regression Metrics, Scale, and Interpretation",
+    "section": "RMSE: Scale Dependence",
+    "text": "RMSE: Scale Dependence\nRMSE is expressed in the same units as the outcome.\nFor medv, this means:\n\nRMSE is measured in thousands of dollars,\nan RMSE of 3.38 may be acceptable or unacceptable depending on context,\n\nRMSE values cannot be compared across datasets unless the outcome scale is identical.",
     "crumbs": [
-      "fastml Tutorials"
+      "Tutorials",
+      "07. Regression Metrics, Scale, and Interpretation"
     ]
   },
   {
-    "objectID": "index.html#where-to-start",
-    "href": "index.html#where-to-start",
-    "title": "fastml Tutorials",
-    "section": "Where to start",
-    "text": "Where to start\nReaders should begin with the Concepts section (C1–C4).\nThe first hands-on example is Tutorial 01: Basic Cl",
+    "objectID": "07-regression-metrics-scale-and-interpretation.html#mae-vs-rmse",
+    "href": "07-regression-metrics-scale-and-interpretation.html#mae-vs-rmse",
+    "title": "07. Regression Metrics, Scale, and Interpretation",
+    "section": "MAE vs RMSE",
+    "text": "MAE vs RMSE\nMAE and RMSE often move together, but they answer different questions.\n\nMAE reflects typical error magnitude.\nRMSE emphasizes large deviations.\n\nIf RMSE is much larger than MAE, large errors dominate performance.\nThis distinction matters in clinical and economic settings where extreme errors may carry disproportionate cost.",
     "crumbs": [
-      "fastml Tutorials"
+      "Tutorials",
+      "07. Regression Metrics, Scale, and Interpretation"
+    ]
+  },
+  {
+    "objectID": "07-regression-metrics-scale-and-interpretation.html#why-better-rmse-is-often-meaningless",
+    "href": "07-regression-metrics-scale-and-interpretation.html#why-better-rmse-is-often-meaningless",
+    "title": "07. Regression Metrics, Scale, and Interpretation",
+    "section": "Why “Better RMSE” Is Often Meaningless",
+    "text": "Why “Better RMSE” Is Often Meaningless\nStatements such as:\nModel A has lower RMSE than Model B\nare incomplete unless accompanied by:\n\nvariability estimates,\nthe outcome scale,\nresampling details,\npractical relevance.\n\nGuarded resampling ensures valid estimation, but interpretation remains a human responsibility.",
+    "crumbs": [
+      "Tutorials",
+      "07. Regression Metrics, Scale, and Interpretation"
+    ]
+  },
+  {
+    "objectID": "07-regression-metrics-scale-and-interpretation.html#what-fastml-guarantees-and-what-it-does-not",
+    "href": "07-regression-metrics-scale-and-interpretation.html#what-fastml-guarantees-and-what-it-does-not",
+    "title": "07. Regression Metrics, Scale, and Interpretation",
+    "section": "What fastml Guarantees — and What It Does Not",
+    "text": "What fastml Guarantees — and What It Does Not\nfastml guarantees that:\n\nmetrics are computed on unseen data,\npreprocessing does not leak information,\nmodel comparisons are fair.\n\nfastml does not guarantee that:\n\nmetric differences are meaningful,\none model should be preferred in practice,\nregression performance implies causal validity.",
+    "crumbs": [
+      "Tutorials",
+      "07. Regression Metrics, Scale, and Interpretation"
+    ]
+  },
+  {
+    "objectID": "07-regression-metrics-scale-and-interpretation.html#responsible-regression-reporting",
+    "href": "07-regression-metrics-scale-and-interpretation.html#responsible-regression-reporting",
+    "title": "07. Regression Metrics, Scale, and Interpretation",
+    "section": "Responsible Regression Reporting",
+    "text": "Responsible Regression Reporting\nA defensible regression report should include:\n\nthe outcome definition and units,\nthe chosen metric(s) and rationale,\nthe resampling scheme,\naggregated performance estimates,\nvariability across folds,\na discussion of practical relevance.\n\nSingle-number summaries are insufficient.",
+    "crumbs": [
+      "Tutorials",
+      "07. Regression Metrics, Scale, and Interpretation"
+    ]
+  },
+  {
+    "objectID": "07-regression-metrics-scale-and-interpretation.html#summary",
+    "href": "07-regression-metrics-scale-and-interpretation.html#summary",
+    "title": "07. Regression Metrics, Scale, and Interpretation",
+    "section": "Summary",
+    "text": "Summary\nRegression metrics are scale-dependent.\nRMSE, MAE, and R² answer different questions.\nAggregated metrics hide variability.\nGuarded resampling ensures validity, not interpretability.\nInterpretation requires domain context and judgment.",
+    "crumbs": [
+      "Tutorials",
+      "07. Regression Metrics, Scale, and Interpretation"
+    ]
+  },
+  {
+    "objectID": "07-regression-metrics-scale-and-interpretation.html#r²-and-its-limitations",
+    "href": "07-regression-metrics-scale-and-interpretation.html#r²-and-its-limitations",
+    "title": "07. Regression Metrics, Scale, and Interpretation",
+    "section": "R² and Its Limitations",
+    "text": "R² and Its Limitations\nR² is frequently misinterpreted.\nAn R² of 0.8 does not mean that:\n\nthe model is “80% accurate”,\npredictions are close in absolute terms,\nthe model is clinically useful.\n\nR² depends on outcome variance.\nHigh R² can coexist with large absolute errors.",
+    "crumbs": [
+      "Tutorials",
+      "07. Regression Metrics, Scale, and Interpretation"
+    ]
+  },
+  {
+    "objectID": "07-regression-metrics-scale-and-interpretation.html#what-comes-next",
+    "href": "07-regression-metrics-scale-and-interpretation.html#what-comes-next",
+    "title": "07. Regression Metrics, Scale, and Interpretation",
+    "section": "What comes next",
+    "text": "What comes next\n08. Penalized Regression and High-Dimensional Data\nPenalized regression and high-dimensional settings.",
+    "crumbs": [
+      "Tutorials",
+      "07. Regression Metrics, Scale, and Interpretation"
+    ]
+  },
+  {
+    "objectID": "08-penalized-regression-and-high-dimensional-data.html",
+    "href": "08-penalized-regression-and-high-dimensional-data.html",
+    "title": "08. Penalized Regression and High-Dimensional Data",
+    "section": "",
+    "text": "Classical regression breaks down when the number of predictors approaches or exceeds the number of observations.\nThis is not a software limitation.\nIt is a statistical one.\nHigh-dimensional settings require explicit regularization, careful resampling, and disciplined interpretation. This tutorial explains why penalized regression exists, how it behaves under guarded resampling, and what fastml does to prevent common failure modes.",
+    "crumbs": [
+      "Tutorials",
+      "08. Penalized Regression and High-Dimensional Data"
+    ]
+  },
+  {
+    "objectID": "08-penalized-regression-and-high-dimensional-data.html#motivation",
+    "href": "08-penalized-regression-and-high-dimensional-data.html#motivation",
+    "title": "08. Penalized Regression and High-Dimensional Data",
+    "section": "",
+    "text": "Classical regression breaks down when the number of predictors approaches or exceeds the number of observations.\nThis is not a software limitation.\nIt is a statistical one.\nHigh-dimensional settings require explicit regularization, careful resampling, and disciplined interpretation. This tutorial explains why penalized regression exists, how it behaves under guarded resampling, and what fastml does to prevent common failure modes.",
+    "crumbs": [
+      "Tutorials",
+      "08. Penalized Regression and High-Dimensional Data"
+    ]
+  },
+  {
+    "objectID": "08-penalized-regression-and-high-dimensional-data.html#the-high-dimensional-regime",
+    "href": "08-penalized-regression-and-high-dimensional-data.html#the-high-dimensional-regime",
+    "title": "08. Penalized Regression and High-Dimensional Data",
+    "section": "The high-dimensional regime",
+    "text": "The high-dimensional regime\nA dataset is effectively high-dimensional when:\n\nthe number of predictors is large relative to sample size\npredictors are correlated\nsignal is weak relative to noise\n\nIn this regime, unpenalized regression produces:\n\nunstable coefficients\ninflated apparent performance\nextreme sensitivity to data splits\n\nPerfect in-sample fit is expected — and meaningless.",
+    "crumbs": [
+      "Tutorials",
+      "08. Penalized Regression and High-Dimensional Data"
+    ]
+  },
+  {
+    "objectID": "08-penalized-regression-and-high-dimensional-data.html#why-penalization-works",
+    "href": "08-penalized-regression-and-high-dimensional-data.html#why-penalization-works",
+    "title": "08. Penalized Regression and High-Dimensional Data",
+    "section": "Why penalization works",
+    "text": "Why penalization works\nPenalized regression modifies the loss function:\n\nRidge (L2) shrinks coefficients toward zero\nLasso (L1) shrinks and performs variable selection\nElastic net interpolates between ridge and lasso\n\nPenalization reduces variance at the cost of bias.\nThis trade-off is not optional in high dimensions.",
+    "crumbs": [
+      "Tutorials",
+      "08. Penalized Regression and High-Dimensional Data"
+    ]
+  },
+  {
+    "objectID": "08-penalized-regression-and-high-dimensional-data.html#recreating-a-high-dimensional-example",
+    "href": "08-penalized-regression-and-high-dimensional-data.html#recreating-a-high-dimensional-example",
+    "title": "08. Penalized Regression and High-Dimensional Data",
+    "section": "Recreating a high-dimensional example",
+    "text": "Recreating a high-dimensional example\nWe simulate a setting with many predictors and limited observations.\n\nlibrary(fastml)\nlibrary(dplyr)\n\nset.seed(123)\n\nn  &lt;- 120\np  &lt;- 110      \nk  &lt;- 12     \nrho &lt;- 0.85  \nnoise_sd &lt;- 2  \n\n# Correlated predictors:\nZ &lt;- rnorm(n)\nX &lt;- sapply(seq_len(p), function(j) rho * Z + sqrt(1 - rho^2) * rnorm(n))\nX &lt;- as.data.frame(X)\ncolnames(X) &lt;- paste0(\"x\", seq_len(p))\n\n# Sparse true effects on first k predictors\nbeta &lt;- c(rep(3, k), rep(0, p - k))\n\n# Outcome\ny &lt;- as.numeric(as.matrix(X) %*% beta + rnorm(n, sd = noise_sd))\n\nhd_data &lt;- bind_cols(tibble(y = y), X)\n\nhead(hd_data)\n\n# A tibble: 6 × 111\n       y      x1      x2     x3      x4      x5     x6      x7      x8      x9\n   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;\n1 -14.4  -0.414  -0.892  -0.585 -0.466   0.0894 -1.03  -0.876  -0.0633  0.527 \n2  -5.28 -0.695  -0.460   0.147 -0.0302 -0.210  -1.11   1.22    1.02   -0.0204\n3  55.8   1.07    2.11    1.47   2.02    1.31    1.66   1.08    1.41    1.45  \n4  -1.67 -0.0750 -0.539   0.600  0.124  -0.739  -0.746  0.0938  0.0846 -0.831 \n5  11.5   1.08    0.0156  0.541  0.485   0.526   0.111  0.452   0.161   0.457 \n6  54.0   1.11    2.46    1.35   1.87    1.35    1.59   1.44    1.49    0.919 \n# ℹ 101 more variables: x10 &lt;dbl&gt;, x11 &lt;dbl&gt;, x12 &lt;dbl&gt;, x13 &lt;dbl&gt;, x14 &lt;dbl&gt;,\n#   x15 &lt;dbl&gt;, x16 &lt;dbl&gt;, x17 &lt;dbl&gt;, x18 &lt;dbl&gt;, x19 &lt;dbl&gt;, x20 &lt;dbl&gt;,\n#   x21 &lt;dbl&gt;, x22 &lt;dbl&gt;, x23 &lt;dbl&gt;, x24 &lt;dbl&gt;, x25 &lt;dbl&gt;, x26 &lt;dbl&gt;,\n#   x27 &lt;dbl&gt;, x28 &lt;dbl&gt;, x29 &lt;dbl&gt;, x30 &lt;dbl&gt;, x31 &lt;dbl&gt;, x32 &lt;dbl&gt;,\n#   x33 &lt;dbl&gt;, x34 &lt;dbl&gt;, x35 &lt;dbl&gt;, x36 &lt;dbl&gt;, x37 &lt;dbl&gt;, x38 &lt;dbl&gt;,\n#   x39 &lt;dbl&gt;, x40 &lt;dbl&gt;, x41 &lt;dbl&gt;, x42 &lt;dbl&gt;, x43 &lt;dbl&gt;, x44 &lt;dbl&gt;,\n#   x45 &lt;dbl&gt;, x46 &lt;dbl&gt;, x47 &lt;dbl&gt;, x48 &lt;dbl&gt;, x49 &lt;dbl&gt;, x50 &lt;dbl&gt;, …\n\n\nOnly five predictors carry signal. The rest are pure noise.",
+    "crumbs": [
+      "Tutorials",
+      "08. Penalized Regression and High-Dimensional Data"
+    ]
+  },
+  {
+    "objectID": "08-penalized-regression-and-high-dimensional-data.html#what-unpenalized-regression-does",
+    "href": "08-penalized-regression-and-high-dimensional-data.html#what-unpenalized-regression-does",
+    "title": "08. Penalized Regression and High-Dimensional Data",
+    "section": "What unpenalized regression does",
+    "text": "What unpenalized regression does\n\nlm_fit &lt;- fastml(\n  data       = hd_data,\n  label      = \"y\",\n  algorithms = \"linear_reg\"\n)\n\nsummary(lm_fit)\n\n\n===== fastml Model Summary =====\nTask: regression \nNumber of Models Trained: 1 \nBest Model(s): linear_reg (lm) (rmse: 12.8543828) \n\nPerformance Metrics (Sorted by rmse):\n\n---------------------------------------------- \nModel        Engine  RMSE    R-squared  MAE    \n---------------------------------------------- \nlinear_reg*  lm      12.854  0.778      10.516 \n---------------------------------------------- \n(*Best model)\n\nBest Model hyperparameters:\n\nModel: linear_reg (lm) \n  penalty: \n  mixture: \n\n\nThis model fits all predictors.\nIts apparent performance may look acceptable, but coefficient estimates are unstable and uninterpretable.",
+    "crumbs": [
+      "Tutorials",
+      "08. Penalized Regression and High-Dimensional Data"
+    ]
+  },
+  {
+    "objectID": "08-penalized-regression-and-high-dimensional-data.html#penalized-regression-with-elastic-net",
+    "href": "08-penalized-regression-and-high-dimensional-data.html#penalized-regression-with-elastic-net",
+    "title": "08. Penalized Regression and High-Dimensional Data",
+    "section": "Penalized regression with elastic net",
+    "text": "Penalized regression with elastic net\n\npen_fit &lt;- fastml(\n  data       = hd_data,\n  label      = \"y\",\n  algorithms = \"elastic_net\"\n)\n\nsummary(pen_fit)\n\n\n===== fastml Model Summary =====\nTask: regression \nNumber of Models Trained: 1 \nBest Model(s): elastic_net (glmnet) (rmse: 3.3240705) \n\nPerformance Metrics (Sorted by rmse):\n\n--------------------------------------------- \nModel         Engine  RMSE   R-squared  MAE   \n--------------------------------------------- \nelastic_net*  glmnet  3.324  0.987      2.720 \n--------------------------------------------- \n(*Best model)\n\nBest Model hyperparameters:\n\nModel: elastic_net (glmnet) \n  penalty: 0.01\n  mixture: 0.5\n\n\nElastic net performs:\n\nshrinkage,\nimplicit feature selection,\nregularization-aware resampling.\n\nThis is not optional tuning.\nIt is required for validity.",
+    "crumbs": [
+      "Tutorials",
+      "08. Penalized Regression and High-Dimensional Data"
+    ]
+  },
+  {
+    "objectID": "08-penalized-regression-and-high-dimensional-data.html#why-tuning-must-be-guarded",
+    "href": "08-penalized-regression-and-high-dimensional-data.html#why-tuning-must-be-guarded",
+    "title": "08. Penalized Regression and High-Dimensional Data",
+    "section": "Why Tuning Must Be Guarded",
+    "text": "Why Tuning Must Be Guarded\nThe penalty strength determines how aggressively coefficients are shrunk.\nIf tuning is performed outside resampling:\n\ntest data influence penalty selection,\nperformance is inflated,\nvariable selection becomes meaningless.\n\nfastml enforces tuning within resampling folds, preventing this failure mode.",
+    "crumbs": [
+      "Tutorials",
+      "08. Penalized Regression and High-Dimensional Data"
+    ]
+  },
+  {
+    "objectID": "08-penalized-regression-and-high-dimensional-data.html#coefficient-interpretation-is-conditional",
+    "href": "08-penalized-regression-and-high-dimensional-data.html#coefficient-interpretation-is-conditional",
+    "title": "08. Penalized Regression and High-Dimensional Data",
+    "section": "Coefficient Interpretation Is Conditional",
+    "text": "Coefficient Interpretation Is Conditional\nIn penalized models:\n\ncoefficient magnitude depends on penalty strength,\nselection is resampling-dependent,\nzero coefficients do not imply irrelevance.\n\nPenalized regression identifies predictive structure, not causal effects.\nThis distinction is routinely violated in applied research.",
+    "crumbs": [
+      "Tutorials",
+      "08. Penalized Regression and High-Dimensional Data"
+    ]
+  },
+  {
+    "objectID": "08-penalized-regression-and-high-dimensional-data.html#stability-matters-more-than-sparsity",
+    "href": "08-penalized-regression-and-high-dimensional-data.html#stability-matters-more-than-sparsity",
+    "title": "08. Penalized Regression and High-Dimensional Data",
+    "section": "Stability Matters More Than Sparsity",
+    "text": "Stability Matters More Than Sparsity\nVariable selection that changes dramatically across folds is unreliable.\nfastml exposes fold-level results so instability can be detected rather than hidden.\nSparse models are not inherently superior.\nStable models are.",
+    "crumbs": [
+      "Tutorials",
+      "08. Penalized Regression and High-Dimensional Data"
+    ]
+  },
+  {
+    "objectID": "08-penalized-regression-and-high-dimensional-data.html#high-dimensional-leakage-risks",
+    "href": "08-penalized-regression-and-high-dimensional-data.html#high-dimensional-leakage-risks",
+    "title": "08. Penalized Regression and High-Dimensional Data",
+    "section": "High-Dimensional Leakage Risks",
+    "text": "High-Dimensional Leakage Risks\nHigh-dimensional workflows amplify leakage through:\n\nfeature screening on full data,\nglobal scaling,\noutcome-informed transformations,\npost-hoc variable selection.\n\nEach of these produces dramatic but invalid performance gains.\nGuarded resampling is essential, not optional.",
+    "crumbs": [
+      "Tutorials",
+      "08. Penalized Regression and High-Dimensional Data"
+    ]
+  },
+  {
+    "objectID": "08-penalized-regression-and-high-dimensional-data.html#what-fastml-deliberately-does-not-allow",
+    "href": "08-penalized-regression-and-high-dimensional-data.html#what-fastml-deliberately-does-not-allow",
+    "title": "08. Penalized Regression and High-Dimensional Data",
+    "section": "What fastml Deliberately Does Not Allow",
+    "text": "What fastml Deliberately Does Not Allow\nfastml does not allow:\n\nglobal feature selection before resampling,\nleakage-prone tuning shortcuts,\nsilent reuse of preprocessing statistics,\nsingle-split performance reporting.\n\nThese are design constraints, not missing features.",
+    "crumbs": [
+      "Tutorials",
+      "08. Penalized Regression and High-Dimensional Data"
+    ]
+  },
+  {
+    "objectID": "08-penalized-regression-and-high-dimensional-data.html#responsible-reporting-in-high-dimensions",
+    "href": "08-penalized-regression-and-high-dimensional-data.html#responsible-reporting-in-high-dimensions",
+    "title": "08. Penalized Regression and High-Dimensional Data",
+    "section": "Responsible Reporting in High Dimensions",
+    "text": "Responsible Reporting in High Dimensions\nA defensible report should include:\n\nsample size and number of predictors,\npenalty type and tuning strategy,\nresampling scheme,\nstability assessment,\nexplicit limits on interpretation.\n\nClaims of “biomarkers” or “important variables” require evidence beyond penalized regression output.",
+    "crumbs": [
+      "Tutorials",
+      "08. Penalized Regression and High-Dimensional Data"
+    ]
+  },
+  {
+    "objectID": "08-penalized-regression-and-high-dimensional-data.html#summary",
+    "href": "08-penalized-regression-and-high-dimensional-data.html#summary",
+    "title": "08. Penalized Regression and High-Dimensional Data",
+    "section": "Summary",
+    "text": "Summary\n\nHigh-dimensional regression is fundamentally different.\n\nPenalization is mandatory, not optional.\n\nPenalization through elastic net, ridge or lasso balances sparsity and stability.\n\nGuarded tuning prevents catastrophic leakage.\n\nInterpretation must be predictive, not causal.",
+    "crumbs": [
+      "Tutorials",
+      "08. Penalized Regression and High-Dimensional Data"
     ]
   },
   {
@@ -454,6 +679,160 @@
     "crumbs": [
       "Concepts",
       "C3. Guarded Resampling"
+    ]
+  },
+  {
+    "objectID": "06-regression-and-continuous-outcomes.html",
+    "href": "06-regression-and-continuous-outcomes.html",
+    "title": "06. Regression and Continuous Outcomes",
+    "section": "",
+    "text": "Regression problems involve continuous outcomes rather than class labels.\nThis difference is not cosmetic.\nIt changes how performance is measured, how preprocessing affects results, and how evaluation errors arise.\nMany applied workflows treat regression as a simpler case than classification.\nIn practice, regression is often more fragile under improper evaluation.",
+    "crumbs": [
+      "Tutorials",
+      "06. Regression and Continuous Outcomes"
+    ]
+  },
+  {
+    "objectID": "06-regression-and-continuous-outcomes.html#motivation",
+    "href": "06-regression-and-continuous-outcomes.html#motivation",
+    "title": "06. Regression and Continuous Outcomes",
+    "section": "",
+    "text": "Regression problems involve continuous outcomes rather than class labels.\nThis difference is not cosmetic.\nIt changes how performance is measured, how preprocessing affects results, and how evaluation errors arise.\nMany applied workflows treat regression as a simpler case than classification.\nIn practice, regression is often more fragile under improper evaluation.",
+    "crumbs": [
+      "Tutorials",
+      "06. Regression and Continuous Outcomes"
+    ]
+  },
+  {
+    "objectID": "06-regression-and-continuous-outcomes.html#why-regression-requires-separate-treatment",
+    "href": "06-regression-and-continuous-outcomes.html#why-regression-requires-separate-treatment",
+    "title": "06. Regression and Continuous Outcomes",
+    "section": "Why regression requires separate treatment",
+    "text": "Why regression requires separate treatment\nIn regression:\n\noutcomes have a natural scale\nerrors are measured in outcome units\npreprocessing directly affects metric values\ncomparisons across datasets are rarely meaningful\n\nMetrics such as RMSE and MAE are scale-dependent.\nA “good” RMSE cannot be interpreted without context.",
+    "crumbs": [
+      "Tutorials",
+      "06. Regression and Continuous Outcomes"
+    ]
+  },
+  {
+    "objectID": "06-regression-and-continuous-outcomes.html#leakage-risks-in-regression-workflows",
+    "href": "06-regression-and-continuous-outcomes.html#leakage-risks-in-regression-workflows",
+    "title": "06. Regression and Continuous Outcomes",
+    "section": "Leakage risks in regression workflows",
+    "text": "Leakage risks in regression workflows\nRegression pipelines are particularly sensitive to leakage because:\n\nscaling affects both predictors and outcome interpretation\nimputation alters the outcome–predictor relationship\nfeature engineering often uses outcome-adjacent information\nresidual structure is easily distorted\n\nAs in earlier tutorials, leakage arises from when information is learned, not from model choice.",
+    "crumbs": [
+      "Tutorials",
+      "06. Regression and Continuous Outcomes"
+    ]
+  },
+  {
+    "objectID": "06-regression-and-continuous-outcomes.html#data",
+    "href": "06-regression-and-continuous-outcomes.html#data",
+    "title": "06. Regression and Continuous Outcomes",
+    "section": "Data",
+    "text": "Data\nWe use a medical dataset with a continuous outcome.\n\nlibrary(fastml)\nlibrary(mlbench)\nlibrary(dplyr)\n\ndata(BostonHousing, package = \"mlbench\")\n\nreg_data &lt;- BostonHousing %&gt;%\n  select(medv, everything())\n\nhead(reg_data)\n\n  medv    crim zn indus chas   nox    rm  age    dis rad tax ptratio      b\n1 24.0 0.00632 18  2.31    0 0.538 6.575 65.2 4.0900   1 296    15.3 396.90\n2 21.6 0.02731  0  7.07    0 0.469 6.421 78.9 4.9671   2 242    17.8 396.90\n3 34.7 0.02729  0  7.07    0 0.469 7.185 61.1 4.9671   2 242    17.8 392.83\n4 33.4 0.03237  0  2.18    0 0.458 6.998 45.8 6.0622   3 222    18.7 394.63\n5 36.2 0.06905  0  2.18    0 0.458 7.147 54.2 6.0622   3 222    18.7 396.90\n6 28.7 0.02985  0  2.18    0 0.458 6.430 58.7 6.0622   3 222    18.7 394.12\n  lstat\n1  4.98\n2  9.14\n3  4.03\n4  2.94\n5  5.33\n6  5.21\n\n\nThe outcome medv represents median home value and is treated here as a continuous response for regression illustration.",
+    "crumbs": [
+      "Tutorials",
+      "06. Regression and Continuous Outcomes"
+    ]
+  },
+  {
+    "objectID": "06-regression-and-continuous-outcomes.html#defining-a-regression-task",
+    "href": "06-regression-and-continuous-outcomes.html#defining-a-regression-task",
+    "title": "06. Regression and Continuous Outcomes",
+    "section": "Defining a regression task",
+    "text": "Defining a regression task\nRegression is specified explicitly in fastml.\n\nfit &lt;- fastml(\n  data       = reg_data,\n  label      = \"medv\",\n  algorithms = c(\"linear_reg\", \"rand_forest\"),\n)\n\nThis declaration ensures that:\n\nregression-specific loss functions are used,\nmetrics are computed on continuous predictions,\nevaluation respects guarded resampling.",
+    "crumbs": [
+      "Tutorials",
+      "06. Regression and Continuous Outcomes"
+    ]
+  },
+  {
+    "objectID": "06-regression-and-continuous-outcomes.html#regression-metrics",
+    "href": "06-regression-and-continuous-outcomes.html#regression-metrics",
+    "title": "06. Regression and Continuous Outcomes",
+    "section": "Regression Metrics",
+    "text": "Regression Metrics\nUnlike classification, regression metrics quantify the magnitude of prediction error.\nTypical metrics include:\n\nRMSE (root mean squared error),\nMAE (mean absolute error),\nR² (variance explained).\n\n\nfit$resampling_results$`linear_reg (lm)`$aggregated\n\n# A tibble: 3 × 3\n  .metric .estimator .estimate\n  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;\n1 mae     standard       3.38 \n2 rmse    standard       4.80 \n3 rsq     standard       0.737\n\n\nEach metric answers a different question and encodes different assumptions about error structure.",
+    "crumbs": [
+      "Tutorials",
+      "06. Regression and Continuous Outcomes"
+    ]
+  },
+  {
+    "objectID": "06-regression-and-continuous-outcomes.html#scale-dependence-and-interpretation",
+    "href": "06-regression-and-continuous-outcomes.html#scale-dependence-and-interpretation",
+    "title": "06. Regression and Continuous Outcomes",
+    "section": "Scale Dependence and Interpretation",
+    "text": "Scale Dependence and Interpretation\nRMSE is expressed in the same units as the outcome.\nAs a result:\n\nRMSE values cannot be compared across datasets,\nsmall numerical differences may be practically irrelevant,\npreprocessing choices directly affect metric magnitude.\n\nThis makes contextual interpretation essential.",
+    "crumbs": [
+      "Tutorials",
+      "06. Regression and Continuous Outcomes"
+    ]
+  },
+  {
+    "objectID": "06-regression-and-continuous-outcomes.html#fold-level-variability",
+    "href": "06-regression-and-continuous-outcomes.html#fold-level-variability",
+    "title": "06. Regression and Continuous Outcomes",
+    "section": "Fold-Level Variability",
+    "text": "Fold-Level Variability\nAs in previous tutorials, aggregated metrics hide variability.\n\nfit$resampling_results$`linear_reg (lm)`$folds\n\n# A tibble: 30 × 4\n   fold  .metric .estimator .estimate\n   &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;\n 1 1     rmse    standard       4.17 \n 2 1     rsq     standard       0.757\n 3 1     mae     standard       3.09 \n 4 2     rmse    standard       3.41 \n 5 2     rsq     standard       0.822\n 6 2     mae     standard       2.51 \n 7 3     rmse    standard       5.96 \n 8 3     rsq     standard       0.713\n 9 3     mae     standard       3.66 \n10 4     rmse    standard       4.59 \n# ℹ 20 more rows\n\n\nFold-level results reveal:\n\ninstability due to limited sample size,\nsensitivity to data partitioning,\noverlap between competing models.\n\nRegression performance often varies more across folds than classification accuracy.",
+    "crumbs": [
+      "Tutorials",
+      "06. Regression and Continuous Outcomes"
+    ]
+  },
+  {
+    "objectID": "06-regression-and-continuous-outcomes.html#model-comparison-in-regression",
+    "href": "06-regression-and-continuous-outcomes.html#model-comparison-in-regression",
+    "title": "06. Regression and Continuous Outcomes",
+    "section": "Model Comparison in Regression",
+    "text": "Model Comparison in Regression\nComparing regression models requires:\n\nidentical resampling splits,\nidentical preprocessing,\nidentical outcome scaling.\n\nfastml enforces these conditions automatically.\nObserved performance differences therefore reflect model behavior rather than evaluation artifacts.",
+    "crumbs": [
+      "Tutorials",
+      "06. Regression and Continuous Outcomes"
+    ]
+  },
+  {
+    "objectID": "06-regression-and-continuous-outcomes.html#what-fastml-does-not-claim",
+    "href": "06-regression-and-continuous-outcomes.html#what-fastml-does-not-claim",
+    "title": "06. Regression and Continuous Outcomes",
+    "section": "What fastml Does Not Claim",
+    "text": "What fastml Does Not Claim\nfastml does not:\n\nidentify a “true” model,\nguarantee optimal predictive accuracy,\njustify causal interpretation of coefficients,\nstandardize outcomes for cross-study comparison.\n\nRegression metrics describe predictive error under a specific evaluation design, nothing more.",
+    "crumbs": [
+      "Tutorials",
+      "06. Regression and Continuous Outcomes"
+    ]
+  },
+  {
+    "objectID": "06-regression-and-continuous-outcomes.html#responsible-reporting",
+    "href": "06-regression-and-continuous-outcomes.html#responsible-reporting",
+    "title": "06. Regression and Continuous Outcomes",
+    "section": "Responsible Reporting",
+    "text": "Responsible Reporting\nFor regression analyses, a defensible report should include:\n\nthe outcome definition and scale,\nthe chosen evaluation metrics,\nthe resampling scheme,\naggregated performance estimates,\nvariability across folds.\n\nReporting a single RMSE without context is insufficient.",
+    "crumbs": [
+      "Tutorials",
+      "06. Regression and Continuous Outcomes"
+    ]
+  },
+  {
+    "objectID": "06-regression-and-continuous-outcomes.html#summary",
+    "href": "06-regression-and-continuous-outcomes.html#summary",
+    "title": "06. Regression and Continuous Outcomes",
+    "section": "Summary",
+    "text": "Summary\nRegression introduces scale-dependent evaluation.\nMetrics are sensitive to preprocessing and leakage.\nGuarded resampling is essential for valid regression evaluation.\nVariability across folds is informative.\nInterpretation requires domain context.",
+    "crumbs": [
+      "Tutorials",
+      "06. Regression and Continuous Outcomes"
+    ]
+  },
+  {
+    "objectID": "06-regression-and-continuous-outcomes.html#what-comes-next",
+    "href": "06-regression-and-continuous-outcomes.html#what-comes-next",
+    "title": "06. Regression and Continuous Outcomes",
+    "section": "What comes next",
+    "text": "What comes next\n07. Regression Metrics, Scale, and Interpretation\nRegression metrics, scale, and why RMSE is often misleading.",
+    "crumbs": [
+      "Tutorials",
+      "06. Regression and Continuous Outcomes"
     ]
   },
   {
@@ -626,7 +1005,7 @@
     "href": "04-missing-data-and-guarded-imputation.html#why-missing-data-are-dangerous-for-evaluation",
     "title": "04. Missing Data and Guarded Imputation",
     "section": "Why missing data are dangerous for evaluation",
-    "text": "Why missing data are dangerous for evaluation\nImputation is a data-dependent operation.\nIf imputation parameters (means, medians, model-based estimates) are learned using the full dataset before resampling, then information from assessment folds leaks into training folds.\nThis is a textbook example of the timing problem described in C1 — What Is Data Leakage.\nThe solution is not “better imputation”, but correct placement of imputation inside resampling.",
+    "text": "Why missing data are dangerous for evaluation\nImputation is a data-dependent operation.\nIf imputation parameters (means, medians, model-based estimates) are learned using the full dataset before resampling, then information from assessment folds leaks into training folds.\nThis is a textbook example of the timing problem described in C1. What Is Data Leakage.\nThe solution is not “better imputation”, but correct placement of imputation inside resampling.",
     "crumbs": [
       "Tutorials",
       "04. Missing Data and Guarded Imputation"
@@ -751,6 +1130,56 @@
     "crumbs": [
       "Tutorials",
       "04. Missing Data and Guarded Imputation"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "fastml Tutorials",
+    "section": "",
+    "text": "This site provides a structured introduction to fastml, an R package for training, evaluating, and comparing machine learning models under architecturally constrained, leakage-aware resampling.\nThe emphasis is not on developing new modeling techniques or maximizing predictive performance. Instead, the focus is on methodologically sound performance evaluation under clearly defined assumptions.",
+    "crumbs": [
+      "fastml Tutorials"
+    ]
+  },
+  {
+    "objectID": "index.html#what-this-site-is-about",
+    "href": "index.html#what-this-site-is-about",
+    "title": "fastml Tutorials",
+    "section": "",
+    "text": "This site provides a structured introduction to fastml, an R package for training, evaluating, and comparing machine learning models under architecturally constrained, leakage-aware resampling.\nThe emphasis is not on developing new modeling techniques or maximizing predictive performance. Instead, the focus is on methodologically sound performance evaluation under clearly defined assumptions.",
+    "crumbs": [
+      "fastml Tutorials"
+    ]
+  },
+  {
+    "objectID": "index.html#why-this-matters",
+    "href": "index.html#why-this-matters",
+    "title": "fastml Tutorials",
+    "section": "Why this matters",
+    "text": "Why this matters\nIn applied machine learning, reported performance estimates are frequently optimistic due to subtle forms of data leakage and unsafe evaluation workflows.\nfastml is designed to reduce this risk by treating Guarded Resampling as a core design principle rather than as an optional recommendation.",
+    "crumbs": [
+      "fastml Tutorials"
+    ]
+  },
+  {
+    "objectID": "index.html#how-to-read-this-site",
+    "href": "index.html#how-to-read-this-site",
+    "title": "fastml Tutorials",
+    "section": "How to read this site",
+    "text": "How to read this site\nThe material is organized into four sections.\n\nConcepts\nThese sections introduce the ideas that motivate fastml, including:\n\nwhat data leakage is,\nwhy many ML pipelines are unsafe by default,\nwhat guarded resampling entails,\nwhich classes of workflow configurations fastml deliberately restricts.\n\nThe concepts establish the assumptions required to interpret the tutorials correctly.\n\n\nTutorials\nThe tutorials apply the conceptual framework to concrete modeling tasks.\nThey assume familiarity with the Concepts section and focus on demonstrating evaluation workflows rather than reintroducing theoretical material.\n\n\nAdvanced\nAdvanced sections extend the framework to more complex settings, such as:\n\nhandling missing data,\nsurvival analysis,\nmodel interpretation and diagnostics.\n\nThese sections build on the same evaluation principles under additional modeling constraints.\n\n\nComparisons\nComparative sections discuss fastml in relation to other frameworks and common workflows, highlighting differences in design philosophy and evaluation guarantees.",
+    "crumbs": [
+      "fastml Tutorials"
+    ]
+  },
+  {
+    "objectID": "index.html#where-to-start",
+    "href": "index.html#where-to-start",
+    "title": "fastml Tutorials",
+    "section": "Where to start",
+    "text": "Where to start\nReaders should begin with the Concepts section (C1–C4).\nThe first hands-on example is Tutorial 01: Basic Cl",
+    "crumbs": [
+      "fastml Tutorials"
     ]
   },
   {
@@ -934,7 +1363,51 @@
     "href": "05-survival-analysis-and-time-to-event-outcomes.html",
     "title": "05. Survival Analysis and Time-to-Event Outcomes",
     "section": "",
-    "text": "## Motivation\nTime-to-event outcomes introduce a new layer of complexity that is absent in standard classification and regression.\nIn survival analysis:\nThese properties make survival analysis especially vulnerable to evaluation errors and leakage.\n## Why survival analysis is different\nIn earlier tutorials, each observation contributed a fully observed outcome.\nIn survival settings, each observation consists of:\nIgnoring this structure leads to invalid evaluation.\nIn particular, treating survival outcomes as binary labels discards timing information and introduces bias.\n## Leakage risks unique to survival analysis\nSurvival workflows introduce additional leakage pathways:\nThese errors often go undetected and produce optimistic results.\nThe principles from C1–C3 apply here with greater force.\n## Data\nWe use a classical survival dataset with right censoring.\nlibrary(fastml)\nlibrary(censored)\nlibrary(survival)\nlibrary(dplyr)\n\ndata(lung, package = \"survival\")\n\nsurv_data &lt;- lung %&gt;%\n  filter(!is.na(time), !is.na(status)) %&gt;%\n  mutate(\n    status = ifelse(status == 2, 1, 0),  # 1 = event, 0 = censored\n    sex    = factor(sex, labels = c(\"male\", \"female\"))\n  )\n\nhead(surv_data)\n\n  inst time status age  sex ph.ecog ph.karno pat.karno meal.cal wt.loss\n1    3  306      1  74 male       1       90       100     1175      NA\n2    3  455      1  68 male       0       90        90     1225      15\n3    3 1010      0  56 male       0       90        90       NA      15\n4    5  210      1  57 male       1       90        60     1150      11\n5    1  883      1  60 male       0      100        90       NA       0\n6   12 1022      0  74 male       1       50        80      513       0\nThis dataset includes:",
+    "text": "Time-to-event outcomes introduce a new layer of complexity that is absent in standard classification and regression.\nIn survival analysis:\n\noutcomes are partially observed\nfollow-up times differ across individuals\ncensoring is informative for evaluation\nmany common ML workflows fail silently\n\nThese properties make survival analysis especially vulnerable to evaluation errors and leakage.",
+    "crumbs": [
+      "Tutorials",
+      "05. Survival Analysis and Time-to-Event Outcomes"
+    ]
+  },
+  {
+    "objectID": "05-survival-analysis-and-time-to-event-outcomes.html#motivation",
+    "href": "05-survival-analysis-and-time-to-event-outcomes.html#motivation",
+    "title": "05. Survival Analysis and Time-to-Event Outcomes",
+    "section": "",
+    "text": "Time-to-event outcomes introduce a new layer of complexity that is absent in standard classification and regression.\nIn survival analysis:\n\noutcomes are partially observed\nfollow-up times differ across individuals\ncensoring is informative for evaluation\nmany common ML workflows fail silently\n\nThese properties make survival analysis especially vulnerable to evaluation errors and leakage.",
+    "crumbs": [
+      "Tutorials",
+      "05. Survival Analysis and Time-to-Event Outcomes"
+    ]
+  },
+  {
+    "objectID": "05-survival-analysis-and-time-to-event-outcomes.html#why-survival-analysis-is-different",
+    "href": "05-survival-analysis-and-time-to-event-outcomes.html#why-survival-analysis-is-different",
+    "title": "05. Survival Analysis and Time-to-Event Outcomes",
+    "section": "Why survival analysis is different",
+    "text": "Why survival analysis is different\nIn earlier tutorials, each observation contributed a fully observed outcome.\nIn survival settings, each observation consists of:\n\na time-to-event\nan event indicator (event vs censoring)\n\nIgnoring this structure leads to invalid evaluation.\nIn particular, treating survival outcomes as binary labels discards timing information and introduces bias.",
+    "crumbs": [
+      "Tutorials",
+      "05. Survival Analysis and Time-to-Event Outcomes"
+    ]
+  },
+  {
+    "objectID": "05-survival-analysis-and-time-to-event-outcomes.html#leakage-risks-unique-to-survival-analysis",
+    "href": "05-survival-analysis-and-time-to-event-outcomes.html#leakage-risks-unique-to-survival-analysis",
+    "title": "05. Survival Analysis and Time-to-Event Outcomes",
+    "section": "Leakage risks unique to survival analysis",
+    "text": "Leakage risks unique to survival analysis\nSurvival workflows introduce additional leakage pathways:\n\nusing full follow-up information during preprocessing\ncomputing time-dependent features globally\nevaluating survival models without respecting censoring\nmixing risk sets across resampling splits\n\nThese errors often go undetected and produce optimistic results.\nThe principles from C1–C3 apply here with greater force.",
+    "crumbs": [
+      "Tutorials",
+      "05. Survival Analysis and Time-to-Event Outcomes"
+    ]
+  },
+  {
+    "objectID": "05-survival-analysis-and-time-to-event-outcomes.html#data",
+    "href": "05-survival-analysis-and-time-to-event-outcomes.html#data",
+    "title": "05. Survival Analysis and Time-to-Event Outcomes",
+    "section": "Data",
+    "text": "Data\nWe use a classical survival dataset with right censoring.\n\nlibrary(fastml)\nlibrary(censored)\nlibrary(survival)\nlibrary(dplyr)\n\ndata(lung, package = \"survival\")\n\nsurv_data &lt;- lung %&gt;%\n  filter(!is.na(time), !is.na(status)) %&gt;%\n  mutate(\n    status = ifelse(status == 2, 1, 0),  # 1 = event, 0 = censored\n    sex    = factor(sex, labels = c(\"male\", \"female\"))\n  )\n\nhead(surv_data)\n\n  inst time status age  sex ph.ecog ph.karno pat.karno meal.cal wt.loss\n1    3  306      1  74 male       1       90       100     1175      NA\n2    3  455      1  68 male       0       90        90     1225      15\n3    3 1010      0  56 male       0       90        90       NA      15\n4    5  210      1  57 male       1       90        60     1150      11\n5    1  883      1  60 male       0      100        90       NA       0\n6   12 1022      0  74 male       1       50        80      513       0\n\n\nThis dataset includes:\n\nsurvival time (time),\nevent indicator (status),\nbaseline clinical covariates.",
     "crumbs": [
       "Tutorials",
       "05. Survival Analysis and Time-to-Event Outcomes"
@@ -1022,7 +1495,7 @@
     "href": "05-survival-analysis-and-time-to-event-outcomes.html#what-comes-next",
     "title": "05. Survival Analysis and Time-to-Event Outcomes",
     "section": "What comes next",
-    "text": "What comes next\n06 — Regression and Continuous Outcomes\nRegression and continuous outcomes under guarded resampling.",
+    "text": "What comes next\n06. Regression and Continuous Outcomes\nRegression and continuous outcomes under guarded resampling.",
     "crumbs": [
       "Tutorials",
       "05. Survival Analysis and Time-to-Event Outcomes"

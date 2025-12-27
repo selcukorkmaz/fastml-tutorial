@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>04. Missing Data and Guarded Imputation – fastml Tutorials</title>
+<title>07. Regression Metrics, Scale, and Interpretation – fastml Tutorials</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,41 +19,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -116,7 +81,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-basic-classification.html">Tutorials</a></li><li class="breadcrumb-item"><a href="./04-missing-data-and-guarded-imputation.html">04. Missing Data and Guarded Imputation</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-basic-classification.html">Tutorials</a></li><li class="breadcrumb-item"><a href="./07-regression-metrics-scale-and-interpretation.html">07. Regression Metrics, Scale, and Interpretation</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -211,7 +176,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04-missing-data-and-guarded-imputation.html" class="sidebar-item-text sidebar-link active">
+  <a href="./04-missing-data-and-guarded-imputation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">04. Missing Data and Guarded Imputation</span></a>
   </div>
 </li>
@@ -229,7 +194,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-regression-metrics-scale-and-interpretation.html" class="sidebar-item-text sidebar-link">
+  <a href="./07-regression-metrics-scale-and-interpretation.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">07. Regression Metrics, Scale, and Interpretation</span></a>
   </div>
 </li>
@@ -252,17 +217,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#motivation" id="toc-motivation" class="nav-link active" data-scroll-target="#motivation">Motivation</a></li>
-  <li><a href="#why-missing-data-are-dangerous-for-evaluation" id="toc-why-missing-data-are-dangerous-for-evaluation" class="nav-link" data-scroll-target="#why-missing-data-are-dangerous-for-evaluation">Why missing data are dangerous for evaluation</a></li>
-  <li><a href="#the-key-constraint" id="toc-the-key-constraint" class="nav-link" data-scroll-target="#the-key-constraint">The key constraint</a></li>
-  <li><a href="#data-with-missing-values" id="toc-data-with-missing-values" class="nav-link" data-scroll-target="#data-with-missing-values">Data with missing values</a></li>
-  <li><a href="#specifying-guarded-imputation" id="toc-specifying-guarded-imputation" class="nav-link" data-scroll-target="#specifying-guarded-imputation">Specifying guarded imputation</a></li>
-  <li><a href="#what-happens-under-the-hood-conceptual" id="toc-what-happens-under-the-hood-conceptual" class="nav-link" data-scroll-target="#what-happens-under-the-hood-conceptual">What Happens Under the Hood (Conceptual)</a></li>
-  <li><a href="#examining-performance" id="toc-examining-performance" class="nav-link" data-scroll-target="#examining-performance">Examining performance</a></li>
-  <li><a href="#fold-level-behavior" id="toc-fold-level-behavior" class="nav-link" data-scroll-target="#fold-level-behavior">Fold-level behavior</a></li>
-  <li><a href="#what-fastml-does-not-allow-here" id="toc-what-fastml-does-not-allow-here" class="nav-link" data-scroll-target="#what-fastml-does-not-allow-here">What fastml Does Not Allow Here</a></li>
-  <li><a href="#what-this-tutorial-does-not-cover" id="toc-what-this-tutorial-does-not-cover" class="nav-link" data-scroll-target="#what-this-tutorial-does-not-cover">What This Tutorial Does Not Cover</a></li>
-  <li><a href="#responsible-interpretation" id="toc-responsible-interpretation" class="nav-link" data-scroll-target="#responsible-interpretation">Responsible Interpretation</a></li>
+  <li><a href="#metrics-encode-assumptions" id="toc-metrics-encode-assumptions" class="nav-link" data-scroll-target="#metrics-encode-assumptions">Metrics encode assumptions</a></li>
+  <li><a href="#rmse-scale-dependence" id="toc-rmse-scale-dependence" class="nav-link" data-scroll-target="#rmse-scale-dependence">RMSE: Scale Dependence</a></li>
+  <li><a href="#mae-vs-rmse" id="toc-mae-vs-rmse" class="nav-link" data-scroll-target="#mae-vs-rmse">MAE vs RMSE</a></li>
+  <li><a href="#why-better-rmse-is-often-meaningless" id="toc-why-better-rmse-is-often-meaningless" class="nav-link" data-scroll-target="#why-better-rmse-is-often-meaningless">Why “Better RMSE” Is Often Meaningless</a></li>
+  <li><a href="#what-fastml-guarantees-and-what-it-does-not" id="toc-what-fastml-guarantees-and-what-it-does-not" class="nav-link" data-scroll-target="#what-fastml-guarantees-and-what-it-does-not">What fastml Guarantees — and What It Does Not</a></li>
+  <li><a href="#responsible-regression-reporting" id="toc-responsible-regression-reporting" class="nav-link" data-scroll-target="#responsible-regression-reporting">Responsible Regression Reporting</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#r²-and-its-limitations" id="toc-r²-and-its-limitations" class="nav-link" data-scroll-target="#r²-and-its-limitations">R² and Its Limitations</a></li>
   <li><a href="#what-comes-next" id="toc-what-comes-next" class="nav-link" data-scroll-target="#what-comes-next">What comes next</a></li>
   </ul>
 </nav>
@@ -270,9 +232,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-basic-classification.html">Tutorials</a></li><li class="breadcrumb-item"><a href="./04-missing-data-and-guarded-imputation.html">04. Missing Data and Guarded Imputation</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-basic-classification.html">Tutorials</a></li><li class="breadcrumb-item"><a href="./07-regression-metrics-scale-and-interpretation.html">07. Regression Metrics, Scale, and Interpretation</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">04. Missing Data and Guarded Imputation</h1>
+<h1 class="title">07. Regression Metrics, Scale, and Interpretation</h1>
 </div>
 
 
@@ -291,194 +253,114 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="motivation" class="level2">
 <h2 class="anchored" data-anchor-id="motivation">Motivation</h2>
-<p>In the earlier tutorials, we restricted the analysis to complete cases using <code>na.omit()</code>.</p>
-<p>This choice was intentional and explicitly justified as a pedagogical simplification.</p>
-<p>However, complete-case analysis is rarely appropriate in applied biomedical settings.<br>
-Missing data are the rule, not the exception.</p>
-<p>This tutorial shows how <strong>missing data can be handled under guarded resampling</strong>, without re-introducing leakage.</p>
-<hr>
-</section>
-<section id="why-missing-data-are-dangerous-for-evaluation" class="level2">
-<h2 class="anchored" data-anchor-id="why-missing-data-are-dangerous-for-evaluation">Why missing data are dangerous for evaluation</h2>
-<p>Imputation is a data-dependent operation.</p>
-<p>If imputation parameters (means, medians, model-based estimates) are learned using the full dataset <strong>before resampling</strong>, then information from assessment folds leaks into training folds.</p>
-<p>This is a textbook example of the timing problem described in <a href="./C1-what-is-data-leakage.html"><strong>C1. What Is Data Leakage</strong></a>.</p>
-<p>The solution is not “better imputation”, but <strong>correct placement of imputation inside resampling</strong>.</p>
-<hr>
-</section>
-<section id="the-key-constraint" class="level2">
-<h2 class="anchored" data-anchor-id="the-key-constraint">The key constraint</h2>
-<p>Under <strong>guarded resampling</strong> (<a href="./C3-guarded-resampling.html">C3</a>):</p>
+<p>Regression results are often reported as a single number:</p>
 <ul>
-<li>imputation must be learned <strong>within each resampling split</strong></li>
-<li>imputation parameters must never be shared across folds</li>
-<li>assessment data must not influence imputation</li>
+<li>RMSE = 3.38</li>
+<li>MAE = 4.80<br>
+</li>
+<li>R² = 0.737</li>
 </ul>
-<p>fastml enforces this automatically.</p>
-<hr>
+<p>These numbers look precise, but without context they are frequently meaningless.</p>
+<p>This tutorial explains <strong>what regression metrics do and do not tell us</strong>, and how guarded resampling changes their interpretation.</p>
 </section>
-<section id="data-with-missing-values" class="level2">
-<h2 class="anchored" data-anchor-id="data-with-missing-values">Data with missing values</h2>
-<p>We return to the original Breast Cancer dataset <strong>without</strong> removing incomplete rows.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fastml)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlbench)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(BreastCancer)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>breastCancer <span class="ot">&lt;-</span> BreastCancer <span class="sc">%&gt;%</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="st">"Id"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Class =</span> <span class="fu">factor</span>(Class, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"benign"</span>, <span class="st">"malignant"</span>)))</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(breastCancer)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  Cl.thickness Cell.size Cell.shape Marg.adhesion Epith.c.size Bare.nuclei
-1            5         1          1             1            2           1
-2            5         4          4             5            7          10
-3            3         1          1             1            2           2
-4            6         8          8             1            3           4
-5            4         1          1             3            2           1
-6            8        10         10             8            7          10
-  Bl.cromatin Normal.nucleoli Mitoses     Class
-1           3               1       1    benign
-2           3               2       1    benign
-3           3               1       1    benign
-4           3               7       1    benign
-5           3               1       1    benign
-6           9               7       1 malignant</code></pre>
-</div>
-</div>
-<p>At this stage, missing values are present in several predictors.</p>
-</section>
-<section id="specifying-guarded-imputation" class="level2">
-<h2 class="anchored" data-anchor-id="specifying-guarded-imputation">Specifying guarded imputation</h2>
-<p>Imputation is specified declaratively.</p>
-<p>Here we use median imputation for numeric predictors.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">fastml</span>(</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data          =</span> breastCancer,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">label         =</span> <span class="st">"Class"</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">algorithms    =</span> <span class="fu">c</span>(<span class="st">"rand_forest"</span>, <span class="st">"xgboost"</span>),</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">impute_method =</span> <span class="st">"medianImpute"</span>,</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>No imputation is performed at this point.</p>
-<p>The imputation strategy is recorded and applied <strong>inside each resampling split.</strong></p>
-</section>
-<section id="what-happens-under-the-hood-conceptual" class="level2">
-<h2 class="anchored" data-anchor-id="what-happens-under-the-hood-conceptual">What Happens Under the Hood (Conceptual)</h2>
-<p>For each resampling fold:</p>
+<section id="metrics-encode-assumptions" class="level2">
+<h2 class="anchored" data-anchor-id="metrics-encode-assumptions">Metrics encode assumptions</h2>
+<p>Regression metrics are not interchangeable.</p>
+<p>Each metric encodes an implicit assumption about error structure.</p>
 <ul>
-<li>training data are isolated,</li>
-<li>imputation parameters are estimated using the training data only,</li>
-<li>the same parameters are applied to the corresponding assessment data,</li>
-<li>the model is trained and evaluated within that fold.</li>
+<li><strong>RMSE</strong> penalizes large errors more heavily<br>
+</li>
+<li><strong>MAE</strong> treats all errors linearly<br>
+</li>
+<li><strong>R²</strong> measures variance explained relative to a baseline</li>
 </ul>
-<p>Under the guarded resampling execution path, assessment observations are not used when estimating imputation parameters.</p>
-<p>This behavior is not a convention assumed of the user.<br>
-It is implemented structurally within the guarded resampling workflow.</p>
+<p>Choosing a metric is a modeling decision, not a reporting formality.</p>
 </section>
-<section id="examining-performance" class="level2">
-<h2 class="anchored" data-anchor-id="examining-performance">Examining performance</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>resampling_results<span class="sc">$</span><span class="st">`</span><span class="at">rand_forest (ranger)</span><span class="st">`</span><span class="sc">$</span>aggregated</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 7 × 3
-  .metric   .estimator .estimate
-  &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;
-1 accuracy  binary         0.959
-2 f_meas    binary         0.968
-3 kap       binary         0.911
-4 precision binary         0.981
-5 roc_auc   binary         0.989
-6 sens      binary         0.956
-7 spec      binary         0.963</code></pre>
-</div>
-</div>
-<p>These metrics are now based on:</p>
+<section id="rmse-scale-dependence" class="level2">
+<h2 class="anchored" data-anchor-id="rmse-scale-dependence">RMSE: Scale Dependence</h2>
+<p>RMSE is expressed in the same units as the outcome.</p>
+<p>For <code>medv</code>, this means:</p>
 <ul>
-<li>incomplete data</li>
-<li>fold-specific imputation</li>
-<li>leakage-safe evaluation</li>
+<li>RMSE is measured in thousands of dollars,</li>
+<li>an RMSE of 3.38 may be acceptable or unacceptable depending on context,</li>
 </ul>
-<p>Performance differences relative to complete-case analysis are expected and interpretable.</p>
+<p>RMSE values cannot be compared across datasets unless the outcome scale is identical.</p>
 </section>
-<section id="fold-level-behavior" class="level2">
-<h2 class="anchored" data-anchor-id="fold-level-behavior">Fold-level behavior</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>resampling_results<span class="sc">$</span><span class="st">`</span><span class="at">rand_forest (ranger)</span><span class="st">`</span><span class="sc">$</span>folds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 70 × 4
-   fold  .metric   .estimator .estimate
-   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;
- 1 1     accuracy  binary         0.965
- 2 1     kap       binary         0.925
- 3 1     sens      binary         0.946
- 4 1     spec      binary         1    
- 5 1     precision binary         1    
- 6 1     f_meas    binary         0.972
- 7 1     roc_auc   binary         0.989
- 8 2     accuracy  binary         0.912
- 9 2     kap       binary         0.818
-10 2     sens      binary         0.865
-# ℹ 60 more rows</code></pre>
-</div>
-</div>
-<p>Missingness can increase variability across resampling folds.</p>
-<p>This variability is expected under resampling-based evaluation and reflects uncertainty induced by incomplete data and finite sample size, rather than a failure of the modeling procedure.</p>
-</section>
-<section id="what-fastml-does-not-allow-here" class="level2">
-<h2 class="anchored" data-anchor-id="what-fastml-does-not-allow-here">What fastml Does Not Allow Here</h2>
-<p>Consistent with <a href="./C4-what-fastml-does-not-allow.html"><strong>C4. What fastml Deliberately Does Not Allow</strong></a>, users cannot:</p>
+<section id="mae-vs-rmse" class="level2">
+<h2 class="anchored" data-anchor-id="mae-vs-rmse">MAE vs RMSE</h2>
+<p>MAE and RMSE often move together, but they answer different questions.</p>
 <ul>
-<li>impute the full dataset prior to resampling,</li>
-<li>reuse imputation parameters across folds,</li>
-<li>mix imputation strategies across models,</li>
-<li>detach imputation from evaluation.</li>
+<li>MAE reflects typical error magnitude.</li>
+<li>RMSE emphasizes large deviations.</li>
 </ul>
-<p>Any such workflow would invalidate the evaluation.</p>
+<p>If RMSE is much larger than MAE, large errors dominate performance.</p>
+<p>This distinction matters in clinical and economic settings where extreme errors may carry disproportionate cost.</p>
 </section>
-<section id="what-this-tutorial-does-not-cover" class="level2">
-<h2 class="anchored" data-anchor-id="what-this-tutorial-does-not-cover">What This Tutorial Does Not Cover</h2>
-<p>This tutorial intentionally does not cover:</p>
+<section id="why-better-rmse-is-often-meaningless" class="level2">
+<h2 class="anchored" data-anchor-id="why-better-rmse-is-often-meaningless">Why “Better RMSE” Is Often Meaningless</h2>
+<p>Statements such as:</p>
+<p><em>Model A has lower RMSE than Model B</em></p>
+<p>are incomplete unless accompanied by:</p>
 <ul>
-<li>multiple imputation (MICE),</li>
-<li>missing-not-at-random (MNAR) modeling,</li>
-<li>sensitivity analyses,</li>
-<li>causal assumptions about missingness.</li>
+<li>variability estimates,</li>
+<li>the outcome scale,</li>
+<li>resampling details,</li>
+<li>practical relevance.</li>
 </ul>
-<p>These require additional assumptions and belong to advanced workflows.</p>
+<p>Guarded resampling ensures valid estimation, but interpretation remains a human responsibility.</p>
 </section>
-<section id="responsible-interpretation" class="level2">
-<h2 class="anchored" data-anchor-id="responsible-interpretation">Responsible Interpretation</h2>
-<p>When missing data are present:</p>
+<section id="what-fastml-guarantees-and-what-it-does-not" class="level2">
+<h2 class="anchored" data-anchor-id="what-fastml-guarantees-and-what-it-does-not">What fastml Guarantees — and What It Does Not</h2>
+<p><code>fastml</code> guarantees that:</p>
 <ul>
-<li>performance estimates typically decrease,</li>
-<li>variability typically increases,</li>
-<li>small model differences become less meaningful.</li>
+<li>metrics are computed on unseen data,</li>
+<li>preprocessing does not leak information,</li>
+<li>model comparisons are fair.</li>
 </ul>
-<p>These are not failures of the model or the framework.<br>
-They are consequences of reduced information.</p>
+<p><code>fastml</code> does not guarantee that:</p>
+<ul>
+<li>metric differences are meaningful,</li>
+<li>one model should be preferred in practice,</li>
+<li>regression performance implies causal validity.</li>
+</ul>
+</section>
+<section id="responsible-regression-reporting" class="level2">
+<h2 class="anchored" data-anchor-id="responsible-regression-reporting">Responsible Regression Reporting</h2>
+<p>A defensible regression report should include:</p>
+<ul>
+<li>the outcome definition and units,</li>
+<li>the chosen metric(s) and rationale,</li>
+<li>the resampling scheme,</li>
+<li>aggregated performance estimates,</li>
+<li>variability across folds,</li>
+<li>a discussion of practical relevance.</li>
+</ul>
+<p>Single-number summaries are insufficient.</p>
 </section>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>Regression metrics are scale-dependent.<br>
+RMSE, MAE, and R² answer different questions.<br>
+Aggregated metrics hide variability.<br>
+Guarded resampling ensures validity, not interpretability.</p>
+<p>Interpretation requires domain context and judgment.</p>
+</section>
+<section id="r²-and-its-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="r²-and-its-limitations">R² and Its Limitations</h2>
+<p>R² is frequently misinterpreted.</p>
+<p>An R² of 0.8 does not mean that:</p>
 <ul>
-<li>Missing data handling is a common source of leakage.<br>
-</li>
-<li>Imputation must be learned within resampling splits.<br>
-</li>
-<li><code>fastml</code> enforces guarded imputation by design.<br>
-</li>
-<li>Increased uncertainty is expected and informative.<br>
-</li>
-<li>Complete-case analysis is a convenience, not a default.</li>
+<li>the model is “80% accurate”,</li>
+<li>predictions are close in absolute terms,</li>
+<li>the model is clinically useful.</li>
 </ul>
+<p>R² depends on outcome variance.<br>
+High R² can coexist with large absolute errors.</p>
 </section>
 <section id="what-comes-next" class="level2">
 <h2 class="anchored" data-anchor-id="what-comes-next">What comes next</h2>
-<p><strong><a href="">05. Survival Analysis and Time-to-Event Outcomes</a></strong><br>
-Survival outcomes and time-to-event evaluation under guarded resampling.</p>
+<p><strong><a href="./08-penalized-regression-and-high-dimensional-data.html">08. Penalized Regression and High-Dimensional Data</a></strong><br>
+Penalized regression and high-dimensional settings.</p>
 
 
 </section>

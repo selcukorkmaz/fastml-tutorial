@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>04. Missing Data and Guarded Imputation – fastml Tutorials</title>
+<title>08. Penalized Regression and High-Dimensional Data – fastml Tutorials</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -116,7 +116,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-basic-classification.html">Tutorials</a></li><li class="breadcrumb-item"><a href="./04-missing-data-and-guarded-imputation.html">04. Missing Data and Guarded Imputation</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-basic-classification.html">Tutorials</a></li><li class="breadcrumb-item"><a href="./08-penalized-regression-and-high-dimensional-data.html">08. Penalized Regression and High-Dimensional Data</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -211,7 +211,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04-missing-data-and-guarded-imputation.html" class="sidebar-item-text sidebar-link active">
+  <a href="./04-missing-data-and-guarded-imputation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">04. Missing Data and Guarded Imputation</span></a>
   </div>
 </li>
@@ -235,7 +235,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08-penalized-regression-and-high-dimensional-data.html" class="sidebar-item-text sidebar-link">
+  <a href="./08-penalized-regression-and-high-dimensional-data.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">08. Penalized Regression and High-Dimensional Data</span></a>
   </div>
 </li>
@@ -252,27 +252,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#motivation" id="toc-motivation" class="nav-link active" data-scroll-target="#motivation">Motivation</a></li>
-  <li><a href="#why-missing-data-are-dangerous-for-evaluation" id="toc-why-missing-data-are-dangerous-for-evaluation" class="nav-link" data-scroll-target="#why-missing-data-are-dangerous-for-evaluation">Why missing data are dangerous for evaluation</a></li>
-  <li><a href="#the-key-constraint" id="toc-the-key-constraint" class="nav-link" data-scroll-target="#the-key-constraint">The key constraint</a></li>
-  <li><a href="#data-with-missing-values" id="toc-data-with-missing-values" class="nav-link" data-scroll-target="#data-with-missing-values">Data with missing values</a></li>
-  <li><a href="#specifying-guarded-imputation" id="toc-specifying-guarded-imputation" class="nav-link" data-scroll-target="#specifying-guarded-imputation">Specifying guarded imputation</a></li>
-  <li><a href="#what-happens-under-the-hood-conceptual" id="toc-what-happens-under-the-hood-conceptual" class="nav-link" data-scroll-target="#what-happens-under-the-hood-conceptual">What Happens Under the Hood (Conceptual)</a></li>
-  <li><a href="#examining-performance" id="toc-examining-performance" class="nav-link" data-scroll-target="#examining-performance">Examining performance</a></li>
-  <li><a href="#fold-level-behavior" id="toc-fold-level-behavior" class="nav-link" data-scroll-target="#fold-level-behavior">Fold-level behavior</a></li>
-  <li><a href="#what-fastml-does-not-allow-here" id="toc-what-fastml-does-not-allow-here" class="nav-link" data-scroll-target="#what-fastml-does-not-allow-here">What fastml Does Not Allow Here</a></li>
-  <li><a href="#what-this-tutorial-does-not-cover" id="toc-what-this-tutorial-does-not-cover" class="nav-link" data-scroll-target="#what-this-tutorial-does-not-cover">What This Tutorial Does Not Cover</a></li>
-  <li><a href="#responsible-interpretation" id="toc-responsible-interpretation" class="nav-link" data-scroll-target="#responsible-interpretation">Responsible Interpretation</a></li>
+  <li><a href="#the-high-dimensional-regime" id="toc-the-high-dimensional-regime" class="nav-link" data-scroll-target="#the-high-dimensional-regime">The high-dimensional regime</a></li>
+  <li><a href="#why-penalization-works" id="toc-why-penalization-works" class="nav-link" data-scroll-target="#why-penalization-works">Why penalization works</a></li>
+  <li><a href="#recreating-a-high-dimensional-example" id="toc-recreating-a-high-dimensional-example" class="nav-link" data-scroll-target="#recreating-a-high-dimensional-example">Recreating a high-dimensional example</a></li>
+  <li><a href="#what-unpenalized-regression-does" id="toc-what-unpenalized-regression-does" class="nav-link" data-scroll-target="#what-unpenalized-regression-does">What unpenalized regression does</a></li>
+  <li><a href="#penalized-regression-with-elastic-net" id="toc-penalized-regression-with-elastic-net" class="nav-link" data-scroll-target="#penalized-regression-with-elastic-net">Penalized regression with elastic net</a></li>
+  <li><a href="#why-tuning-must-be-guarded" id="toc-why-tuning-must-be-guarded" class="nav-link" data-scroll-target="#why-tuning-must-be-guarded">Why Tuning Must Be Guarded</a></li>
+  <li><a href="#coefficient-interpretation-is-conditional" id="toc-coefficient-interpretation-is-conditional" class="nav-link" data-scroll-target="#coefficient-interpretation-is-conditional">Coefficient Interpretation Is Conditional</a></li>
+  <li><a href="#stability-matters-more-than-sparsity" id="toc-stability-matters-more-than-sparsity" class="nav-link" data-scroll-target="#stability-matters-more-than-sparsity">Stability Matters More Than Sparsity</a></li>
+  <li><a href="#high-dimensional-leakage-risks" id="toc-high-dimensional-leakage-risks" class="nav-link" data-scroll-target="#high-dimensional-leakage-risks">High-Dimensional Leakage Risks</a></li>
+  <li><a href="#what-fastml-deliberately-does-not-allow" id="toc-what-fastml-deliberately-does-not-allow" class="nav-link" data-scroll-target="#what-fastml-deliberately-does-not-allow">What fastml Deliberately Does Not Allow</a></li>
+  <li><a href="#responsible-reporting-in-high-dimensions" id="toc-responsible-reporting-in-high-dimensions" class="nav-link" data-scroll-target="#responsible-reporting-in-high-dimensions">Responsible Reporting in High Dimensions</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
-  <li><a href="#what-comes-next" id="toc-what-comes-next" class="nav-link" data-scroll-target="#what-comes-next">What comes next</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-basic-classification.html">Tutorials</a></li><li class="breadcrumb-item"><a href="./04-missing-data-and-guarded-imputation.html">04. Missing Data and Guarded Imputation</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-basic-classification.html">Tutorials</a></li><li class="breadcrumb-item"><a href="./08-penalized-regression-and-high-dimensional-data.html">08. Penalized Regression and High-Dimensional Data</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">04. Missing Data and Guarded Imputation</h1>
+<h1 class="title">08. Penalized Regression and High-Dimensional Data</h1>
 </div>
 
 
@@ -291,194 +291,243 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="motivation" class="level2">
 <h2 class="anchored" data-anchor-id="motivation">Motivation</h2>
-<p>In the earlier tutorials, we restricted the analysis to complete cases using <code>na.omit()</code>.</p>
-<p>This choice was intentional and explicitly justified as a pedagogical simplification.</p>
-<p>However, complete-case analysis is rarely appropriate in applied biomedical settings.<br>
-Missing data are the rule, not the exception.</p>
-<p>This tutorial shows how <strong>missing data can be handled under guarded resampling</strong>, without re-introducing leakage.</p>
-<hr>
+<p>Classical regression breaks down when the number of predictors approaches or exceeds the number of observations.</p>
+<p>This is not a software limitation.<br>
+It is a statistical one.</p>
+<p>High-dimensional settings require <strong>explicit regularization</strong>, careful resampling, and disciplined interpretation. This tutorial explains why penalized regression exists, how it behaves under guarded resampling, and what fastml does to prevent common failure modes.</p>
 </section>
-<section id="why-missing-data-are-dangerous-for-evaluation" class="level2">
-<h2 class="anchored" data-anchor-id="why-missing-data-are-dangerous-for-evaluation">Why missing data are dangerous for evaluation</h2>
-<p>Imputation is a data-dependent operation.</p>
-<p>If imputation parameters (means, medians, model-based estimates) are learned using the full dataset <strong>before resampling</strong>, then information from assessment folds leaks into training folds.</p>
-<p>This is a textbook example of the timing problem described in <a href="./C1-what-is-data-leakage.html"><strong>C1. What Is Data Leakage</strong></a>.</p>
-<p>The solution is not “better imputation”, but <strong>correct placement of imputation inside resampling</strong>.</p>
-<hr>
-</section>
-<section id="the-key-constraint" class="level2">
-<h2 class="anchored" data-anchor-id="the-key-constraint">The key constraint</h2>
-<p>Under <strong>guarded resampling</strong> (<a href="./C3-guarded-resampling.html">C3</a>):</p>
+<section id="the-high-dimensional-regime" class="level2">
+<h2 class="anchored" data-anchor-id="the-high-dimensional-regime">The high-dimensional regime</h2>
+<p>A dataset is effectively high-dimensional when:</p>
 <ul>
-<li>imputation must be learned <strong>within each resampling split</strong></li>
-<li>imputation parameters must never be shared across folds</li>
-<li>assessment data must not influence imputation</li>
+<li>the number of predictors is large relative to sample size</li>
+<li>predictors are correlated</li>
+<li>signal is weak relative to noise</li>
 </ul>
-<p>fastml enforces this automatically.</p>
-<hr>
+<p>In this regime, unpenalized regression produces:</p>
+<ul>
+<li>unstable coefficients</li>
+<li>inflated apparent performance</li>
+<li>extreme sensitivity to data splits</li>
+</ul>
+<p>Perfect in-sample fit is expected — and meaningless.</p>
 </section>
-<section id="data-with-missing-values" class="level2">
-<h2 class="anchored" data-anchor-id="data-with-missing-values">Data with missing values</h2>
-<p>We return to the original Breast Cancer dataset <strong>without</strong> removing incomplete rows.</p>
+<section id="why-penalization-works" class="level2">
+<h2 class="anchored" data-anchor-id="why-penalization-works">Why penalization works</h2>
+<p>Penalized regression modifies the loss function:</p>
+<ul>
+<li><strong>Ridge (L2)</strong> shrinks coefficients toward zero</li>
+<li><strong>Lasso (L1)</strong> shrinks and performs variable selection</li>
+<li><strong>Elastic net</strong> interpolates between ridge and lasso</li>
+</ul>
+<p>Penalization reduces variance at the cost of bias.<br>
+This trade-off is not optional in high dimensions.</p>
+</section>
+<section id="recreating-a-high-dimensional-example" class="level2">
+<h2 class="anchored" data-anchor-id="recreating-a-high-dimensional-example">Recreating a high-dimensional example</h2>
+<p>We simulate a setting with many predictors and limited observations.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fastml)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlbench)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(BreastCancer)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>breastCancer <span class="ot">&lt;-</span> BreastCancer <span class="sc">%&gt;%</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="st">"Id"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Class =</span> <span class="fu">factor</span>(Class, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"benign"</span>, <span class="st">"malignant"</span>)))</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(breastCancer)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>n  <span class="ot">&lt;-</span> <span class="dv">120</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>p  <span class="ot">&lt;-</span> <span class="dv">110</span>      </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>k  <span class="ot">&lt;-</span> <span class="dv">12</span>     </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>rho <span class="ot">&lt;-</span> <span class="fl">0.85</span>  </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>noise_sd <span class="ot">&lt;-</span> <span class="dv">2</span>  </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlated predictors:</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>Z <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">seq_len</span>(p), <span class="cf">function</span>(j) rho <span class="sc">*</span> Z <span class="sc">+</span> <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">-</span> rho<span class="sc">^</span><span class="dv">2</span>) <span class="sc">*</span> <span class="fu">rnorm</span>(n))</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(X)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(X) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"x"</span>, <span class="fu">seq_len</span>(p))</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Sparse true effects on first k predictors</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">3</span>, k), <span class="fu">rep</span>(<span class="dv">0</span>, p <span class="sc">-</span> k))</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Outcome</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">as.matrix</span>(X) <span class="sc">%*%</span> beta <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> noise_sd))</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>hd_data <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(<span class="fu">tibble</span>(<span class="at">y =</span> y), X)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(hd_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  Cl.thickness Cell.size Cell.shape Marg.adhesion Epith.c.size Bare.nuclei
-1            5         1          1             1            2           1
-2            5         4          4             5            7          10
-3            3         1          1             1            2           2
-4            6         8          8             1            3           4
-5            4         1          1             3            2           1
-6            8        10         10             8            7          10
-  Bl.cromatin Normal.nucleoli Mitoses     Class
-1           3               1       1    benign
-2           3               2       1    benign
-3           3               1       1    benign
-4           3               7       1    benign
-5           3               1       1    benign
-6           9               7       1 malignant</code></pre>
+<pre><code># A tibble: 6 × 111
+       y      x1      x2     x3      x4      x5     x6      x7      x8      x9
+   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+1 -14.4  -0.414  -0.892  -0.585 -0.466   0.0894 -1.03  -0.876  -0.0633  0.527 
+2  -5.28 -0.695  -0.460   0.147 -0.0302 -0.210  -1.11   1.22    1.02   -0.0204
+3  55.8   1.07    2.11    1.47   2.02    1.31    1.66   1.08    1.41    1.45  
+4  -1.67 -0.0750 -0.539   0.600  0.124  -0.739  -0.746  0.0938  0.0846 -0.831 
+5  11.5   1.08    0.0156  0.541  0.485   0.526   0.111  0.452   0.161   0.457 
+6  54.0   1.11    2.46    1.35   1.87    1.35    1.59   1.44    1.49    0.919 
+# ℹ 101 more variables: x10 &lt;dbl&gt;, x11 &lt;dbl&gt;, x12 &lt;dbl&gt;, x13 &lt;dbl&gt;, x14 &lt;dbl&gt;,
+#   x15 &lt;dbl&gt;, x16 &lt;dbl&gt;, x17 &lt;dbl&gt;, x18 &lt;dbl&gt;, x19 &lt;dbl&gt;, x20 &lt;dbl&gt;,
+#   x21 &lt;dbl&gt;, x22 &lt;dbl&gt;, x23 &lt;dbl&gt;, x24 &lt;dbl&gt;, x25 &lt;dbl&gt;, x26 &lt;dbl&gt;,
+#   x27 &lt;dbl&gt;, x28 &lt;dbl&gt;, x29 &lt;dbl&gt;, x30 &lt;dbl&gt;, x31 &lt;dbl&gt;, x32 &lt;dbl&gt;,
+#   x33 &lt;dbl&gt;, x34 &lt;dbl&gt;, x35 &lt;dbl&gt;, x36 &lt;dbl&gt;, x37 &lt;dbl&gt;, x38 &lt;dbl&gt;,
+#   x39 &lt;dbl&gt;, x40 &lt;dbl&gt;, x41 &lt;dbl&gt;, x42 &lt;dbl&gt;, x43 &lt;dbl&gt;, x44 &lt;dbl&gt;,
+#   x45 &lt;dbl&gt;, x46 &lt;dbl&gt;, x47 &lt;dbl&gt;, x48 &lt;dbl&gt;, x49 &lt;dbl&gt;, x50 &lt;dbl&gt;, …</code></pre>
 </div>
 </div>
-<p>At this stage, missing values are present in several predictors.</p>
+<p>Only five predictors carry signal. The rest are pure noise.</p>
 </section>
-<section id="specifying-guarded-imputation" class="level2">
-<h2 class="anchored" data-anchor-id="specifying-guarded-imputation">Specifying guarded imputation</h2>
-<p>Imputation is specified declaratively.</p>
-<p>Here we use median imputation for numeric predictors.</p>
+<section id="what-unpenalized-regression-does" class="level2">
+<h2 class="anchored" data-anchor-id="what-unpenalized-regression-does">What unpenalized regression does</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">fastml</span>(</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data          =</span> breastCancer,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">label         =</span> <span class="st">"Class"</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">algorithms    =</span> <span class="fu">c</span>(<span class="st">"rand_forest"</span>, <span class="st">"xgboost"</span>),</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">impute_method =</span> <span class="st">"medianImpute"</span>,</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>No imputation is performed at this point.</p>
-<p>The imputation strategy is recorded and applied <strong>inside each resampling split.</strong></p>
-</section>
-<section id="what-happens-under-the-hood-conceptual" class="level2">
-<h2 class="anchored" data-anchor-id="what-happens-under-the-hood-conceptual">What Happens Under the Hood (Conceptual)</h2>
-<p>For each resampling fold:</p>
-<ul>
-<li>training data are isolated,</li>
-<li>imputation parameters are estimated using the training data only,</li>
-<li>the same parameters are applied to the corresponding assessment data,</li>
-<li>the model is trained and evaluated within that fold.</li>
-</ul>
-<p>Under the guarded resampling execution path, assessment observations are not used when estimating imputation parameters.</p>
-<p>This behavior is not a convention assumed of the user.<br>
-It is implemented structurally within the guarded resampling workflow.</p>
-</section>
-<section id="examining-performance" class="level2">
-<h2 class="anchored" data-anchor-id="examining-performance">Examining performance</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>resampling_results<span class="sc">$</span><span class="st">`</span><span class="at">rand_forest (ranger)</span><span class="st">`</span><span class="sc">$</span>aggregated</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>lm_fit <span class="ot">&lt;-</span> <span class="fu">fastml</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data       =</span> hd_data,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">label      =</span> <span class="st">"y"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">algorithms =</span> <span class="st">"linear_reg"</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 7 × 3
-  .metric   .estimator .estimate
-  &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;
-1 accuracy  binary         0.959
-2 f_meas    binary         0.968
-3 kap       binary         0.911
-4 precision binary         0.981
-5 roc_auc   binary         0.989
-6 sens      binary         0.956
-7 spec      binary         0.963</code></pre>
+<pre><code>
+===== fastml Model Summary =====
+Task: regression 
+Number of Models Trained: 1 
+Best Model(s): linear_reg (lm) (rmse: 12.8543828) 
+
+Performance Metrics (Sorted by rmse):
+
+---------------------------------------------- 
+Model        Engine  RMSE    R-squared  MAE    
+---------------------------------------------- 
+linear_reg*  lm      12.854  0.778      10.516 
+---------------------------------------------- 
+(*Best model)
+
+Best Model hyperparameters:
+
+Model: linear_reg (lm) 
+  penalty: 
+  mixture: </code></pre>
 </div>
 </div>
-<p>These metrics are now based on:</p>
-<ul>
-<li>incomplete data</li>
-<li>fold-specific imputation</li>
-<li>leakage-safe evaluation</li>
-</ul>
-<p>Performance differences relative to complete-case analysis are expected and interpretable.</p>
+<p>This model fits all predictors.</p>
+<p>Its apparent performance may look acceptable, but coefficient estimates are unstable and uninterpretable.</p>
 </section>
-<section id="fold-level-behavior" class="level2">
-<h2 class="anchored" data-anchor-id="fold-level-behavior">Fold-level behavior</h2>
+<section id="penalized-regression-with-elastic-net" class="level2">
+<h2 class="anchored" data-anchor-id="penalized-regression-with-elastic-net">Penalized regression with elastic net</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>resampling_results<span class="sc">$</span><span class="st">`</span><span class="at">rand_forest (ranger)</span><span class="st">`</span><span class="sc">$</span>folds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>pen_fit <span class="ot">&lt;-</span> <span class="fu">fastml</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data       =</span> hd_data,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">label      =</span> <span class="st">"y"</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">algorithms =</span> <span class="st">"elastic_net"</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pen_fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 70 × 4
-   fold  .metric   .estimator .estimate
-   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;
- 1 1     accuracy  binary         0.965
- 2 1     kap       binary         0.925
- 3 1     sens      binary         0.946
- 4 1     spec      binary         1    
- 5 1     precision binary         1    
- 6 1     f_meas    binary         0.972
- 7 1     roc_auc   binary         0.989
- 8 2     accuracy  binary         0.912
- 9 2     kap       binary         0.818
-10 2     sens      binary         0.865
-# ℹ 60 more rows</code></pre>
+<pre><code>
+===== fastml Model Summary =====
+Task: regression 
+Number of Models Trained: 1 
+Best Model(s): elastic_net (glmnet) (rmse: 3.3240705) 
+
+Performance Metrics (Sorted by rmse):
+
+--------------------------------------------- 
+Model         Engine  RMSE   R-squared  MAE   
+--------------------------------------------- 
+elastic_net*  glmnet  3.324  0.987      2.720 
+--------------------------------------------- 
+(*Best model)
+
+Best Model hyperparameters:
+
+Model: elastic_net (glmnet) 
+  penalty: 0.01
+  mixture: 0.5</code></pre>
 </div>
 </div>
-<p>Missingness can increase variability across resampling folds.</p>
-<p>This variability is expected under resampling-based evaluation and reflects uncertainty induced by incomplete data and finite sample size, rather than a failure of the modeling procedure.</p>
-</section>
-<section id="what-fastml-does-not-allow-here" class="level2">
-<h2 class="anchored" data-anchor-id="what-fastml-does-not-allow-here">What fastml Does Not Allow Here</h2>
-<p>Consistent with <a href="./C4-what-fastml-does-not-allow.html"><strong>C4. What fastml Deliberately Does Not Allow</strong></a>, users cannot:</p>
+<p>Elastic net performs:</p>
 <ul>
-<li>impute the full dataset prior to resampling,</li>
-<li>reuse imputation parameters across folds,</li>
-<li>mix imputation strategies across models,</li>
-<li>detach imputation from evaluation.</li>
+<li>shrinkage,</li>
+<li>implicit feature selection,</li>
+<li>regularization-aware resampling.</li>
 </ul>
-<p>Any such workflow would invalidate the evaluation.</p>
+<p>This is not optional tuning.<br>
+It is required for validity.</p>
 </section>
-<section id="what-this-tutorial-does-not-cover" class="level2">
-<h2 class="anchored" data-anchor-id="what-this-tutorial-does-not-cover">What This Tutorial Does Not Cover</h2>
-<p>This tutorial intentionally does not cover:</p>
+<section id="why-tuning-must-be-guarded" class="level2">
+<h2 class="anchored" data-anchor-id="why-tuning-must-be-guarded">Why Tuning Must Be Guarded</h2>
+<p>The penalty strength determines how aggressively coefficients are shrunk.</p>
+<p>If tuning is performed outside resampling:</p>
 <ul>
-<li>multiple imputation (MICE),</li>
-<li>missing-not-at-random (MNAR) modeling,</li>
-<li>sensitivity analyses,</li>
-<li>causal assumptions about missingness.</li>
+<li>test data influence penalty selection,</li>
+<li>performance is inflated,</li>
+<li>variable selection becomes meaningless.</li>
 </ul>
-<p>These require additional assumptions and belong to advanced workflows.</p>
+<p><code>fastml</code> enforces tuning within resampling folds, preventing this failure mode.</p>
 </section>
-<section id="responsible-interpretation" class="level2">
-<h2 class="anchored" data-anchor-id="responsible-interpretation">Responsible Interpretation</h2>
-<p>When missing data are present:</p>
+<section id="coefficient-interpretation-is-conditional" class="level2">
+<h2 class="anchored" data-anchor-id="coefficient-interpretation-is-conditional">Coefficient Interpretation Is Conditional</h2>
+<p>In penalized models:</p>
 <ul>
-<li>performance estimates typically decrease,</li>
-<li>variability typically increases,</li>
-<li>small model differences become less meaningful.</li>
+<li>coefficient magnitude depends on penalty strength,</li>
+<li>selection is resampling-dependent,</li>
+<li>zero coefficients do not imply irrelevance.</li>
 </ul>
-<p>These are not failures of the model or the framework.<br>
-They are consequences of reduced information.</p>
+<p>Penalized regression identifies predictive structure, not causal effects.</p>
+<p>This distinction is routinely violated in applied research.</p>
+</section>
+<section id="stability-matters-more-than-sparsity" class="level2">
+<h2 class="anchored" data-anchor-id="stability-matters-more-than-sparsity">Stability Matters More Than Sparsity</h2>
+<p>Variable selection that changes dramatically across folds is unreliable.</p>
+<p><code>fastml</code> exposes fold-level results so instability can be detected rather than hidden.</p>
+<p>Sparse models are not inherently superior.<br>
+Stable models are.</p>
+</section>
+<section id="high-dimensional-leakage-risks" class="level2">
+<h2 class="anchored" data-anchor-id="high-dimensional-leakage-risks">High-Dimensional Leakage Risks</h2>
+<p>High-dimensional workflows amplify leakage through:</p>
+<ul>
+<li>feature screening on full data,</li>
+<li>global scaling,</li>
+<li>outcome-informed transformations,</li>
+<li>post-hoc variable selection.</li>
+</ul>
+<p>Each of these produces dramatic but invalid performance gains.</p>
+<p>Guarded resampling is essential, not optional.</p>
+</section>
+<section id="what-fastml-deliberately-does-not-allow" class="level2">
+<h2 class="anchored" data-anchor-id="what-fastml-deliberately-does-not-allow">What fastml Deliberately Does Not Allow</h2>
+<p><code>fastml</code> does not allow:</p>
+<ul>
+<li>global feature selection before resampling,</li>
+<li>leakage-prone tuning shortcuts,</li>
+<li>silent reuse of preprocessing statistics,</li>
+<li>single-split performance reporting.</li>
+</ul>
+<p>These are design constraints, not missing features.</p>
+</section>
+<section id="responsible-reporting-in-high-dimensions" class="level2">
+<h2 class="anchored" data-anchor-id="responsible-reporting-in-high-dimensions">Responsible Reporting in High Dimensions</h2>
+<p>A defensible report should include:</p>
+<ul>
+<li>sample size and number of predictors,</li>
+<li>penalty type and tuning strategy,</li>
+<li>resampling scheme,</li>
+<li>stability assessment,</li>
+<li>explicit limits on interpretation.</li>
+</ul>
+<p>Claims of “biomarkers” or “important variables” require evidence beyond penalized regression output.</p>
 </section>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
 <ul>
-<li>Missing data handling is a common source of leakage.<br>
+<li>High-dimensional regression is fundamentally different.<br>
 </li>
-<li>Imputation must be learned within resampling splits.<br>
+<li>Penalization is mandatory, not optional.<br>
 </li>
-<li><code>fastml</code> enforces guarded imputation by design.<br>
+<li>Penalization through elastic net, ridge or lasso balances sparsity and stability.<br>
 </li>
-<li>Increased uncertainty is expected and informative.<br>
-</li>
-<li>Complete-case analysis is a convenience, not a default.</li>
+<li>Guarded tuning prevents catastrophic leakage.</li>
 </ul>
-</section>
-<section id="what-comes-next" class="level2">
-<h2 class="anchored" data-anchor-id="what-comes-next">What comes next</h2>
-<p><strong><a href="">05. Survival Analysis and Time-to-Event Outcomes</a></strong><br>
-Survival outcomes and time-to-event evaluation under guarded resampling.</p>
+<p>Interpretation must be predictive, not causal.</p>
 
 
 </section>

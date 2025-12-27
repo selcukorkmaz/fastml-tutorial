@@ -32,18 +32,18 @@ Specifically, the difficulty is to obtain an estimate that is not biased by info
 
 ## Why this is harder than it sounds
 
-From **C1** and **C2**, recall the following points:
+From **[C1](C1-what-is-data-leakage.qmd)** and **[C2](C2-why-most-ml-pipelines-are-unsafe-by-default.qmd)**, recall the following points:
 
 -   Leakage does not require obvious mistakes.
 -   Pipelines that appear valid can still yield biased performance estimates.
 -   Most machine learning frameworks allow such pipelines to run without warnings.
 
-From **C3**, recall:
+From **[C3](C3-guarded-resampling.qmd)**, recall:
 
 -   Correct evaluation requires resampling to *enclose* preprocessing and model fitting.
 -   This enclosure must be structural, not procedural.
 
-From **C4**, recall:
+From **[C4](C4-what-fastml-does-not-allow.qmd)**, recall:
 
 -   fastml enforces correctness by removing degrees of freedom rather than relying on user discipline.
 

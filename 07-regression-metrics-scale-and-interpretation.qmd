@@ -1,0 +1,123 @@
+---
+title: "07. Regression Metrics, Scale, and Interpretation"
+execute:
+  warning: false
+  message: false
+---
+
+## Motivation
+
+Regression results are often reported as a single number:
+
+- RMSE = 3.38 
+- MAE = 4.80  
+- R² = 0.737  
+
+These numbers look precise, but without context they are frequently meaningless.
+
+This tutorial explains **what regression metrics do and do not tell us**, and how guarded resampling changes their interpretation.
+
+## Metrics encode assumptions
+
+Regression metrics are not interchangeable.
+
+Each metric encodes an implicit assumption about error structure.
+
+- **RMSE** penalizes large errors more heavily  
+- **MAE** treats all errors linearly  
+- **R²** measures variance explained relative to a baseline
+
+Choosing a metric is a modeling decision, not a reporting formality.
+
+## RMSE: Scale Dependence
+
+RMSE is expressed in the same units as the outcome.
+
+For `medv`, this means:
+
+- RMSE is measured in thousands of dollars,
+- an RMSE of 3.38 may be acceptable or unacceptable depending on context,
+
+RMSE values cannot be compared across datasets unless the outcome scale is identical.
+
+## MAE vs RMSE
+
+MAE and RMSE often move together, but they answer different questions.
+
+- MAE reflects typical error magnitude.
+- RMSE emphasizes large deviations.
+
+If RMSE is much larger than MAE, large errors dominate performance.
+
+This distinction matters in clinical and economic settings where extreme errors may carry disproportionate cost.
+
+## Why “Better RMSE” Is Often Meaningless
+
+Statements such as:
+
+*Model A has lower RMSE than Model B*
+
+are incomplete unless accompanied by:
+
+- variability estimates,
+- the outcome scale,
+- resampling details,
+- practical relevance.
+
+Guarded resampling ensures valid estimation, but interpretation remains a human responsibility.
+
+## What fastml Guarantees — and What It Does Not
+
+`fastml` guarantees that:
+
+- metrics are computed on unseen data,
+- preprocessing does not leak information,
+- model comparisons are fair.
+
+`fastml` does not guarantee that:
+
+- metric differences are meaningful,
+- one model should be preferred in practice,
+- regression performance implies causal validity.
+
+## Responsible Regression Reporting
+
+A defensible regression report should include:
+
+- the outcome definition and units,
+- the chosen metric(s) and rationale,
+- the resampling scheme,
+- aggregated performance estimates,
+- variability across folds,
+- a discussion of practical relevance.
+
+Single-number summaries are insufficient.
+
+## Summary
+
+Regression metrics are scale-dependent.  
+RMSE, MAE, and R² answer different questions.  
+Aggregated metrics hide variability.  
+Guarded resampling ensures validity, not interpretability.  
+
+Interpretation requires domain context and judgment.
+
+
+## R² and Its Limitations
+
+R² is frequently misinterpreted.
+
+An R² of 0.8 does not mean that:
+
+- the model is “80% accurate”,
+- predictions are close in absolute terms,
+- the model is clinically useful.
+
+R² depends on outcome variance.  
+High R² can coexist with large absolute errors.
+
+## What comes next
+
+**[08. Penalized Regression and High-Dimensional Data](08-penalized-regression-and-high-dimensional-data.qmd)**  
+Penalized regression and high-dimensional settings.
+

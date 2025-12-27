@@ -1,0 +1,194 @@
+---
+title: "08. Penalized Regression and High-Dimensional Data"
+execute:
+  warning: false
+  message: false
+---
+
+## Motivation
+
+Classical regression breaks down when the number of predictors approaches or exceeds the number of observations.
+
+This is not a software limitation.  
+It is a statistical one.
+
+High-dimensional settings require **explicit regularization**, careful resampling, and disciplined interpretation. This tutorial explains why penalized regression exists, how it behaves under guarded resampling, and what fastml does to prevent common failure modes.
+
+## The high-dimensional regime
+
+A dataset is effectively high-dimensional when:
+
+- the number of predictors is large relative to sample size
+- predictors are correlated
+- signal is weak relative to noise
+
+In this regime, unpenalized regression produces:
+
+- unstable coefficients
+- inflated apparent performance
+- extreme sensitivity to data splits
+
+Perfect in-sample fit is expected — and meaningless.
+
+## Why penalization works
+
+Penalized regression modifies the loss function:
+
+- **Ridge (L2)** shrinks coefficients toward zero
+- **Lasso (L1)** shrinks and performs variable selection
+- **Elastic net** interpolates between ridge and lasso
+
+Penalization reduces variance at the cost of bias.  
+This trade-off is not optional in high dimensions.
+
+## Recreating a high-dimensional example
+
+We simulate a setting with many predictors and limited observations.
+
+```{r}
+library(fastml)
+library(dplyr)
+
+set.seed(123)
+
+n  <- 120
+p  <- 110      
+k  <- 12     
+rho <- 0.85  
+noise_sd <- 2  
+
+# Correlated predictors:
+Z <- rnorm(n)
+X <- sapply(seq_len(p), function(j) rho * Z + sqrt(1 - rho^2) * rnorm(n))
+X <- as.data.frame(X)
+colnames(X) <- paste0("x", seq_len(p))
+
+# Sparse true effects on first k predictors
+beta <- c(rep(3, k), rep(0, p - k))
+
+# Outcome
+y <- as.numeric(as.matrix(X) %*% beta + rnorm(n, sd = noise_sd))
+
+hd_data <- bind_cols(tibble(y = y), X)
+
+head(hd_data)
+```
+
+Only five predictors carry signal. The rest are pure noise.
+
+## What unpenalized regression does
+
+```{r}
+lm_fit <- fastml(
+  data       = hd_data,
+  label      = "y",
+  algorithms = "linear_reg"
+)
+
+summary(lm_fit)
+```
+
+This model fits all predictors.
+
+Its apparent performance may look acceptable, but coefficient estimates are unstable and uninterpretable.
+
+## Penalized regression with elastic net
+
+```{r}
+pen_fit <- fastml(
+  data       = hd_data,
+  label      = "y",
+  algorithms = "elastic_net"
+)
+
+summary(pen_fit)
+```
+
+Elastic net performs:
+
+- shrinkage,
+- implicit feature selection,
+- regularization-aware resampling.
+
+This is not optional tuning.  
+It is required for validity.
+
+## Why Tuning Must Be Guarded
+
+The penalty strength determines how aggressively coefficients are shrunk.
+
+If tuning is performed outside resampling:
+
+- test data influence penalty selection,
+- performance is inflated,
+- variable selection becomes meaningless.
+
+`fastml` enforces tuning within resampling folds, preventing this failure mode.
+
+## Coefficient Interpretation Is Conditional
+
+In penalized models:
+
+- coefficient magnitude depends on penalty strength,
+- selection is resampling-dependent,
+- zero coefficients do not imply irrelevance.
+
+Penalized regression identifies predictive structure, not causal effects.
+
+This distinction is routinely violated in applied research.
+
+## Stability Matters More Than Sparsity
+
+Variable selection that changes dramatically across folds is unreliable.
+
+`fastml` exposes fold-level results so instability can be detected rather than hidden.
+
+Sparse models are not inherently superior.  
+Stable models are.
+
+## High-Dimensional Leakage Risks
+
+High-dimensional workflows amplify leakage through:
+
+- feature screening on full data,
+- global scaling,
+- outcome-informed transformations,
+- post-hoc variable selection.
+
+Each of these produces dramatic but invalid performance gains.
+
+Guarded resampling is essential, not optional.
+
+## What fastml Deliberately Does Not Allow
+
+`fastml` does not allow:
+
+- global feature selection before resampling,
+- leakage-prone tuning shortcuts,
+- silent reuse of preprocessing statistics,
+- single-split performance reporting.
+
+These are design constraints, not missing features.
+
+## Responsible Reporting in High Dimensions
+
+A defensible report should include:
+
+- sample size and number of predictors,
+- penalty type and tuning strategy,
+- resampling scheme,
+- stability assessment,
+- explicit limits on interpretation.
+
+Claims of “biomarkers” or “important variables” require evidence beyond penalized regression output.
+
+## Summary
+
+- High-dimensional regression is fundamentally different.  
+- Penalization is mandatory, not optional.  
+- Penalization through elastic net, ridge or lasso balances sparsity and stability.  
+- Guarded tuning prevents catastrophic leakage.  
+
+Interpretation must be predictive, not causal.
+
+

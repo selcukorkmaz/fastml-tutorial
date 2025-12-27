@@ -20,6 +20,9 @@ website:
           - 03-metrics-variability-and-uncertainty.qmd
           - 04-missing-data-and-guarded-imputation.qmd
           - 05-survival-analysis-and-time-to-event-outcomes.qmd
+          - 06-regression-and-continuous-outcomes.qmd
+          - 07-regression-metrics-scale-and-interpretation.qmd
+          - 08-penalized-regression-and-high-dimensional-data.qmd
 
 format:
   html:

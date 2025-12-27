@@ -31,5 +31,14 @@
   },
   "05-survival-analysis-and-time-to-event-outcomes.qmd": {
     "05-survival-analysis-and-time-to-event-outcomes.html": "240952f9"
+  },
+  "06-regression-and-continuous-outcomes.qmd": {
+    "06-regression-and-continuous-outcomes.html": "825f6643"
+  },
+  "08-penalized-regression-and-high-dimensional-data.qmd": {
+    "08-penalized-regression-and-high-dimensional-data.html": "828081c9"
+  },
+  "07-regression-metrics-scale-and-interpretation.qmd": {
+    "07-regression-metrics-scale-and-interpretation.html": "dee07afb"
   }
 }

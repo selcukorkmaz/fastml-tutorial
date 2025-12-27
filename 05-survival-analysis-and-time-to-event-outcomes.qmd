@@ -5,41 +5,39 @@ execute:
   message: false
 ---
   
-  ## Motivation
+## Motivation
   
-  Time-to-event outcomes introduce a new layer of complexity that is absent in standard classification and regression.
+Time-to-event outcomes introduce a new layer of complexity that is absent in standard classification and regression.
 
 In survival analysis:
   
-  - outcomes are partially observed
+- outcomes are partially observed
 - follow-up times differ across individuals
 - censoring is informative for evaluation
 - many common ML workflows fail silently
 
 These properties make survival analysis especially vulnerable to **evaluation errors and leakage**.
 
----
+
+## Why survival analysis is different
   
-  ## Why survival analysis is different
-  
-  In earlier tutorials, each observation contributed a fully observed outcome.
+In earlier tutorials, each observation contributed a fully observed outcome.
 
 In survival settings, each observation consists of:
   
-  - a time-to-event
+- a time-to-event
 - an event indicator (event vs censoring)
 
 Ignoring this structure leads to invalid evaluation.
 
 In particular, treating survival outcomes as binary labels discards timing information and introduces bias.
 
----
+
+## Leakage risks unique to survival analysis
   
-  ## Leakage risks unique to survival analysis
+Survival workflows introduce additional leakage pathways:
   
-  Survival workflows introduce additional leakage pathways:
-  
-  - using full follow-up information during preprocessing
+- using full follow-up information during preprocessing
 - computing time-dependent features globally
 - evaluating survival models without respecting censoring
 - mixing risk sets across resampling splits
@@ -48,11 +46,10 @@ These errors often go undetected and produce optimistic results.
 
 The principles from **C1–C3** apply here with greater force.
 
----
+
+## Data
   
-  ## Data
-  
-  We use a classical survival dataset with right censoring.
+We use a classical survival dataset with right censoring.
 
 ```{r}
 library(fastml)
@@ -176,6 +173,6 @@ Guarded resampling ensures valid evaluation, not clinical validity.
 
 ## What comes next
 
-**[06. Regression and Continuous Outcomes]()**  
+**[06. Regression and Continuous Outcomes](06-regression-and-continuous-outcomes.qmd)**  
 Regression and continuous outcomes under guarded resampling.
 
