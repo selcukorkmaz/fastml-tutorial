@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.8.26">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>fastml Tutorials - 01. Basic Classification</title>
+<title>01. Basic Classification – fastml Tutorials</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,6 +21,7 @@ ul.task-list li input[type="checkbox"] {
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -64,22 +65,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -88,6 +97,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -97,19 +107,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body class="nav-sidebar floating">
+<body class="nav-sidebar floating quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-basic-classification.html">Tutorials</a></li><li class="breadcrumb-item"><a href="./01-basic-classification.html">01. Basic Classification</a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-basic-classification.html">Tutorials</a></li><li class="breadcrumb-item"><a href="./01-basic-classification.html">01. Basic Classification</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -118,7 +128,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">fastml Tutorials</a> 
@@ -139,9 +149,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
  <span class="menu-text">Concepts</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -153,8 +163,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
           <li class="sidebar-item">
- <span class="menu-text">C2-why-most-ml-pipelines-are-unsafe.qmd</span>
-  </li>
+  <div class="sidebar-item-container"> 
+  <a href="./C2-why-most-ml-pipelines-are-unsafe-by-default.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">C2 — Why Most ML Pipelines Are Unsafe by Default</span></a>
+  </div>
+</li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./C3-guarded-resampling.html" class="sidebar-item-text sidebar-link">
@@ -171,9 +184,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -189,7 +202,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -217,7 +230,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-basic-classification.html">Tutorials</a></li><li class="breadcrumb-item"><a href="./01-basic-classification.html">01. Basic Classification</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">01. Basic Classification</h1>
 <p class="subtitle lead">Declaring intent under guarded resampling</p>
@@ -233,7 +246,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
+
 
 <section id="before-you-start" class="level2">
 <h2 class="anchored" data-anchor-id="before-you-start">Before you start</h2>
@@ -288,24 +303,802 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>This choice is intentional. The dataset is deliberately low-dimensional and clean, so that attention can remain on the evaluation procedure rather than on feature engineering, preprocessing decisions, or data-quality issues.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modeldata)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modeldata)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(two_class_dat)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>two_class_dat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>two_class_dat</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 791 × 3
-       A     B Class 
-   &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; 
- 1  2.07 1.63  Class1
- 2  2.02 1.04  Class1
- 3  1.69 1.37  Class2
- 4  3.43 1.98  Class2
- 5  2.88 1.98  Class1
- 6  3.31 2.41  Class2
- 7  2.50 1.56  Class2
- 8  1.98 1.55  Class2
- 9  2.88 0.580 Class1
-10  3.74 2.74  Class2
-# ℹ 781 more rows</code></pre>
+<pre><code>            A         B  Class
+1   2.0697297 1.6316467 Class1
+2   2.0164150 1.0366289 Class1
+3   1.6885554 1.3666097 Class2
+4   3.4345378 1.9797759 Class2
+5   2.8845957 1.9758911 Class1
+6   3.3135895 2.4058755 Class2
+7   2.4955833 1.5596673 Class2
+8   1.9782978 1.5502284 Class2
+9   2.8759583 0.5797836 Class1
+10  3.7402188 2.7431176 Class2
+11  1.4433105 1.6776070 Class1
+12  2.3427624 2.3230457 Class2
+13  2.6469801 1.8830934 Class2
+14  0.8486771 0.8129134 Class1
+15  3.2529647 0.8692317 Class1
+16  1.0516171 0.8450980 Class1
+17  0.8862019 0.4885507 Class1
+18  2.9069784 1.5378191 Class1
+19  3.1365968 2.0626572 Class2
+20  1.0387123 0.8864907 Class2
+21  2.1357587 2.3263359 Class2
+22  1.5648698 1.1003705 Class2
+23  3.6546557 2.4699692 Class2
+24  1.1324521 0.8976271 Class1
+25  2.1411035 1.8825245 Class1
+26  1.4251777 1.1849752 Class2
+27  0.9617529 0.7489629 Class1
+28  1.5055126 0.9684829 Class1
+29  3.9320717 1.7431961 Class1
+30  1.6410639 0.5024271 Class1
+31  2.9537896 3.0028569 Class2
+32  0.9892504 0.6127839 Class2
+33  2.2643581 1.5671440 Class2
+34  1.0098809 0.6989700 Class1
+35  1.8817118 1.9577988 Class1
+36  1.6086655 1.1430148 Class1
+37  1.4185320 0.8195439 Class1
+38  3.2408479 1.9705328 Class1
+39  0.8818781 0.4983106 Class1
+40  1.1986673 0.9138139 Class1
+41  2.0509957 1.6473830 Class2
+42  3.7312721 1.6519561 Class2
+43  1.0986309 0.7543483 Class1
+44  1.0771790 1.2750809 Class1
+45  3.3142770 2.6234457 Class2
+46  1.7454073 1.4487063 Class1
+47  1.6375912 1.5340261 Class2
+48  0.7405329 0.1986571 Class1
+49  1.7613585 0.8195439 Class1
+50  3.5785367 1.9978231 Class1
+51  1.9807671 1.8069935 Class2
+52  3.0635699 2.8069258 Class2
+53  0.8709567 0.6201361 Class1
+54  2.7894378 1.9884252 Class2
+55  1.1929973 1.0374265 Class1
+56  1.6971850 1.9608512 Class2
+57  1.1329441 1.3521825 Class1
+58  1.1210380 0.3010300 Class1
+59  1.4959114 0.4014005 Class1
+60  2.4443374 2.1000257 Class2
+61  2.1653559 2.3988077 Class2
+62  1.9948128 1.7347998 Class1
+63  2.9673959 2.8054329 Class2
+64  1.8083332 0.7708520 Class1
+65  1.4243459 0.6981005 Class1
+66  2.2958749 1.9218425 Class2
+67  3.9190304 2.6030361 Class1
+68  2.9963335 2.5742628 Class2
+69  3.9247944 3.3042923 Class2
+70  1.2389557 0.6901961 Class1
+71  1.3487062 0.8819550 Class1
+72  1.6831528 1.3304138 Class1
+73  2.9836169 1.9992611 Class2
+74  1.5811148 1.0421816 Class1
+75  1.3579220 1.4183013 Class1
+76  3.1485419 1.4312029 Class1
+77  0.7373215 0.7481880 Class1
+78  1.5243478 1.2172207 Class1
+79  2.3111901 2.1055102 Class2
+80  1.9847841 1.9329808 Class2
+81  3.2748186 3.1664301 Class2
+82  2.8389339 2.0994044 Class2
+83  1.0641919 0.6627578 Class1
+84  2.8063707 1.9554472 Class2
+85  3.5825135 1.4616486 Class1
+86  2.1041960 1.8007171 Class2
+87  2.9007813 1.9890492 Class2
+88  1.6020883 1.7708520 Class2
+89  2.2487514 1.9350032 Class1
+90  1.2333820 1.9982593 Class2
+91  2.5728610 1.0530784 Class1
+92  1.7762621 0.7767012 Class1
+93  1.8303619 1.2073650 Class2
+94  1.9244405 0.4623980 Class1
+95  2.6838117 2.3153405 Class2
+96  1.0340391 0.2405492 Class1
+97  3.2157011 2.5890555 Class2
+98  2.0392915 1.9484130 Class2
+99  3.9320717 2.1419825 Class1
+100 1.4929386 1.4166405 Class2
+101 1.2013638 0.8808136 Class1
+102 1.2248285 1.3138672 Class1
+103 1.8965881 1.9813655 Class2
+104 0.9873975 0.5728716 Class1
+105 1.5960533 1.4668676 Class1
+106 1.2023312 0.6434527 Class2
+107 2.6810283 0.8615344 Class1
+108 1.0056867 1.2405492 Class1
+109 2.4456415 0.9242793 Class1
+110 1.1303729 0.8808136 Class1
+111 1.2032458 0.6324573 Class1
+112 2.2004313 2.2049335 Class2
+113 1.5313184 1.6170003 Class2
+114 1.5040268 0.7767012 Class1
+115 1.4135101 0.8808136 Class1
+116 1.7117700 0.9542425 Class1
+117 1.2996303 1.0884905 Class1
+118 0.8959855 0.6928469 Class1
+119 1.5879767 0.5774918 Class1
+120 3.5637939 2.6303262 Class2
+121 1.5793687 0.5314789 Class1
+122 1.2078368 0.8082110 Class1
+123 1.3394318 1.5705429 Class1
+124 2.2858644 1.8192806 Class1
+125 1.4668087 1.2035768 Class2
+126 3.1297283 2.7296507 Class2
+127 1.0116499 1.0863598 Class1
+128 1.3483032 0.3424227 Class1
+129 1.5171731 0.2504200 Class2
+130 2.5619709 1.2940251 Class1
+131 1.2074461 0.8234742 Class1
+132 2.7654546 1.9147133 Class1
+133 1.8640556 1.6117233 Class2
+134 1.4773936 1.2764618 Class1
+135 1.1518518 0.7993405 Class1
+136 1.1840035 0.5314789 Class1
+137 2.7902697 1.1772478 Class2
+138 3.3445838 2.3581253 Class2
+139 2.7110593 1.6812412 Class1
+140 3.2158060 1.7168377 Class1
+141 1.4569120 0.6294096 Class1
+142 3.3067498 1.3673559 Class1
+143 1.0723317 0.8651040 Class1
+144 3.8208835 3.1964802 Class2
+145 1.3532269 0.9956352 Class1
+146 3.4248252 2.8880109 Class2
+147 2.4776203 1.8018837 Class2
+148 0.8392408 0.8195439 Class1
+149 1.8353843 1.0499929 Class1
+150 2.4975812 2.1532049 Class2
+151 1.3238427 1.2718416 Class2
+152 2.8313033 1.7958800 Class1
+153 1.7589877 0.1461280 Class1
+154 3.7999698 2.6101276 Class2
+155 1.2562615 0.9493900 Class1
+156 0.4443868 0.5314789 Class1
+157 2.3662909 2.8748875 Class2
+158 1.1656436 1.2469907 Class1
+159 3.3114858 2.1467480 Class1
+160 1.9640393 1.0000000 Class1
+161 0.4400599 0.3802112 Class1
+162 2.2292064 1.6009729 Class1
+163 1.1173990 1.3149201 Class1
+164 0.9544488 0.5622929 Class1
+165 1.7352566 1.7058637 Class2
+166 1.0326433 1.6605809 Class2
+167 3.7757727 3.2428171 Class2
+168 1.5158263 1.2405492 Class1
+169 2.0401250 0.9138139 Class1
+170 0.9117613 0.6901961 Class1
+171 3.8704353 2.5016069 Class1
+172 0.9807156 0.9344985 Class1
+173 3.6351337 2.5363059 Class2
+174 3.2025169 1.2169572 Class1
+175 1.0243016 0.9637878 Class1
+176 2.6667111 2.4279727 Class2
+177 1.7100831 0.9637878 Class1
+178 2.0708183 1.6512780 Class1
+179 2.5294512 2.2657374 Class1
+180 1.5484864 1.8438554 Class1
+181 1.6662424 1.1728947 Class1
+182 2.5343203 2.0011277 Class2
+183 1.9123481 1.6138418 Class2
+184 0.4477367 0.1461280 Class1
+185 1.1055698 0.5575072 Class1
+186 2.3865400 0.8567289 Class1
+187 3.6460259 3.2071495 Class2
+188 3.6346569 2.9005637 Class2
+189 1.1149407 1.2111205 Class1
+190 1.1477690 1.1673173 Class1
+191 2.3495452 2.0312872 Class1
+192 3.0649622 2.4375920 Class2
+193 1.3765981 1.2073650 Class1
+194 0.8837234 0.8987252 Class1
+195 2.9515553 1.0128372 Class1
+196 0.9772291 1.3096302 Class1
+197 0.9899970 0.8920946 Class1
+198 1.4076970 0.7993405 Class1
+199 3.0710733 3.3367398 Class1
+200 3.8137607 2.6920534 Class2
+201 3.1479818 2.6895752 Class2
+202 1.9192259 1.8280151 Class1
+203 1.7501617 2.0599419 Class2
+204 3.8090487 3.3140127 Class2
+205 0.9341354 0.8195439 Class1
+206 0.8759789 0.6127839 Class1
+207 2.8916416 2.0761305 Class1
+208 1.0786219 1.0253059 Class1
+209 2.6253589 1.6776070 Class1
+210 1.6432847 1.5733358 Class1
+211 1.5938699 1.0827854 Class1
+212 3.4458242 2.4774107 Class1
+213 1.3396227 0.9395193 Class1
+214 2.9548306 1.3974185 Class1
+215 1.0839858 0.4623980 Class1
+216 1.2995813 1.8161087 Class2
+217 2.2041739 1.2185355 Class2
+218 3.4746941 2.5680843 Class2
+219 0.6247626 0.6589648 Class1
+220 0.5653138 0.6857417 Class1
+221 1.4914606 1.1105897 Class1
+222 1.4682915 0.8627275 Class1
+223 2.6417854 1.8426092 Class1
+224 0.9306435 0.9052560 Class1
+225 1.1572432 1.1139434 Class1
+226 3.6991888 2.4360990 Class2
+227 2.2327158 1.5428254 Class1
+228 1.9802622 1.6935511 Class2
+229 0.7220149 0.5453071 Class1
+230 2.2386974 1.6273659 Class2
+231 1.6136453 1.7067178 Class2
+232 3.4603894 1.1442628 Class1
+233 1.2728221 1.7218106 Class1
+234 2.7989636 2.7087607 Class2
+235 3.0944786 2.6738500 Class2
+236 0.7696885 1.0842187 Class1
+237 1.2781279 0.8325089 Class1
+238 1.0069283 0.7923917 Class2
+239 3.3884220 2.0484806 Class1
+240 1.7526197 1.2528530 Class2
+241 0.8741253 1.0681859 Class1
+242 1.9827702 1.9469433 Class2
+243 2.4919443 2.3070680 Class2
+244 1.1187232 1.1430148 Class2
+245 3.2448652 1.4440448 Class1
+246 1.2765356 0.6532125 Class1
+247 1.8188421 1.1789769 Class1
+248 2.7632284 1.9674544 Class2
+249 2.5694675 2.4068807 Class2
+250 1.6301542 1.5751878 Class1
+251 1.2845048 1.2405492 Class2
+252 3.9139629 1.7617775 Class1
+253 1.5313808 1.3372595 Class2
+254 1.8873971 2.2030329 Class2
+255 1.7873598 1.9566486 Class2
+256 3.8157835 2.1628331 Class2
+257 3.8906656 3.6849620 Class2
+258 1.7206383 1.7944880 Class2
+259 1.0349981 0.6232493 Class1
+260 1.1221941 1.0827854 Class1
+261 2.6117717 1.5611014 Class1
+262 2.2002561 0.9772662 Class1
+263 1.8207007 1.9811388 Class2
+264 2.1018028 2.2245331 Class2
+265 1.4235361 1.6776070 Class2
+266 2.0655373 1.7885219 Class2
+267 2.4438545 0.6444386 Class1
+268 3.4423555 2.8584530 Class2
+269 1.6983763 1.2405492 Class1
+270 3.6905673 1.4225898 Class1
+271 2.0345106 1.4899585 Class1
+272 1.1289762 0.8853612 Class1
+273 2.3082328 2.1126720 Class2
+274 2.2067191 1.0000000 Class1
+275 0.8827373 0.7634280 Class1
+276 1.8034647 2.2350232 Class2
+277 1.9306878 1.2851070 Class2
+278 1.5519759 1.3180633 Class2
+279 1.2343039 0.1461280 Class1
+280 3.4090302 2.6605809 Class2
+281 1.4626134 1.1058507 Class1
+282 1.2101792 0.8082110 Class1
+283 1.0385384 0.9731279 Class1
+284 2.9874710 0.8698182 Class1
+285 1.3341740 1.1205739 Class1
+286 2.5084662 1.1743506 Class1
+287 2.9365921 2.7404416 Class2
+288 2.9779156 2.3144992 Class2
+289 2.2311212 0.8651040 Class1
+290 1.1475253 1.2671717 Class1
+291 1.7589179 0.8388491 Class1
+292 2.8584869 2.4299137 Class2
+293 1.4377749 0.5740313 Class1
+294 1.5202406 0.8129134 Class1
+295 2.7572733 1.0863598 Class1
+296 1.9206117 0.9633155 Class1
+297 2.3561981 1.9719713 Class2
+298 1.3714267 1.7094396 Class2
+299 1.3240837 1.2648178 Class2
+300 2.4370653 2.3481101 Class2
+301 2.5494506 2.4065402 Class2
+302 1.9495364 1.4733410 Class1
+303 1.1402788 0.7067178 Class1
+304 2.6770085 0.6222140 Class2
+305 1.7839966 1.3626709 Class2
+306 2.4688200 1.9572241 Class2
+307 1.5899308 1.3424227 Class1
+308 1.4813502 0.6655810 Class1
+309 0.6430136 0.3560259 Class1
+310 1.7154803 1.7831171 Class2
+311 2.9486505 1.3827373 Class1
+312 3.0607210 2.4769620 Class2
+313 2.3472500 2.1590255 Class1
+314 1.9268194 1.4623980 Class2
+315 1.9427961 1.0453230 Class1
+316 3.1060838 2.2846563 Class2
+317 3.0123071 2.2004674 Class2
+318 1.2735705 2.2891428 Class1
+319 2.5034291 1.9263424 Class2
+320 2.8000989 0.9623693 Class1
+321 0.9232960 1.1038037 Class1
+322 1.2999734 1.0362295 Class1
+323 2.5927205 2.2384727 Class2
+324 1.5817765 1.5774918 Class2
+325 1.5068485 1.1105897 Class1
+326 1.2367082 1.2741578 Class1
+327 2.0840434 1.2695129 Class1
+328 1.9305520 1.3664230 Class1
+329 1.7461657 0.8859263 Class1
+330 2.6688133 2.3059959 Class2
+331 2.9372107 2.8773713 Class2
+332 3.2031760 2.6675463 Class2
+333 1.7646803 1.9548212 Class2
+334 2.0160939 2.3669830 Class2
+335 1.1441641 1.1172713 Class1
+336 3.1245045 2.5582284 Class1
+337 3.0491795 1.9393195 Class1
+338 1.4306734 0.4313638 Class2
+339 1.7606442 1.4377506 Class1
+340 2.2230057 1.8668778 Class1
+341 2.7163400 0.9439889 Class1
+342 1.1529316 1.2552725 Class1
+343 2.6668456 1.4842998 Class1
+344 3.4436123 2.6664618 Class2
+345 1.5543314 1.3921691 Class2
+346 0.9739765 0.6730209 Class1
+347 2.1440744 2.3609719 Class2
+348 1.1102621 1.5954962 Class1
+349 1.4063539 0.7075702 Class2
+350 0.5744726 0.4983106 Class1
+351 3.0095308 2.4134674 Class2
+352 1.9719623 1.4927604 Class1
+353 3.7031329 1.0476642 Class1
+354 3.1211439 2.3508293 Class2
+355 0.4421235 0.8864907 Class1
+356 2.2974063 1.6538876 Class2
+357 3.1647721 2.5340261 Class2
+358 0.7510934 0.6384893 Class1
+359 1.7370163 1.4454485 Class2
+360 1.7175749 2.1687920 Class2
+361 1.6757704 0.7664128 Class1
+362 3.1772186 2.3554324 Class2
+363 1.6421173 1.1172713 Class2
+364 3.5534894 2.6337713 Class2
+365 1.8465831 1.7767012 Class2
+366 1.5235944 1.4983106 Class2
+367 1.0262596 0.8469553 Class1
+368 1.5307562 1.9210619 Class2
+369 1.2026187 0.6794279 Class1
+370 1.2698996 1.7932314 Class2
+371 2.7118170 0.8267225 Class1
+372 1.2655930 0.9527924 Class1
+373 3.3122066 3.0301138 Class2
+374 1.2200040 0.9030900 Class1
+375 0.4368185 0.1461280 Class1
+376 0.9770787 1.1205739 Class1
+377 2.9116540 2.7617024 Class2
+378 1.7858415 1.6364879 Class2
+379 3.6407692 1.4139700 Class1
+380 1.0348238 0.9804579 Class2
+381 2.2473613 0.9623693 Class2
+382 1.0251494 0.9493900 Class1
+383 2.7671557 1.3673559 Class1
+384 1.1320146 0.6954817 Class1
+385 3.4851491 2.5354207 Class2
+386 2.2261395 1.7032914 Class2
+387 3.1636151 2.9929068 Class2
+388 1.2837618 0.6127839 Class1
+389 0.7120883 0.9190781 Class1
+390 0.9254695 1.2430380 Class2
+391 0.9593218 0.7543483 Class1
+392 0.7656108 1.2253093 Class2
+393 0.4431342 1.4623980 Class1
+394 1.0663019 1.0310043 Class2
+395 3.6922255 1.7096939 Class1
+396 0.7437041 0.4149733 Class1
+397 3.7896577 2.9782718 Class2
+398 1.7968861 0.9344985 Class1
+399 2.9556390 1.7820424 Class1
+400 2.2355367 2.3803922 Class2
+401 2.4006036 1.9724805 Class1
+402 1.9207639 1.8457180 Class2
+403 2.8095029 1.6512780 Class1
+404 2.0770362 2.4432630 Class2
+405 2.2297733 2.6151080 Class2
+406 1.0593626 1.0207755 Class1
+407 1.6447375 1.2610248 Class1
+408 2.4493286 1.0655797 Class1
+409 0.9647263 0.2787536 Class1
+410 1.3120778 0.7853298 Class1
+411 3.0337673 2.4232459 Class2
+412 2.2346349 2.2753114 Class2
+413 2.1748831 0.7611758 Class1
+414 2.7453766 1.8836614 Class1
+415 1.7169794 1.3443923 Class1
+416 2.4098578 2.2340108 Class1
+417 1.7338149 1.9641181 Class2
+418 1.0501499 1.5258220 Class2
+419 1.4465241 1.2552725 Class1
+420 0.9507237 1.2095150 Class2
+421 1.4407566 0.9395193 Class1
+422 1.2913722 1.5132176 Class2
+423 1.2808606 1.3706981 Class2
+424 1.9929599 1.2988531 Class1
+425 2.4965744 2.4075608 Class2
+426 0.8145640 0.3617278 Class1
+427 1.8652219 1.6444386 Class1
+428 1.6480387 1.1583625 Class1
+429 2.2235762 1.8375884 Class2
+430 1.6783601 0.9513375 Class1
+431 1.6849686 1.4313638 Class2
+432 0.4438212 0.8195439 Class2
+433 2.8361585 2.5352941 Class1
+434 2.2665855 1.9643539 Class1
+435 1.5507043 0.8864907 Class1
+436 2.6107782 1.9237620 Class2
+437 0.9766273 0.6532125 Class1
+438 1.8663711 1.5831988 Class1
+439 0.6754108 0.5943926 Class1
+440 1.2785506 1.5786392 Class2
+441 1.3915648 0.8555192 Class1
+442 1.0394078 0.5797836 Class1
+443 1.6962861 0.7481880 Class1
+444 1.3264444 1.7632782 Class2
+445 3.3167452 2.7347998 Class2
+446 2.7957240 1.6334685 Class1
+447 3.3741792 2.7171127 Class2
+448 1.1408772 0.9867717 Class1
+449 1.5658440 1.6464037 Class2
+450 1.7420507 0.1731863 Class1
+451 2.7161581 2.5374413 Class2
+452 1.9713370 2.4007106 Class2
+453 2.9399550 2.4258601 Class2
+454 2.4612058 1.6560023 Class1
+455 1.5668580 0.6334685 Class1
+456 2.4236520 0.5440680 Class1
+457 2.7866363 2.5680843 Class2
+458 2.8193566 2.4723175 Class2
+459 3.6469615 2.7241939 Class2
+460 1.8007701 0.6334685 Class1
+461 1.0163580 0.7160033 Class1
+462 1.1122016 1.8407332 Class2
+463 3.5142229 1.3802112 Class1
+464 1.6486103 0.8864907 Class1
+465 1.4758771 1.5670264 Class2
+466 2.8087281 2.7722483 Class2
+467 2.9095826 1.9988694 Class2
+468 2.8771530 1.9726656 Class2
+469 1.2975701 1.4608978 Class2
+470 0.6545513 0.1731863 Class1
+471 3.2722012 2.4058584 Class2
+472 1.1914449 1.7619278 Class1
+473 1.5961723 2.0371475 Class2
+474 1.1215887 0.8129134 Class1
+475 1.8731789 1.8303962 Class2
+476 1.2461863 1.3767594 Class2
+477 0.8856938 0.5078559 Class1
+478 3.7120081 2.9551584 Class2
+479 2.8770649 2.3469395 Class2
+480 1.2385729 0.6560982 Class2
+481 0.6896951 0.1731863 Class1
+482 1.0189710 0.8692317 Class1
+483 2.0606855 1.3096302 Class1
+484 3.1033639 1.8299467 Class1
+485 1.1783590 1.6232493 Class2
+486 2.5659206 1.2455127 Class1
+487 3.0398046 2.7007037 Class2
+488 1.1645994 0.9395193 Class1
+489 0.6562144 0.6989700 Class1
+490 2.4449003 1.2405492 Class1
+491 3.7469087 2.9916690 Class2
+492 1.7844752 1.5682017 Class2
+493 3.3217884 1.8407332 Class1
+494 1.7176110 0.9960737 Class1
+495 3.5491143 2.6717281 Class1
+496 2.3416068 1.1367206 Class1
+497 1.3158886 1.2201081 Class1
+498 1.9203682 1.2164298 Class1
+499 3.5074215 1.2008505 Class1
+500 3.1655559 2.5902844 Class2
+501 3.7378928 2.6141270 Class2
+502 0.9026027 0.6627578 Class1
+503 1.4365269 0.7403627 Class1
+504 2.4153317 0.9138139 Class1
+505 1.2728221 1.3424227 Class2
+506 3.1412655 2.8816699 Class2
+507 3.8447065 2.6632296 Class2
+508 1.5749832 1.7745170 Class1
+509 2.6123802 1.3463530 Class1
+510 2.0414353 1.5976952 Class2
+511 2.4777664 0.9938769 Class1
+512 2.5284270 2.1981070 Class2
+513 1.4056477 1.7831887 Class2
+514 1.5154051 1.0374265 Class1
+515 1.3043531 1.2174839 Class2
+516 0.9014072 1.0253059 Class1
+517 0.8420445 1.0572856 Class1
+518 2.5092682 2.1131743 Class2
+519 2.6776116 1.7781513 Class1
+520 2.2960229 1.9084850 Class2
+521 2.4467476 2.1021935 Class2
+522 2.3887742 1.9395193 Class1
+523 3.0999104 2.5742628 Class2
+524 0.5689145 0.4913617 Class1
+525 1.2897693 1.6042261 Class2
+526 1.4533698 1.2041200 Class1
+527 1.9623834 1.4756712 Class2
+528 2.2526772 1.1205739 Class2
+529 1.1542263 0.5797836 Class1
+530 1.0794700 0.7853298 Class1
+531 2.9865909 1.9871745 Class1
+532 1.1987721 1.5118834 Class2
+533 2.2694059 0.8512583 Class1
+534 2.1437035 2.0378248 Class2
+535 1.6107264 1.8970770 Class2
+536 2.0382112 1.7143298 Class2
+537 2.2435589 2.1713754 Class2
+538 1.1292502 0.7993405 Class1
+539 1.7533211 2.0955180 Class2
+540 2.1905697 1.5976952 Class2
+541 2.4070611 2.4308809 Class2
+542 3.4307631 2.8145805 Class2
+543 2.1702332 1.6857417 Class2
+544 1.8239794 1.8318698 Class2
+545 2.6655196 2.4109459 Class2
+546 3.1685599 2.9716005 Class1
+547 0.8773200 1.1492191 Class1
+548 1.4640570 1.0417873 Class1
+549 2.2226404 1.9106244 Class2
+550 2.5183574 2.2725378 Class2
+551 1.3700258 0.9030900 Class1
+552 2.6315881 2.4080703 Class2
+553 1.0853944 1.1003705 Class1
+554 1.3291376 1.5224442 Class2
+555 0.4255132 0.1461280 Class1
+556 1.1095689 1.4712917 Class1
+557 0.8023440 0.5932861 Class1
+558 2.9890903 2.4850112 Class2
+559 1.3966185 1.1634596 Class1
+560 2.4754957 1.9732202 Class2
+561 2.5677805 1.6304279 Class2
+562 1.9592847 1.7708520 Class2
+563 0.9203419 0.6159501 Class1
+564 1.2867068 1.2624511 Class1
+565 0.9330855 0.7427251 Class1
+566 2.2071948 1.8585372 Class1
+567 1.3642680 1.7881684 Class2
+568 0.4363319 0.8750613 Class1
+569 1.1013655 1.8662873 Class2
+570 3.3036787 3.0177051 Class2
+571 2.4088334 2.0170333 Class2
+572 1.4648437 0.9912261 Class2
+573 3.7316795 2.6496269 Class2
+574 1.6388586 1.8876173 Class2
+575 1.6904557 0.2430380 Class1
+576 1.2862864 0.6627578 Class1
+577 0.9962551 0.7015680 Class1
+578 1.8521994 2.1053398 Class2
+579 2.3297452 1.2273724 Class1
+580 1.4263459 1.5550944 Class2
+581 1.5873780 2.0191163 Class2
+582 1.6186063 0.8450980 Class1
+583 1.1764995 1.4377506 Class1
+584 1.3273106 0.9642596 Class2
+585 1.1939963 1.3802112 Class2
+586 1.8525707 2.2837534 Class2
+587 2.8422565 0.8129134 Class1
+588 0.8182333 1.0606978 Class2
+589 1.2833902 0.9324738 Class1
+590 3.5642941 2.5509618 Class2
+591 1.8771529 1.4199557 Class2
+592 1.9041941 1.8585372 Class2
+593 1.3121750 0.9211661 Class1
+594 1.7899993 1.9662356 Class2
+595 2.3085457 2.3163898 Class2
+596 1.6925555 0.9680157 Class1
+597 2.4987457 1.9746959 Class2
+598 2.9599731 2.3628593 Class2
+599 2.5184391 1.3384565 Class1
+600 3.3066292 3.0450099 Class2
+601 1.5301313 1.4082400 Class1
+602 2.9770939 1.7134905 Class1
+603 1.6340514 1.5998831 Class1
+604 1.3451461 1.2278867 Class2
+605 3.9249666 2.3502480 Class1
+606 1.2717487 0.9222063 Class1
+607 0.8029770 1.5415792 Class2
+608 1.4940515 1.2878017 Class2
+609 1.3976959 1.1931246 Class2
+610 3.3105643 2.2861644 Class1
+611 2.7294204 0.1760913 Class1
+612 3.6146231 1.7902852 Class1
+613 1.5147731 1.8744818 Class2
+614 2.1594082 1.9595660 Class2
+615 1.9850140 1.9705793 Class2
+616 2.5692683 1.4563660 Class1
+617 2.7866081 1.4881275 Class1
+618 0.4122137 0.6232493 Class1
+619 2.9262528 1.9592322 Class1
+620 1.6656410 0.9242793 Class1
+621 2.0766404 2.1516762 Class2
+622 2.5903238 1.0211893 Class1
+623 2.9572096 2.4563660 Class2
+624 3.0421990 1.9628427 Class1
+625 1.2533825 1.6493349 Class2
+626 1.2753154 1.6190933 Class1
+627 1.8707816 1.8285955 Class1
+628 2.4577289 1.9237620 Class2
+629 2.0693843 1.9602329 Class2
+630 1.4321950 0.8188854 Class1
+631 1.3626254 0.6334685 Class1
+632 1.2182200 1.1818436 Class1
+633 2.9024715 1.2624511 Class2
+634 1.2663200 0.8260748 Class1
+635 1.2004480 0.7558749 Class1
+636 1.1560048 0.9758911 Class1
+637 1.9657951 0.5440680 Class1
+638 2.9641222 1.9815015 Class1
+639 2.5327327 1.7730547 Class1
+640 1.9826263 1.6711728 Class2
+641 3.7731220 2.5622572 Class2
+642 0.4457194 0.8808136 Class1
+643 3.3004269 1.7291648 Class1
+644 3.0243532 1.8305887 Class1
+645 0.8916230 0.8463371 Class1
+646 3.2565459 3.0462219 Class2
+647 1.1570548 0.8299467 Class1
+648 1.8361375 1.2866810 Class1
+649 1.4212841 1.6009729 Class2
+650 1.3833721 1.0863598 Class1
+651 3.7863123 2.0145205 Class1
+652 1.2059864 0.8061800 Class1
+653 2.2118935 2.3912880 Class2
+654 2.3947421 2.3430145 Class2
+655 1.7190535 0.8692317 Class1
+656 2.8112836 2.7752463 Class2
+657 2.8901596 0.8363241 Class1
+658 1.2140233 1.5390761 Class1
+659 2.2733987 1.4358444 Class1
+660 2.2736586 1.5428254 Class1
+661 3.4391079 2.8031839 Class2
+662 1.2221988 0.8293038 Class1
+663 3.4232949 2.3590572 Class2
+664 3.0887466 2.5621739 Class2
+665 1.9501297 1.6732974 Class1
+666 3.8317600 2.8646890 Class1
+667 3.8665085 3.8097078 Class2
+668 1.3782249 1.6972293 Class2
+669 1.5006033 0.4313638 Class1
+670 0.8579010 0.8082110 Class1
+671 1.0435167 1.0827854 Class1
+672 2.5812045 2.3727279 Class2
+673 2.0056392 1.9579423 Class2
+674 0.9709290 1.1818436 Class2
+675 2.0844888 1.6866363 Class2
+676 2.3269393 2.1783149 Class2
+677 1.1593946 0.4471580 Class1
+678 2.6127277 2.5819497 Class2
+679 3.6185069 2.3203540 Class2
+680 0.7949644 0.9493900 Class2
+681 1.3738517 0.8260748 Class1
+682 1.2210373 0.7853298 Class1
+683 2.0519417 2.2281436 Class2
+684 2.2482957 1.8195439 Class2
+685 3.8956997 2.7062055 Class2
+686 1.9037308 1.7528164 Class1
+687 1.1163498 0.7986506 Class1
+688 0.8314253 0.9299296 Class1
+689 1.2562615 1.2600714 Class1
+690 2.0867522 1.6785184 Class2
+691 1.2847771 0.9365137 Class2
+692 2.2968363 2.4586378 Class1
+693 2.0432617 2.2523675 Class2
+694 3.5598808 2.6760531 Class2
+695 1.4792112 0.9344985 Class1
+696 3.0207918 2.4667194 Class1
+697 2.2930166 2.3664230 Class2
+698 1.4695768 1.7986506 Class2
+699 2.3279811 1.1430148 Class1
+700 3.7552408 2.8531504 Class2
+701 1.6927764 1.9881128 Class2
+702 0.5330984 0.4842998 Class1
+703 1.7679412 1.9484130 Class2
+704 1.1555200 0.5440680 Class1
+705 1.8394065 0.9965117 Class1
+706 1.0564122 0.6989700 Class1
+707 3.6926171 2.6739420 Class2
+708 1.2386750 1.1072100 Class1
+709 0.9313548 0.4471580 Class1
+710 3.8649648 3.2504688 Class2
+711 3.2868462 2.7579272 Class2
+712 1.2297918 0.8195439 Class1
+713 2.2673595 1.7846173 Class2
+714 2.5461431 2.2440296 Class2
+715 0.6064050 0.3710679 Class1
+716 2.3450891 1.6910815 Class2
+717 0.8664658 0.7242759 Class1
+718 1.9561922 0.1731863 Class1
+719 2.8283457 1.9439889 Class1
+720 1.1181164 0.7853298 Class1
+721 0.9005572 0.4424798 Class1
+722 2.3931306 2.2232363 Class2
+723 1.1564895 1.0453230 Class1
+724 1.7285682 1.3342526 Class2
+725 0.8355827 1.4189638 Class2
+726 1.5791477 1.0644580 Class1
+727 2.4432192 2.0919130 Class2
+728 1.1373926 1.0492180 Class2
+729 0.9314476 0.3159703 Class1
+730 3.2838530 2.1105897 Class1
+731 0.4358857 0.1461280 Class1
+732 1.9953680 1.6414741 Class2
+733 1.5132551 1.0685569 Class1
+734 3.4703838 2.2046625 Class2
+735 2.0151578 1.5965971 Class2
+736 3.8437696 2.8734020 Class2
+737 3.0406076 2.5281451 Class2
+738 3.2526139 2.6863681 Class2
+739 3.2653139 2.5808110 Class2
+740 3.1180518 2.6266483 Class2
+741 1.6224410 0.6627578 Class1
+742 3.9162166 2.7304593 Class2
+743 0.7709778 0.8926510 Class1
+744 3.5669606 2.4896773 Class1
+745 3.6145237 3.7008335 Class2
+746 1.6996947 0.6875290 Class1
+747 1.7269218 2.0909631 Class2
+748 3.3957607 1.4727564 Class1
+749 0.4284474 0.7708520 Class1
+750 3.4720916 2.5848173 Class2
+751 0.6256078 0.5185139 Class1
+752 1.4979607 1.2124540 Class1
+753 2.8440403 1.8698182 Class1
+754 3.5183215 2.6952189 Class2
+755 3.2775229 1.2060159 Class1
+756 1.9068159 2.2523675 Class2
+757 1.1876231 0.8512583 Class1
+758 2.0840041 1.7774268 Class2
+759 1.3394080 1.1303338 Class1
+760 1.5133395 0.9637878 Class1
+761 3.6674849 3.5408048 Class2
+762 1.7230837 1.2833012 Class1
+763 2.8020106 1.1795518 Class1
+764 1.8614153 1.5910646 Class2
+765 1.7975625 1.3010300 Class1
+766 2.6351574 0.5453071 Class1
+767 1.2377302 1.3710679 Class2
+768 1.3129525 0.9912261 Class1
+769 1.6956070 0.9057959 Class1
+770 3.3672385 2.4913617 Class2
+771 2.7038385 1.9834007 Class2
+772 3.1805539 2.6905505 Class2
+773 0.9610847 0.9637878 Class1
+774 3.2942366 1.9787282 Class2
+775 2.3255588 2.3290926 Class2
+776 1.5399711 1.0740847 Class1
+777 2.2155005 2.3053514 Class2
+778 1.2841086 1.5959369 Class2
+779 1.8658924 2.0827854 Class2
+780 3.7907533 2.3803922 Class2
+781 2.5775445 1.8591383 Class1
+782 2.7607717 2.2655253 Class1
+783 0.7912798 0.6127839 Class1
+784 2.2768787 1.8536982 Class2
+785 3.9145490 3.0401354 Class1
+786 2.8016574 2.5282738 Class2
+787 1.7915633 1.0923697 Class1
+788 3.9320717 2.4726102 Class1
+789 3.8705828 2.6044421 Class2
+790 2.9787360 1.0413927 Class2
+791 1.9074935 0.6532125 Class1</code></pre>
 </div>
 </div>
 <p>The purpose of this example is to illustrate evaluation mechanics rather than data preprocessing challenges. Although the dataset itself is simple, the evaluation principles demonstrated here extend to more complex datasets and other supported tasks in fastml, subject to their respective assumptions and constraints.</p>
@@ -338,7 +1131,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>the intended resampling strategy.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fastml)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fastml)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">fastml</span>(</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data       =</span> two_class_dat,</span>
@@ -346,7 +1139,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">algorithms =</span> <span class="fu">c</span>(<span class="st">"rand_forest"</span>, <span class="st">"xgboost"</span>),</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">resampling =</span> <span class="st">"cv"</span>,</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">folds      =</span> <span class="dv">5</span>,</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>This call defines the full evaluation setup under the default execution path. Model fitting, preprocessing, and performance estimation are carried out internally according to the declared intent and the constraints imposed by fastml.</p>
 <hr>
@@ -386,31 +1179,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="inspecting-results">Inspecting results</h2>
 <p>Once execution is complete, performance estimates can be accessed directly from the fitted object.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>performance<span class="sc">$</span>rand_forest<span class="sc">$</span>ranger</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>performance<span class="sc">$</span>rand_forest<span class="sc">$</span>ranger</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 7 × 3
   .metric   .estimator .estimate
   &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;
-1 accuracy  binary         0.824
-2 kap       binary         0.643
+1 accuracy  binary         0.818
+2 kap       binary         0.629
 3 sens      binary         0.852
-4 spec      binary         0.789
-5 precision binary         0.833
-6 f_meas    binary         0.843
-7 roc_auc   binary         0.873</code></pre>
+4 spec      binary         0.775
+5 precision binary         0.824
+6 f_meas    binary         0.838
+7 roc_auc   binary         0.874</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>performance<span class="sc">$</span>xgboost<span class="sc">$</span>xgboost</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>performance<span class="sc">$</span>xgboost<span class="sc">$</span>xgboost</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 7 × 3
   .metric   .estimator .estimate
   &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;
-1 accuracy  binary         0.824
-2 kap       binary         0.643
-3 sens      binary         0.852
-4 spec      binary         0.789
-5 precision binary         0.833
-6 f_meas    binary         0.843
-7 roc_auc   binary         0.881</code></pre>
+1 accuracy  binary         0.811
+2 kap       binary         0.617
+3 sens      binary         0.841
+4 spec      binary         0.775
+5 precision binary         0.822
+6 f_meas    binary         0.831
+7 roc_auc   binary         0.864</code></pre>
 </div>
 </div>
 <p>The reported metrics summarize performance estimates obtained under 5-fold cross-validation for each model.</p>
@@ -422,13 +1215,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="fold-level-variability" class="level2">
 <h2 class="anchored" data-anchor-id="fold-level-variability">Fold-Level variability</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>resampling_results<span class="sc">$</span><span class="st">`</span><span class="at">rand_forest (ranger)</span><span class="st">`</span><span class="sc">$</span>folds</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>resampling_results<span class="sc">$</span><span class="st">`</span><span class="at">rand_forest (ranger)</span><span class="st">`</span><span class="sc">$</span>folds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>NULL</code></pre>
+<pre><code># A tibble: 35 × 4
+   fold  .metric   .estimator .estimate
+   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;
+ 1 1     accuracy  binary         0.850
+ 2 1     kap       binary         0.699
+ 3 1     sens      binary         0.843
+ 4 1     spec      binary         0.860
+ 5 1     precision binary         0.881
+ 6 1     f_meas    binary         0.861
+ 7 1     roc_auc   binary         0.874
+ 8 2     accuracy  binary         0.890
+ 9 2     kap       binary         0.779
+10 2     sens      binary         0.871
+# ℹ 25 more rows</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>resampling_results<span class="sc">$</span><span class="st">`</span><span class="at">xgboost (xgboost)</span><span class="st">`</span><span class="sc">$</span>folds</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>resampling_results<span class="sc">$</span><span class="st">`</span><span class="at">xgboost (xgboost)</span><span class="st">`</span><span class="sc">$</span>folds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>NULL</code></pre>
+<pre><code># A tibble: 35 × 4
+   fold  .metric   .estimator .estimate
+   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;
+ 1 1     accuracy  binary         0.843
+ 2 1     kap       binary         0.685
+ 3 1     sens      binary         0.814
+ 4 1     spec      binary         0.877
+ 5 1     precision binary         0.891
+ 6 1     f_meas    binary         0.851
+ 7 1     roc_auc   binary         0.875
+ 8 2     accuracy  binary         0.866
+ 9 2     kap       binary         0.730
+10 2     sens      binary         0.871
+# ℹ 25 more rows</code></pre>
 </div>
 </div>
 <p>Performance estimates vary across resampling folds, across metrics, and across models.</p>
@@ -440,21 +1259,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="model-comparison" class="level2">
 <h2 class="anchored" data-anchor-id="model-comparison">Model comparison</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 ===== fastml Model Summary =====
 Task: classification 
 Number of Models Trained: 2 
-Best Model(s): rand_forest (ranger) xgboost (xgboost) (accuracy: 0.8238994) 
+Best Model(s): rand_forest (ranger) (accuracy: 0.8176101) 
 
 Performance Metrics (Sorted by accuracy):
 
 ---------------------------------------------------------------------------------------------- 
 Model         Engine   Accuracy  F1 Score  Kappa  Precision  Sensitivity  Specificity  ROC AUC 
 ---------------------------------------------------------------------------------------------- 
-rand_forest*  ranger   0.824     0.843     0.643  0.833      0.852        0.789        0.873   
-xgboost*      xgboost  0.824     0.843     0.643  0.833      0.852        0.789        0.881   
+rand_forest*  ranger   0.818     0.838     0.629  0.824      0.852        0.775        0.874   
+xgboost       xgboost  0.811     0.831     0.617  0.822      0.841        0.775        0.864   
 ---------------------------------------------------------------------------------------------- 
 (*Best model)
 
@@ -465,16 +1284,6 @@ Model: rand_forest (ranger)
   trees: 500
   min_n: 10
 
-Model: xgboost (xgboost) 
-  mtry: 2
-  trees: 15
-  min_n: 2
-  tree_depth: 6
-  learn_rate: 0.1
-  loss_reduction: 0
-  sample_size: 0.5
-  stop_iter: 
-
 
 ===========================
 Confusion Matrices by Model
@@ -484,15 +1293,8 @@ Model: rand_forest (ranger)
 ---------------------------
           Truth
 Prediction Class1 Class2
-    Class1     75     15
-    Class2     13     56
-
-Model: xgboost (xgboost) 
----------------------------
-          Truth
-Prediction Class1 Class2
-    Class1     75     15
-    Class2     13     56</code></pre>
+    Class1     75     16
+    Class2     13     55</code></pre>
 </div>
 </div>
 <p>The summary output compares models evaluated under an identical resampling specification.</p>
@@ -543,43 +1345,58 @@ A deeper look at how fastml enforces evaluation invariants.</p>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
       }
+      return false;
     }
-    return false;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
       for (const childEl of codeEl.children) {
         if (isCodeAnnotation(childEl)) {
           childEl.remove();
@@ -587,195 +1404,348 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
       return codeEl.innerText;
     }
-  });
-  clipboard.on('success', function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  });
-  function tippyHover(el, contentFn) {
-    const config = {
-      allowHTML: true,
-      content: contentFn,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start'
-    };
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      return note.innerHTML;
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
     });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
     }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
           }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
       });
     }
-  }
-});
-</script>
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 </div> <!-- /content -->
+
 
 
 

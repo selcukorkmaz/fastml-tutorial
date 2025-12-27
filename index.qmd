@@ -24,10 +24,10 @@ The material is organized into four sections.
 
 These sections introduce the ideas that motivate fastml, including:
 
-- what data leakage is,
-- why many ML pipelines are unsafe by default,
-- what guarded resampling entails,
-- which classes of workflow configurations fastml deliberately restricts.
+-   what data leakage is,
+-   why many ML pipelines are unsafe by default,
+-   what guarded resampling entails,
+-   which classes of workflow configurations fastml deliberately restricts.
 
 The concepts establish the assumptions required to interpret the tutorials correctly.
 
@@ -41,9 +41,9 @@ They assume familiarity with the Concepts section and focus on demonstrating eva
 
 Advanced sections extend the framework to more complex settings, such as:
 
-- handling missing data,
-- survival analysis,
-- model interpretation and diagnostics.
+-   handling missing data,
+-   survival analysis,
+-   model interpretation and diagnostics.
 
 These sections build on the same evaluation principles under additional modeling constraints.
 
