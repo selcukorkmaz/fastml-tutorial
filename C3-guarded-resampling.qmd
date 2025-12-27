@@ -1,5 +1,5 @@
 ---
-title: "C3 — Guarded Resampling"
+title: "C3. Guarded Resampling"
 format:
   html:
     toc: true

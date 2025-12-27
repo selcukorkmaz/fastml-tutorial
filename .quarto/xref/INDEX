@@ -16,5 +16,14 @@
   },
   "C2-why-most-ml-pipelines-are-unsafe-by-default.qmd": {
     "C2-why-most-ml-pipelines-are-unsafe-by-default.html": "f595afd7"
+  },
+  "02-multiple-models-fair-comparison.qmd.qmd": {
+    "02-multiple-models-fair-comparison.qmd.html": "b64f4499"
+  },
+  "02-multiple-models-fair-comparison.qmd": {
+    "02-multiple-models-fair-comparison.html": "ba9de2fb"
+  },
+  "03-metrics-variability-and-uncertainty.qmd": {
+    "03-metrics-variability-and-uncertainty.html": "f40c8eb8"
   }
 }

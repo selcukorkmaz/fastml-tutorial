@@ -1,5 +1,5 @@
 ---
-title: "C4 — What fastml Deliberately Does Not Allow"
+title: "C4. What fastml Deliberately Does Not Allow"
 format:
   html:
     toc: true

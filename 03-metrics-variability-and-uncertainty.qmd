@@ -1,0 +1,164 @@
+---
+title: "03. Metrics, Variability, and Uncertainty"
+execute:
+  warning: false
+  message: false
+---
+
+## Motivation
+
+Machine learning results are often summarized by a single number.
+
+This practice is convenient, but it is rarely sufficient.
+
+Performance metrics are **random variables**, not fixed properties of a model.  
+They depend on how data are split, how models are trained, and how evaluation is conducted.
+
+As shown in Tutorials 01–02, fastml enforces valid evaluation.  
+This tutorial focuses on how to **interpret the resulting metrics responsibly**.
+
+
+## Recreating the analysis
+
+Each tutorial in this series is designed to be **fully self-contained**.
+
+We therefore recreate the analysis from Tutorials 01–02 before examining metric behavior.
+
+```{r}
+library(fastml)
+library(mlbench)
+library(dplyr)
+
+data(BreastCancer)
+
+breastCancer <- BreastCancer %>%
+  select(-Id) %>%
+  filter(!is.na(Class)) %>%
+  na.omit() %>%
+  mutate(Class = factor(Class, levels = c("benign", "malignant")))
+
+fit <- fastml(
+  data       = breastCancer,
+  label      = "Class",
+  algorithms = c("rand_forest", "xgboost"),
+)
+```
+
+## Metrics Are Estimates, Not Truths
+
+A performance metric such as accuracy or ROC AUC is an estimate of out-of-sample performance rather than a fixed quantity.
+
+Its value depends on:
+
+- the resampling scheme,
+- the specific data splits,
+- random elements in model fitting.
+
+Reporting only a single point estimate obscures this variability.
+
+## Aggregated Metrics
+
+`fastml` reports metrics aggregated across resampling folds.
+
+```{r}
+fit$resampling_results$`rand_forest (ranger)`$aggregated
+```
+
+These values summarize performance under guarded cross-validation.
+
+They answer the question:
+
+*What is the average performance of this model under this evaluation design?*
+
+They do not answer:
+
+*How stable is this performance?*
+
+
+## Fold-Level Variability
+
+To assess performance stability, fold-level results must be examined.
+
+```{r}
+fit$resampling_results$`rand_forest (ranger)`$folds
+```
+
+Fold-level metrics reveal:
+
+- sensitivity to data partitioning,
+- variability across assessment sets,
+- overlap between competing models.
+
+Large variability indicates that small differences in average performance are unlikely to be meaningful.
+
+## Variability and Model Comparison
+
+In Tutorial 02, models were compared using shared resampling.
+
+Even under fair comparison, it is common to observe:
+
+- overlapping fold-level performance,
+- different rankings across folds,
+- instability in “best model” selection.
+
+This is not a flaw.  
+It reflects finite-sample uncertainty.
+
+## Beyond Point Estimates
+
+Point estimates encourage overinterpretation.
+
+Two models with accuracies of 0.82 and 0.84 may appear different, but without information on variability, this difference is not interpretable.
+
+For this reason, `fastml` supports uncertainty-aware performance summaries.
+
+## Bootstrap-Based Metric Uncertainty
+
+When enabled, `fastml` computes bootstrap distributions of evaluation metrics.
+
+```{r}
+fit$metric_bootstrap
+```
+
+Bootstrapping provides:
+
+- empirical uncertainty estimates,
+- insight into metric dispersion,
+- a basis for interval-based reporting.
+
+These intervals describe evaluation uncertainty rather than population-level inference.
+
+## What fastml Does Not Claim
+
+`fastml` does not:
+
+- perform hypothesis testing between models,
+- assign statistical significance to metric differences,
+- provide p-values for model superiority.
+
+Such procedures require additional assumptions and lie outside the scope of guarded resampling.
+
+## Responsible Reporting
+
+A defensible performance report should include:
+
+- the primary evaluation metric,
+- the resampling scheme,
+- aggregated performance estimates,
+- fold-level variability or uncertainty intervals.
+
+Single-number summaries are insufficient.
+
+## Summary
+
+Metrics are random variables.  
+Point estimates hide variability.  
+Fold-level results reveal stability and overlap.  
+Bootstrap methods provide uncertainty estimates.  
+
+`fastml` emphasizes defensible interpretation over ranking.
+
+## What comes next
+
+**[04. Missing Data and Guarded Imputation]()**  
+

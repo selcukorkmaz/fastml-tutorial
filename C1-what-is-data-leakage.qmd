@@ -1,5 +1,5 @@
 ---
-title: "C1 — What Is Data Leakage"
+title: "C1. What Is Data Leakage"
 format:
   html:
     toc: true

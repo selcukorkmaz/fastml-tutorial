@@ -1,5 +1,5 @@
 ---
-title: "C2 — Why Most ML Pipelines Are Unsafe by Default"
+title: "C2. Why Most ML Pipelines Are Unsafe by Default"
 format:
   html:
     toc: true
@@ -28,7 +28,7 @@ Contemporary ML frameworks emphasize modularity:
 
 This flexibility is powerful, but it has consequences.
 
-Nothing in the default design prevents users from assembling pipelines in orders that violate evaluation assumptions.
+In most frameworks, nothing in the default execution path prevents users from assembling pipelines in orders that violate evaluation assumptions.
 
 Such pipelines are typically syntactically valid and computationally successful, even when they are methodologically incorrect.
 
@@ -50,9 +50,9 @@ Users may still:
 - apply preprocessing outside the resampling loop,
 - tune models using data that later serve as assessment sets.
 
-The software generally permits these configurations to run without intervention.
+In most cases, the software permits these configurations to execute without intervention.
 
-As a result, methodological correctness is advisory rather than enforced.
+As a result, methodological correctness depends on how components are assembled, not on guarantees provided by the execution model.
 
 
 ## Why warnings do not solve the problem
@@ -67,9 +67,9 @@ Leakage is often:
 - dependent on context and intent,
 - indistinguishable from valid workflows at runtime.
 
-Static analysis can detect only narrow classes of problems, and comprehensive runtime checks are difficult without restricting flexibility.
+Static analysis can detect only narrow classes of problems, and comprehensive runtime checks are difficult without constraining flexibility or expressiveness.
 
-Most frameworks therefore favor permissiveness over enforcement.
+Most frameworks therefore favor permissiveness and composability over strict enforcement.
 
 
 ## The expert-user fallacy
@@ -84,7 +84,7 @@ This implicitly assumes that:
 
 These assumptions do not reliably hold.
 
-As workflows become more complex—nested resampling, grouped splits, tuning loops—the space for subtle errors expands, even for experienced practitioners.
+As workflows become more complex, for example nested resampling, grouped splits, or tuning loops, the space for subtle errors expands, even for experienced practitioners.
 
 Expertise can reduce risk, but it does not eliminate it.
 
@@ -101,28 +101,26 @@ When pipelines are unsafe by default:
 This is not primarily a failure of individual users.  
 It reflects limitations in pipeline architecture.
 
-
 ## What a safe default would require
 
 A safe default requires more than recommendations or documentation.
 
-It requires that:
+It requires that, along the default execution path:
 
 - resampling encloses all data-dependent learning steps,
-- preprocessing cannot be learned globally,
-- evaluation cannot be detached from model fitting,
-- unsafe configurations are restricted along the default execution path.
+- preprocessing is not learned globally,
+- evaluation is not detachable from model fitting,
+- unsafe configurations are restricted or redirected.
 
-In other words, correctness must be enforced by construction rather than assumed.
-
+In other words, correctness must be enforced by construction within the execution model, rather than assumed.
 
 ## Summary
 
-- Modern ML frameworks prioritize flexibility.
-- Methodological correctness is typically optional.
-- Invalid pipelines are often allowed to execute silently.
+- Modern ML frameworks prioritize flexibility and composability.
+- Methodological correctness is usually supported but not enforced.
+- Invalid pipelines can execute without warnings.
 - Expertise alone does not prevent evaluation errors.
-- Safe evaluation requires architectural constraints.
+- Safer evaluation requires architectural constraints.
 
 This motivates the core idea behind **fastml**: **Guarded Resampling**.
 

@@ -1,6 +1,5 @@
 ---
 title: "01. Basic Classification"
-subtitle: "Declaring intent under guarded resampling"
 execute:
   warning: false
   message: false
@@ -10,10 +9,10 @@ execute:
 
 This tutorial builds on the following conceptual material:
 
--   **C1 — What is Data Leakage**
--   **C2 — Why Most ML Pipelines Are Unsafe by Default**
--   **C3 — Guarded Resampling**
--   **C4 — What fastml Deliberately Does Not Allow**
+-   **[C1. What is Data Leakage](C1-what-is-data-leakage.qmd)**
+-   **[C2. Why Most ML Pipelines Are Unsafe by Default](C2-why-most-ml-pipelines-are-unsafe-by-default.qmd)**
+-   **[C3. Guarded Resampling](C3-guarded-resampling.qmd)**
+-   **[C4. What fastml Deliberately Does Not Allow](C4-what-fastml-does-not-allow.qmd)**
 
 Readers are expected to be familiar with these concepts before proceeding.
 
@@ -72,7 +71,7 @@ This choice is intentional. The dataset is deliberately low-dimensional and clea
 ```{r}
 library(modeldata)
 data(two_class_dat)
-two_class_dat
+head(two_class_dat)
 ```
 
 The purpose of this example is to illustrate evaluation mechanics rather than data preprocessing challenges. Although the dataset itself is simple, the evaluation principles demonstrated here extend to more complex datasets and other supported tasks in fastml, subject to their respective assumptions and constraints.
@@ -248,8 +247,5 @@ The distinguishing characteristic of fastml is therefore not automation for its 
 
 ## What comes next
 
-**02. Multiple Models and Fair Comparison**  
+**[02. Multiple Models and Fair Comparison](02-multiple-models-fair-comparison.qmd)**  
 Why comparing models is statistically invalid without shared resampling.
-
-**Concept: Guarded Resampling (Revisited)**  
-A deeper look at how fastml enforces evaluation invariants.

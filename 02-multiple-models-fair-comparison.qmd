@@ -1,0 +1,160 @@
+---
+title: "02. Multiple Models and Fair Comparison"
+execute:
+  warning: false
+  message: false
+---
+
+## Motivation
+
+Comparing machine learning models is a central goal of applied analysis.
+
+However, many model comparisons are invalid—not because the models are wrong, but because they are evaluated under **different data partitions**, **different preprocessing**, or **different sources of randomness**.
+
+As discussed in **C3 — Guarded Resampling**, fair comparison requires more than using the same metric.
+
+---
+
+## What “fair comparison” means
+
+A comparison is fair only if:
+
+- all models see the **same resampling splits**
+- preprocessing is learned **independently within each split**
+- metrics are computed on **identical assessment sets**
+- differences reflect models, not data partitioning
+
+fastml enforces these conditions along its guarded resampling execution path, ensuring fair comparison when models are evaluated within a single fastml call.
+
+---
+
+## Data
+
+We use a complete-case version of the *BreastCancer* dataset after removing the identifier column and excluding observations with missing values. This complete-case strategy is used for simplicity in this tutorial; in real applications, missingness should be handled explicitly (e.g., via guarded imputation) when it is nontrivial or informative.
+
+```{r}
+library(fastml)
+library(mlbench)
+library(dplyr)
+
+data(BreastCancer)
+
+breastCancer <- BreastCancer %>%
+  select(-Id) %>%
+  filter(!is.na(Class)) %>%
+  na.omit() %>%
+  mutate(Class = factor(Class, levels = c("benign", "malignant")))
+  
+head(breastCancer)
+```
+
+## Defining Multiple Models
+
+We compare three structurally different models:
+
+- **Logistic regression** (linear)
+- **Random forest** (tree ensemble)
+- **Gradient boosted trees**
+
+No hyperparameter tuning is performed.  
+Default engine settings are used intentionally.
+This isolates differences due to model structure rather than tuning effort, which is essential for a fair baseline comparison.
+
+```{r}
+fit <- fastml(
+  data       = breastCancer,
+  label      = "Class",
+  algorithms = c("logistic_reg", "rand_forest", "xgboost")
+)
+```
+
+## Shared resampling plan
+
+All models are evaluated under a single, shared resampling plan.
+
+```{r}
+fit$resampling_plan
+```
+
+This guarantees that:
+
+- every model is trained and evaluated on the same splits
+- differences in performance are attributable to the model, not the data
+
+
+## Aggregated performance
+
+We first examine performance aggregated across folds.
+
+```{r}
+fit$resampling_results$`logistic_reg (glm)`$aggregated
+fit$resampling_results$`rand_forest (ranger)`$aggregated
+fit$resampling_results$`xgboost (xgboost)`$aggregated
+```
+
+These summaries provide point estimates under guarded cross-validation.
+
+## Fold-level variability
+
+Fair comparison also requires inspecting variability across folds.
+
+```{r}
+fit$resampling_results$`rand_forest (ranger)`$folds
+```
+
+Fold-level results reveal:
+
+- instability
+- sensitivity to data partitioning
+- overlap between models’ performance distributions
+
+Single numbers are rarely sufficient.
+
+## Best model selection
+
+fastml identifies a “best” model based on the primary metric.
+
+```{r}
+fit$best_model_name
+```
+
+This selection is **descriptive**, not inferential.
+
+It indicates which model performed best under the chosen metric, resampling scheme, and random seed, not which model is universally superior.
+
+
+## Why this comparison is valid
+
+This comparison is valid because:
+
+- preprocessing is guarded
+- resampling is shared
+- evaluation is inseparable from fitting
+- no model receives information unavailable to others
+
+These properties hold regardless of model complexity.
+
+## What fastml does not allow here
+
+Consistent with [C4 — What fastml Deliberately Does Not Allow](C4-what-fastml-does-not-allow.qmd), within a single fastml benchmarking call users cannot:
+
+- evaluate models on different folds
+- reuse preprocessing across models
+- tune one model more aggressively than another
+- detach evaluation from resampling
+
+These restrictions are necessary for fairness.
+
+## Summary
+
+- Fair model comparison requires shared resampling.
+- fastml enforces this structurally.
+- Differences in performance reflect models, not evaluation artifacts.
+- “Best model” selection is contextual and metric-dependent.
+
+## What comes next
+
+**[03. Metrics, Variability, and Uncertainty](03-metrics-variability-and-uncertainty.qmd)**  
+Fold variability, bootstrap metrics and over-interpretation of small differences.
+
+

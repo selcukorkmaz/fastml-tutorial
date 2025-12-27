@@ -16,6 +16,8 @@ website:
       - section: "Tutorials"
         contents:
           - 01-basic-classification.qmd
+          - 02-multiple-models-fair-comparison.qmd
+          - 03-metrics-variability-and-uncertainty.qmd
 
 format:
   html:
