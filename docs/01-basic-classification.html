@@ -215,6 +215,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">04. Missing Data and Guarded Imputation</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-survival-analysis-and-time-to-event-outcomes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">05. Survival Analysis and Time-to-Event Outcomes</span></a>
+  </div>
+</li>
       </ul>
   </li>
     </ul>
@@ -278,7 +284,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>Readers are expected to be familiar with these concepts before proceeding.</p>
 <p>The workflow demonstrated here uses a deliberately constrained interface. These constraints are intentional and reflect the design philosophy of fastml: to reduce common sources of evaluation error by limiting user-facing degrees of freedom along the default execution path.</p>
-<hr>
 </section>
 <section id="the-problem-we-are-solving" class="level2">
 <h2 class="anchored" data-anchor-id="the-problem-we-are-solving">The problem we are solving</h2>
@@ -287,7 +292,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>What level of predictive performance can reasonably be expected on new, unseen data, given a fixed modeling specification?</strong></p>
 <p>In this setting, model fitting itself is straightforward. The primary challenge lies in performance evaluation.</p>
 <p>Specifically, the difficulty is to obtain an estimate that is not biased by information leakage or other forms of contamination arising from reuse of the data during training and evaluation.</p>
-<hr>
 </section>
 <section id="why-this-is-harder-than-it-sounds" class="level2">
 <h2 class="anchored" data-anchor-id="why-this-is-harder-than-it-sounds">Why this is harder than it sounds</h2>
@@ -307,7 +311,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>fastml enforces correctness by removing degrees of freedom rather than relying on user discipline.</li>
 </ul>
 <p>This tutorial demonstrates what that enforcement looks like in practice.</p>
-<hr>
 </section>
 <section id="the-data" class="level2">
 <h2 class="anchored" data-anchor-id="the-data">The data</h2>
@@ -334,7 +337,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>The purpose of this example is to illustrate evaluation mechanics rather than data preprocessing challenges. Although the dataset itself is simple, the evaluation principles demonstrated here extend to more complex datasets and other supported tasks in fastml, subject to their respective assumptions and constraints.</p>
-<hr>
 </section>
 <section id="what-you-do-not-need-to-do-in-fastml" class="level2">
 <h2 class="anchored" data-anchor-id="what-you-do-not-need-to-do-in-fastml">What you do not need to do in fastml</h2>
@@ -350,7 +352,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>These steps are common entry points for data leakage.</p>
 <p>By default, fastml executes preprocessing, model fitting, and evaluation within a single, resampling-aware structure. While advanced users may override specific components, the standard execution path is designed to preserve training–assessment isolation without relying on user discipline.</p>
-<hr>
 </section>
 <section id="declaring-intent" class="level2">
 <h2 class="anchored" data-anchor-id="declaring-intent">Declaring intent</h2>
@@ -374,7 +375,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>This call defines the full evaluation setup under the default execution path. Model fitting, preprocessing, and performance estimation are carried out internally according to the declared intent and the constraints imposed by fastml.</p>
-<hr>
 </section>
 <section id="what-happens-internally" class="level2">
 <h2 class="anchored" data-anchor-id="what-happens-internally">What happens internally</h2>
@@ -388,7 +388,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>performance metrics are computed exclusively on assessment data.</li>
 </ul>
 <p>As an additional safety measure, fastml performs internal checks on the resampling structure. If a resample is detected in which the training set coincides with the full dataset, execution is halted and the run is flagged as unsafe.</p>
-<hr>
 </section>
 <section id="why-this-differs-from-typical-workflows" class="level2">
 <h2 class="anchored" data-anchor-id="why-this-differs-from-typical-workflows">Why this differs from typical workflows</h2>
@@ -405,7 +404,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>key evaluation invariants are checked and enforced during execution.</li>
 </ul>
 <p>This reflects a deliberate design trade-off: reducing flexibility in pipeline construction in order to lower the risk of undetected evaluation errors.</p>
-<hr>
 </section>
 <section id="inspecting-results" class="level2">
 <h2 class="anchored" data-anchor-id="inspecting-results">Inspecting results</h2>
@@ -442,7 +440,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>For both the random forest and xgboost models, these estimates are computed on assessment data that are held out from model fitting within each resampling split. They therefore differ from training-set performance and are not derived from post-hoc adjustments or recalibration.</p>
 <p>In this example, the random forest model attains slightly higher average performance across most metrics, including accuracy, Cohen’s kappa, F1 score, and ROC AUC. However, the differences relative to xgboost are modest, and both models display a similar balance between sensitivity and specificity. These results indicate comparable overall performance with small differences in error structure rather than a clear dominance of one model over the other.</p>
 <p>All reported values arise directly from the resampling-based evaluation procedure used by fastml, in which preprocessing, model fitting, and performance estimation are executed within a single, resampling-aware structure. The metrics therefore represent cross-validated performance summaries under the declared evaluation setup, subject to the usual variability and limitations inherent to resampling-based estimates.</p>
-<hr>
 </section>
 <section id="fold-level-variability" class="level2">
 <h2 class="anchored" data-anchor-id="fold-level-variability">Fold-Level variability</h2>
@@ -486,7 +483,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>In this example, both the random forest and xgboost models exhibit noticeable but moderate fold-to-fold variability. Accuracy, sensitivity, specificity, and agreement-based measures such as Cohen’s kappa fluctuate across folds for both models, reflecting differences in class composition and difficulty across resampling splits.</p>
 <p>Across folds, the two models show broadly comparable behavior. The random forest model attains slightly higher values in some folds, while the xgboost model matches or closely tracks its performance in others. For both models, sensitivity and specificity remain relatively balanced across folds, and no systematic metric asymmetry or degenerate behavior is observed. Variation in kappa and accuracy remains within a range consistent with expected resampling variability rather than indicating instability.</p>
 <p>This pattern illustrates that, even when aggregated summaries suggest similar overall performance, fold-level inspection remains necessary to assess stability, class-wise trade-offs, and the influence of individual resampling splits. Such variability is an inherent feature of resampling-based evaluation and cannot be fully characterized by a single averaged estimate.</p>
-<hr>
 </section>
 <section id="model-comparison" class="level2">
 <h2 class="anchored" data-anchor-id="model-comparison">Model comparison</h2>
@@ -532,7 +528,6 @@ Prediction Class1 Class2
 <p>The summary output compares models evaluated under an identical resampling specification.</p>
 <p>In this example, the random forest model attains slightly higher average performance across all reported metrics, including accuracy, F1 score, Cohen’s kappa, sensitivity, specificity, and ROC AUC. The xgboost model shows closely comparable performance, with modestly lower values across the same metrics. The differences between models are small and reflect incremental variations in error rates rather than qualitatively distinct error profiles.</p>
 <p>Because all models are evaluated using the same resampling splits, observed performance differences can be attributed to the modeling approaches rather than to variation in data partitioning. This consistency is not merely a convenience; it is a methodological requirement for meaningful model comparison under resampling-based evaluation.</p>
-<hr>
 </section>
 <section id="what-is-guaranteed-here" class="level2">
 <h2 class="anchored" data-anchor-id="what-is-guaranteed-here">What is guaranteed here</h2>
@@ -544,7 +539,6 @@ Prediction Class1 Class2
 <li>reported performance metrics correspond to resampling-based estimates of out-of-sample performance.</li>
 </ul>
 <p>These properties arise from the architectural design of fastml rather than from user-enforced conventions. They reflect enforced evaluation invariants under standard usage, not informal best-practice recommendations.</p>
-<hr>
 </section>
 <section id="what-fastml-cannot-guarantee" class="level2">
 <h2 class="anchored" data-anchor-id="what-fastml-cannot-guarantee">What fastml cannot guarantee</h2>
@@ -556,14 +550,12 @@ Prediction Class1 Class2
 <li>that the chosen performance metrics are appropriate for the scientific or clinical context.</li>
 </ul>
 <p>Methodological safeguards can reduce certain classes of technical error, but they cannot substitute for domain expertise, sound study design, or scientific judgment.</p>
-<hr>
 </section>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
 <p>This tutorial did not focus on constructing highly flexible modeling pipelines.</p>
 <p>Instead, it demonstrated how fastml limits common pathways to invalid evaluation by constraining how models are trained, evaluated, and compared along the default execution path.</p>
 <p>The distinguishing characteristic of fastml is therefore not automation for its own sake, but the enforcement of evaluation invariants intended to reduce methodological errors in performance estimation.</p>
-<hr>
 </section>
 <section id="what-comes-next" class="level2">
 <h2 class="anchored" data-anchor-id="what-comes-next">What comes next</h2>

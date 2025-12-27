@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>C4. What fastml Deliberately Does Not Allow – fastml Tutorials</title>
+<title>05. Survival Analysis and Time-to-Event Outcomes – fastml Tutorials</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -81,7 +116,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./C1-what-is-data-leakage.html">Concepts</a></li><li class="breadcrumb-item"><a href="./C4-what-fastml-does-not-allow.html">C4. What fastml Deliberately Does Not Allow</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-basic-classification.html">Tutorials</a></li><li class="breadcrumb-item"><a href="./05-survival-analysis-and-time-to-event-outcomes.html">05. Survival Analysis and Time-to-Event Outcomes</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -141,7 +176,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./C4-what-fastml-does-not-allow.html" class="sidebar-item-text sidebar-link active">
+  <a href="./C4-what-fastml-does-not-allow.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">C4. What fastml Deliberately Does Not Allow</span></a>
   </div>
 </li>
@@ -182,7 +217,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05-survival-analysis-and-time-to-event-outcomes.html" class="sidebar-item-text sidebar-link">
+  <a href="./05-survival-analysis-and-time-to-event-outcomes.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">05. Survival Analysis and Time-to-Event Outcomes</span></a>
   </div>
 </li>
@@ -197,26 +232,24 @@ ul.task-list li input[type="checkbox"] {
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul class="collapse">
-  <li><a href="#constraints-as-a-design-decision" id="toc-constraints-as-a-design-decision" class="nav-link active" data-scroll-target="#constraints-as-a-design-decision">Constraints as a design decision</a></li>
-  <li><a href="#no-global-preprocessing" id="toc-no-global-preprocessing" class="nav-link" data-scroll-target="#no-global-preprocessing">No global preprocessing</a></li>
-  <li><a href="#no-detached-evaluation" id="toc-no-detached-evaluation" class="nav-link" data-scroll-target="#no-detached-evaluation">No detached evaluation</a></li>
-  <li><a href="#no-manual-fold-reuse-across-models" id="toc-no-manual-fold-reuse-across-models" class="nav-link" data-scroll-target="#no-manual-fold-reuse-across-models">No manual fold reuse across models</a></li>
-  <li><a href="#no-implicit-tuning-loops" id="toc-no-implicit-tuning-loops" class="nav-link" data-scroll-target="#no-implicit-tuning-loops">No implicit tuning loops</a></li>
-  <li><a href="#no-partial-control-over-pipeline-order" id="toc-no-partial-control-over-pipeline-order" class="nav-link" data-scroll-target="#no-partial-control-over-pipeline-order">No partial control over pipeline order</a></li>
-  <li><a href="#why-these-restrictions-exist" id="toc-why-these-restrictions-exist" class="nav-link" data-scroll-target="#why-these-restrictions-exist">Why these restrictions exist</a></li>
-  <li><a href="#what-fastml-optimizes-for" id="toc-what-fastml-optimizes-for" class="nav-link" data-scroll-target="#what-fastml-optimizes-for">What fastml optimizes for</a></li>
-  <li><a href="#when-fastml-may-not-be-appropriate" id="toc-when-fastml-may-not-be-appropriate" class="nav-link" data-scroll-target="#when-fastml-may-not-be-appropriate">When fastml may not be appropriate</a></li>
+  <ul>
+  <li><a href="#defining-a-survival-task" id="toc-defining-a-survival-task" class="nav-link active" data-scroll-target="#defining-a-survival-task">Defining a survival task</a></li>
+  <li><a href="#guarded-resampling-for-survival-outcomes" id="toc-guarded-resampling-for-survival-outcomes" class="nav-link" data-scroll-target="#guarded-resampling-for-survival-outcomes">Guarded Resampling for Survival Outcomes</a></li>
+  <li><a href="#survival-specific-metrics" id="toc-survival-specific-metrics" class="nav-link" data-scroll-target="#survival-specific-metrics">Survival-Specific Metrics</a></li>
+  <li><a href="#variability-across-folds" id="toc-variability-across-folds" class="nav-link" data-scroll-target="#variability-across-folds">Variability across folds</a></li>
+  <li><a href="#what-fastml-does-not-allow-here" id="toc-what-fastml-does-not-allow-here" class="nav-link" data-scroll-target="#what-fastml-does-not-allow-here">What fastml Does Not Allow Here</a></li>
+  <li><a href="#interpretation-cautions" id="toc-interpretation-cautions" class="nav-link" data-scroll-target="#interpretation-cautions">Interpretation Cautions</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#what-comes-next" id="toc-what-comes-next" class="nav-link" data-scroll-target="#what-comes-next">What comes next</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./C1-what-is-data-leakage.html">Concepts</a></li><li class="breadcrumb-item"><a href="./C4-what-fastml-does-not-allow.html">C4. What fastml Deliberately Does Not Allow</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-basic-classification.html">Tutorials</a></li><li class="breadcrumb-item"><a href="./05-survival-analysis-and-time-to-event-outcomes.html">05. Survival Analysis and Time-to-Event Outcomes</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">C4. What fastml Deliberately Does Not Allow</h1>
+<h1 class="title">05. Survival Analysis and Time-to-Event Outcomes</h1>
 </div>
 
 
@@ -233,115 +266,195 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="constraints-as-a-design-decision" class="level2">
-<h2 class="anchored" data-anchor-id="constraints-as-a-design-decision">Constraints as a design decision</h2>
-<p><strong>fastml</strong> adopts a deliberately constrained design.</p>
-<p>These constraints are not the result of missing functionality or incomplete implementation.<br>
-They are a direct consequence of the guarantees described in <strong>C1–C3</strong>.</p>
-<p>To support guarded resampling along the default execution path, certain classes of actions are intentionally restricted.</p>
-</section>
-<section id="no-global-preprocessing" class="level2">
-<h2 class="anchored" data-anchor-id="no-global-preprocessing">No global preprocessing</h2>
-<p>Along the default execution path, fastml does not permit preprocessing steps to be estimated using the full dataset prior to resampling.</p>
-<p>Users are not required—and are not encouraged—to:</p>
+<p>## Motivation</p>
+<p>Time-to-event outcomes introduce a new layer of complexity that is absent in standard classification and regression.</p>
+<p>In survival analysis:</p>
 <ul>
-<li>scale predictors globally,</li>
-<li>impute missing values using global statistics,</li>
-<li>perform feature selection outside resampling,</li>
-<li>reuse preprocessing parameters across folds.</li>
+<li>outcomes are partially observed</li>
+<li>follow-up times differ across individuals</li>
+<li>censoring is informative for evaluation</li>
+<li>many common ML workflows fail silently</li>
 </ul>
-<p>Instead, preprocessing steps are estimated separately within each resampling split.</p>
-<p>This design prevents backward information flow from assessment data into training by construction.</p>
-</section>
-<section id="no-detached-evaluation" class="level2">
-<h2 class="anchored" data-anchor-id="no-detached-evaluation">No detached evaluation</h2>
-<p>In fastml, evaluation is not treated as a post hoc operation.</p>
-<p>Under the standard execution model, users do not:</p>
+<p>These properties make survival analysis especially vulnerable to <strong>evaluation errors and leakage</strong>.</p>
+<hr>
+<p>## Why survival analysis is different</p>
+<p>In earlier tutorials, each observation contributed a fully observed outcome.</p>
+<p>In survival settings, each observation consists of:</p>
 <ul>
-<li>fit a model once and later evaluate it using resampling,</li>
-<li>reuse a trained model across new or inconsistent folds,</li>
-<li>compute performance metrics outside a resampling-aware context.</li>
+<li>a time-to-event</li>
+<li>an event indicator (event vs censoring)</li>
 </ul>
-<p>Model fitting and evaluation are coupled within a single resampling-based procedure.</p>
-</section>
-<section id="no-manual-fold-reuse-across-models" class="level2">
-<h2 class="anchored" data-anchor-id="no-manual-fold-reuse-across-models">No manual fold reuse across models</h2>
-<p>Model comparison in fastml is conducted using a shared resampling specification.</p>
-<p>Users do not manually:</p>
+<p>Ignoring this structure leads to invalid evaluation.</p>
+<p>In particular, treating survival outcomes as binary labels discards timing information and introduces bias.</p>
+<hr>
+<p>## Leakage risks unique to survival analysis</p>
+<p>Survival workflows introduce additional leakage pathways:</p>
 <ul>
-<li>define different folds for different models within the same comparison,</li>
-<li>selectively reuse folds,</li>
-<li>mix incompatible resampling schemes across models.</li>
+<li>using full follow-up information during preprocessing</li>
+<li>computing time-dependent features globally</li>
+<li>evaluating survival models without respecting censoring</li>
+<li>mixing risk sets across resampling splits</li>
 </ul>
-<p>This ensures that observed performance differences arise from modeling choices rather than from differences in data partitioning.</p>
-</section>
-<section id="no-implicit-tuning-loops" class="level2">
-<h2 class="anchored" data-anchor-id="no-implicit-tuning-loops">No implicit tuning loops</h2>
-<p>When hyperparameter tuning is enabled, it is carried out within the resampling structure.</p>
-<p>Under the default design, users do not:</p>
+<p>These errors often go undetected and produce optimistic results.</p>
+<p>The principles from <strong>C1–C3</strong> apply here with greater force.</p>
+<hr>
+<p>## Data</p>
+<p>We use a classical survival dataset with right censoring.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fastml)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(censored)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survival)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(lung, <span class="at">package =</span> <span class="st">"survival"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>surv_data <span class="ot">&lt;-</span> lung <span class="sc">%&gt;%</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(time), <span class="sc">!</span><span class="fu">is.na</span>(status)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">status =</span> <span class="fu">ifelse</span>(status <span class="sc">==</span> <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">0</span>),  <span class="co"># 1 = event, 0 = censored</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">sex    =</span> <span class="fu">factor</span>(sex, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"male"</span>, <span class="st">"female"</span>))</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(surv_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  inst time status age  sex ph.ecog ph.karno pat.karno meal.cal wt.loss
+1    3  306      1  74 male       1       90       100     1175      NA
+2    3  455      1  68 male       0       90        90     1225      15
+3    3 1010      0  56 male       0       90        90       NA      15
+4    5  210      1  57 male       1       90        60     1150      11
+5    1  883      1  60 male       0      100        90       NA       0
+6   12 1022      0  74 male       1       50        80      513       0</code></pre>
+</div>
+</div>
+<p>This dataset includes:</p>
 <ul>
-<li>tune models on the full dataset and then evaluate them using resampling,</li>
-<li>tune once and reuse tuning results across folds,</li>
-<li>decouple tuning from evaluation.</li>
+<li>survival time (<code>time</code>),</li>
+<li>event indicator (<code>status</code>),</li>
+<li>baseline clinical covariates.</li>
 </ul>
-<p>This restricts subtle leakage pathways that can arise when tuning is performed outside resampling.</p>
-</section>
-<section id="no-partial-control-over-pipeline-order" class="level2">
-<h2 class="anchored" data-anchor-id="no-partial-control-over-pipeline-order">No partial control over pipeline order</h2>
-<p>fastml does not expose low-level hooks for rearranging the order of:</p>
+<section id="defining-a-survival-task" class="level2">
+<h2 class="anchored" data-anchor-id="defining-a-survival-task">Defining a survival task</h2>
+<p>In fastml, survival analysis is specified explicitly.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">fastml</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data       =</span> surv_data,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">label      =</span> <span class="fu">c</span>(<span class="st">"time"</span>, <span class="st">"status"</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">algorithms =</span> <span class="fu">c</span>(<span class="st">"cox_ph"</span>, <span class="st">"survreg"</span>),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">impute_method =</span> <span class="st">"remove"</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>This declaration ensures that:</p>
 <ul>
-<li>preprocessing,</li>
-<li>model fitting,</li>
-<li>evaluation.</li>
-</ul>
-<p>This ordering is fixed along the default execution path.</p>
-<p>Users specify <em>what</em> is to be evaluated, not <em>how</em> the internal pipeline is assembled.</p>
-</section>
-<section id="why-these-restrictions-exist" class="level2">
-<h2 class="anchored" data-anchor-id="why-these-restrictions-exist">Why these restrictions exist</h2>
-<p>Each restriction removes a class of evaluation errors that are:</p>
-<ul>
-<li>easy to introduce,</li>
-<li>difficult to detect,</li>
-<li>associated with optimistic performance estimates,</li>
-<li>rarely flagged by software.</li>
-</ul>
-<p>Reducing flexibility is the cost of enforcing methodological validity.</p>
-</section>
-<section id="what-fastml-optimizes-for" class="level2">
-<h2 class="anchored" data-anchor-id="what-fastml-optimizes-for">What fastml optimizes for</h2>
-<p>fastml is not designed to optimize for:</p>
-<ul>
-<li>maximal procedural flexibility,</li>
-<li>unrestricted pipeline experimentation,</li>
-<li>interactive trial-and-error workflow assembly.</li>
-</ul>
-<p>It is designed to prioritize:</p>
-<ul>
-<li>evaluation correctness,</li>
-<li>reproducibility,</li>
-<li>comparability across models,</li>
-<li>defensible performance estimation.</li>
+<li>censoring is respected,</li>
+<li>models are trained under survival-specific assumptions,</li>
+<li>evaluation uses survival-appropriate metrics.</li>
 </ul>
 </section>
-<section id="when-fastml-may-not-be-appropriate" class="level2">
-<h2 class="anchored" data-anchor-id="when-fastml-may-not-be-appropriate">When fastml may not be appropriate</h2>
-<p>fastml may not be well suited when:</p>
+<section id="guarded-resampling-for-survival-outcomes" class="level2">
+<h2 class="anchored" data-anchor-id="guarded-resampling-for-survival-outcomes">Guarded Resampling for Survival Outcomes</h2>
+<p>Under guarded resampling:</p>
 <ul>
-<li>exploratory pipeline experimentation is the primary objective,</li>
-<li>highly nonstandard evaluation schemes are required,</li>
-<li>fine-grained procedural control is essential.</li>
+<li>preprocessing is learned within each training split,</li>
+<li>risk sets are isolated by fold,</li>
+<li>evaluation uses only information available at assessment time.</li>
 </ul>
-<p>In such settings, lower-level or more permissive frameworks may be more appropriate.</p>
+<p>No observation contributes future information to training.</p>
+<p>This is essential for valid survival evaluation.</p>
+</section>
+<section id="survival-specific-metrics" class="level2">
+<h2 class="anchored" data-anchor-id="survival-specific-metrics">Survival-Specific Metrics</h2>
+<p>Survival models cannot be evaluated using accuracy or ROC AUC.</p>
+<p>Instead, <code>fastml</code> reports metrics such as:</p>
+<ul>
+<li>concordance index (C-index),</li>
+<li>time-dependent performance summaries,</li>
+<li>integrated Brier score (when applicable).</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>resampling_results<span class="sc">$</span><span class="st">`</span><span class="at">cox_ph (survival)</span><span class="st">`</span><span class="sc">$</span>aggregated</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 2
+  .metric   .estimate
+  &lt;chr&gt;         &lt;dbl&gt;
+1 brier_t1      0.276
+2 brier_t2      0.306
+3 c_index       0.612
+4 ibs           0.226
+5 rmst_diff    68.6  
+6 uno_c         0.591</code></pre>
+</div>
+</div>
+<p>These metrics account for censoring and timing.</p>
+</section>
+<section id="variability-across-folds" class="level2">
+<h2 class="anchored" data-anchor-id="variability-across-folds">Variability across folds</h2>
+<p>As with earlier tutorials, fold-level variability matters.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>resampling_results<span class="sc">$</span><span class="st">`</span><span class="at">cox_ph (survival)</span><span class="st">`</span><span class="sc">$</span>folds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 60 × 3
+   fold  .metric   .estimate
+   &lt;chr&gt; &lt;chr&gt;         &lt;dbl&gt;
+ 1 1     c_index       0.730
+ 2 1     uno_c         0.724
+ 3 1     ibs           0.187
+ 4 1     rmst_diff   263.   
+ 5 1     brier_t1      0.231
+ 6 1     brier_t2      0.169
+ 7 2     c_index       0.415
+ 8 2     uno_c         0.274
+ 9 2     ibs           0.286
+10 2     rmst_diff  -145.   
+# ℹ 50 more rows</code></pre>
+</div>
+</div>
+<p>Survival metrics often exhibit higher variability due to:</p>
+<ul>
+<li>censoring patterns,</li>
+<li>limited numbers of events,</li>
+<li>heterogeneous follow-up times.</li>
+</ul>
+<p>This variability is informative, not pathological.</p>
+</section>
+<section id="what-fastml-does-not-allow-here" class="level2">
+<h2 class="anchored" data-anchor-id="what-fastml-does-not-allow-here">What fastml Does Not Allow Here</h2>
+<p>Consistent with <a href="./C4-what-fastml-does-not-allow.html"><strong>C4. What fastml Deliberately Does Not Allow</strong></a>, <code>fastml</code> prevents users from:</p>
+<ul>
+<li>converting survival outcomes to binary labels,</li>
+<li>evaluating survival models with classification metrics,</li>
+<li>preprocessing time-to-event data globally,</li>
+<li>detaching evaluation from resampling.</li>
+</ul>
+<p>These restrictions are necessary for validity.</p>
+</section>
+<section id="interpretation-cautions" class="level2">
+<h2 class="anchored" data-anchor-id="interpretation-cautions">Interpretation Cautions</h2>
+<p>Survival metrics describe ranking or calibration under censoring, not absolute risk.</p>
+<p>They should not be interpreted as:</p>
+<ul>
+<li>probabilities of survival at specific times,</li>
+<li>causal effects,</li>
+<li>guarantees of clinical utility.</li>
+</ul>
+<p>Guarded resampling ensures valid evaluation, not clinical validity.</p>
 </section>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
 <ul>
-<li>fastml is restrictive by design.</li>
-<li>Restrictions follow directly from guarded resampling principles.</li>
-<li>Flexibility is traded for methodological validity.</li>
-<li>If a workflow feels constrained, the guard is functioning as intended.</li>
+<li>Survival outcomes require task-specific evaluation.<br>
+</li>
+<li>Censoring introduces new leakage risks.<br>
+</li>
+<li>Guarded resampling is essential in survival analysis.<br>
+</li>
+<li>Variability is expected and informative.</li>
 </ul>
+<p><code>fastml</code> is designed to encourage survival-appropriate workflows by constraining how outcomes, preprocessing, resampling, and evaluation are coordinated under supported execution paths.</p>
+</section>
+<section id="what-comes-next" class="level2">
+<h2 class="anchored" data-anchor-id="what-comes-next">What comes next</h2>
+<p><strong><a href="">06 — Regression and Continuous Outcomes</a></strong><br>
+Regression and continuous outcomes under guarded resampling.</p>
 
 
 </section>

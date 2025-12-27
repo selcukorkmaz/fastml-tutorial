@@ -1,0 +1,181 @@
+---
+title: "05. Survival Analysis and Time-to-Event Outcomes"
+execute:
+  warning: false
+  message: false
+---
+  
+  ## Motivation
+  
+  Time-to-event outcomes introduce a new layer of complexity that is absent in standard classification and regression.
+
+In survival analysis:
+  
+  - outcomes are partially observed
+- follow-up times differ across individuals
+- censoring is informative for evaluation
+- many common ML workflows fail silently
+
+These properties make survival analysis especially vulnerable to **evaluation errors and leakage**.
+
+---
+  
+  ## Why survival analysis is different
+  
+  In earlier tutorials, each observation contributed a fully observed outcome.
+
+In survival settings, each observation consists of:
+  
+  - a time-to-event
+- an event indicator (event vs censoring)
+
+Ignoring this structure leads to invalid evaluation.
+
+In particular, treating survival outcomes as binary labels discards timing information and introduces bias.
+
+---
+  
+  ## Leakage risks unique to survival analysis
+  
+  Survival workflows introduce additional leakage pathways:
+  
+  - using full follow-up information during preprocessing
+- computing time-dependent features globally
+- evaluating survival models without respecting censoring
+- mixing risk sets across resampling splits
+
+These errors often go undetected and produce optimistic results.
+
+The principles from **C1–C3** apply here with greater force.
+
+---
+  
+  ## Data
+  
+  We use a classical survival dataset with right censoring.
+
+```{r}
+library(fastml)
+library(censored)
+library(survival)
+library(dplyr)
+
+data(lung, package = "survival")
+
+surv_data <- lung %>%
+  filter(!is.na(time), !is.na(status)) %>%
+  mutate(
+    status = ifelse(status == 2, 1, 0),  # 1 = event, 0 = censored
+    sex    = factor(sex, labels = c("male", "female"))
+  )
+
+head(surv_data)
+```
+
+This dataset includes:
+
+- survival time (`time`),
+- event indicator (`status`),
+- baseline clinical covariates.
+
+
+## Defining a survival task
+
+In fastml, survival analysis is specified explicitly.
+
+```{r}
+fit <- fastml(
+  data       = surv_data,
+  label      = c("time", "status"),
+  algorithms = c("cox_ph", "survreg"),
+  impute_method = "remove"
+)
+```
+
+This declaration ensures that:
+
+- censoring is respected,
+- models are trained under survival-specific assumptions,
+- evaluation uses survival-appropriate metrics.
+
+## Guarded Resampling for Survival Outcomes
+
+Under guarded resampling:
+
+- preprocessing is learned within each training split,
+- risk sets are isolated by fold,
+- evaluation uses only information available at assessment time.
+
+No observation contributes future information to training.
+
+This is essential for valid survival evaluation.
+
+## Survival-Specific Metrics
+
+Survival models cannot be evaluated using accuracy or ROC AUC.
+
+Instead, `fastml` reports metrics such as:
+
+- concordance index (C-index),
+- time-dependent performance summaries,
+- integrated Brier score (when applicable).
+
+```{r}
+fit$resampling_results$`cox_ph (survival)`$aggregated
+```
+
+These metrics account for censoring and timing.
+
+## Variability across folds
+
+As with earlier tutorials, fold-level variability matters.
+
+```{r}
+fit$resampling_results$`cox_ph (survival)`$folds
+```
+
+Survival metrics often exhibit higher variability due to:
+
+- censoring patterns,
+- limited numbers of events,
+- heterogeneous follow-up times.
+
+This variability is informative, not pathological.
+
+## What fastml Does Not Allow Here
+
+Consistent with [**C4. What fastml Deliberately Does Not Allow**](C4-what-fastml-does-not-allow.qmd), `fastml` prevents users from:
+
+- converting survival outcomes to binary labels,
+- evaluating survival models with classification metrics,
+- preprocessing time-to-event data globally,
+- detaching evaluation from resampling.
+
+These restrictions are necessary for validity.
+
+## Interpretation Cautions
+
+Survival metrics describe ranking or calibration under censoring, not absolute risk.
+
+They should not be interpreted as:
+
+- probabilities of survival at specific times,
+- causal effects,
+- guarantees of clinical utility.
+
+Guarded resampling ensures valid evaluation, not clinical validity.
+
+## Summary
+
+- Survival outcomes require task-specific evaluation.  
+- Censoring introduces new leakage risks.  
+- Guarded resampling is essential in survival analysis.  
+- Variability is expected and informative.  
+
+`fastml` is designed to encourage survival-appropriate workflows by constraining how outcomes, preprocessing, resampling, and evaluation are coordinated under supported execution paths.
+
+## What comes next
+
+**[06. Regression and Continuous Outcomes]()**  
+Regression and continuous outcomes under guarded resampling.
+

@@ -176,6 +176,584 @@
     ]
   },
   {
+    "objectID": "C4-what-fastml-does-not-allow.html",
+    "href": "C4-what-fastml-does-not-allow.html",
+    "title": "C4. What fastml Deliberately Does Not Allow",
+    "section": "",
+    "text": "fastml adopts a deliberately constrained design.\nThese constraints are not the result of missing functionality or incomplete implementation.\nThey are a direct consequence of the guarantees described in C1–C3.\nTo support guarded resampling along the default execution path, certain classes of actions are intentionally restricted.",
+    "crumbs": [
+      "Concepts",
+      "C4. What fastml Deliberately Does Not Allow"
+    ]
+  },
+  {
+    "objectID": "C4-what-fastml-does-not-allow.html#constraints-as-a-design-decision",
+    "href": "C4-what-fastml-does-not-allow.html#constraints-as-a-design-decision",
+    "title": "C4. What fastml Deliberately Does Not Allow",
+    "section": "",
+    "text": "fastml adopts a deliberately constrained design.\nThese constraints are not the result of missing functionality or incomplete implementation.\nThey are a direct consequence of the guarantees described in C1–C3.\nTo support guarded resampling along the default execution path, certain classes of actions are intentionally restricted.",
+    "crumbs": [
+      "Concepts",
+      "C4. What fastml Deliberately Does Not Allow"
+    ]
+  },
+  {
+    "objectID": "C4-what-fastml-does-not-allow.html#no-global-preprocessing",
+    "href": "C4-what-fastml-does-not-allow.html#no-global-preprocessing",
+    "title": "C4. What fastml Deliberately Does Not Allow",
+    "section": "No global preprocessing",
+    "text": "No global preprocessing\nAlong the default execution path, fastml does not permit preprocessing steps to be estimated using the full dataset prior to resampling.\nUsers are not required—and are not encouraged—to:\n\nscale predictors globally,\nimpute missing values using global statistics,\nperform feature selection outside resampling,\nreuse preprocessing parameters across folds.\n\nInstead, preprocessing steps are estimated separately within each resampling split.\nThis design prevents backward information flow from assessment data into training by construction.",
+    "crumbs": [
+      "Concepts",
+      "C4. What fastml Deliberately Does Not Allow"
+    ]
+  },
+  {
+    "objectID": "C4-what-fastml-does-not-allow.html#no-detached-evaluation",
+    "href": "C4-what-fastml-does-not-allow.html#no-detached-evaluation",
+    "title": "C4. What fastml Deliberately Does Not Allow",
+    "section": "No detached evaluation",
+    "text": "No detached evaluation\nIn fastml, evaluation is not treated as a post hoc operation.\nUnder the standard execution model, users do not:\n\nfit a model once and later evaluate it using resampling,\nreuse a trained model across new or inconsistent folds,\ncompute performance metrics outside a resampling-aware context.\n\nModel fitting and evaluation are coupled within a single resampling-based procedure.",
+    "crumbs": [
+      "Concepts",
+      "C4. What fastml Deliberately Does Not Allow"
+    ]
+  },
+  {
+    "objectID": "C4-what-fastml-does-not-allow.html#no-manual-fold-reuse-across-models",
+    "href": "C4-what-fastml-does-not-allow.html#no-manual-fold-reuse-across-models",
+    "title": "C4. What fastml Deliberately Does Not Allow",
+    "section": "No manual fold reuse across models",
+    "text": "No manual fold reuse across models\nModel comparison in fastml is conducted using a shared resampling specification.\nUsers do not manually:\n\ndefine different folds for different models within the same comparison,\nselectively reuse folds,\nmix incompatible resampling schemes across models.\n\nThis ensures that observed performance differences arise from modeling choices rather than from differences in data partitioning.",
+    "crumbs": [
+      "Concepts",
+      "C4. What fastml Deliberately Does Not Allow"
+    ]
+  },
+  {
+    "objectID": "C4-what-fastml-does-not-allow.html#no-implicit-tuning-loops",
+    "href": "C4-what-fastml-does-not-allow.html#no-implicit-tuning-loops",
+    "title": "C4. What fastml Deliberately Does Not Allow",
+    "section": "No implicit tuning loops",
+    "text": "No implicit tuning loops\nWhen hyperparameter tuning is enabled, it is carried out within the resampling structure.\nUnder the default design, users do not:\n\ntune models on the full dataset and then evaluate them using resampling,\ntune once and reuse tuning results across folds,\ndecouple tuning from evaluation.\n\nThis restricts subtle leakage pathways that can arise when tuning is performed outside resampling.",
+    "crumbs": [
+      "Concepts",
+      "C4. What fastml Deliberately Does Not Allow"
+    ]
+  },
+  {
+    "objectID": "C4-what-fastml-does-not-allow.html#no-partial-control-over-pipeline-order",
+    "href": "C4-what-fastml-does-not-allow.html#no-partial-control-over-pipeline-order",
+    "title": "C4. What fastml Deliberately Does Not Allow",
+    "section": "No partial control over pipeline order",
+    "text": "No partial control over pipeline order\nfastml does not expose low-level hooks for rearranging the order of:\n\npreprocessing,\nmodel fitting,\nevaluation.\n\nThis ordering is fixed along the default execution path.\nUsers specify what is to be evaluated, not how the internal pipeline is assembled.",
+    "crumbs": [
+      "Concepts",
+      "C4. What fastml Deliberately Does Not Allow"
+    ]
+  },
+  {
+    "objectID": "C4-what-fastml-does-not-allow.html#why-these-restrictions-exist",
+    "href": "C4-what-fastml-does-not-allow.html#why-these-restrictions-exist",
+    "title": "C4. What fastml Deliberately Does Not Allow",
+    "section": "Why these restrictions exist",
+    "text": "Why these restrictions exist\nEach restriction removes a class of evaluation errors that are:\n\neasy to introduce,\ndifficult to detect,\nassociated with optimistic performance estimates,\nrarely flagged by software.\n\nReducing flexibility is the cost of enforcing methodological validity.",
+    "crumbs": [
+      "Concepts",
+      "C4. What fastml Deliberately Does Not Allow"
+    ]
+  },
+  {
+    "objectID": "C4-what-fastml-does-not-allow.html#what-fastml-optimizes-for",
+    "href": "C4-what-fastml-does-not-allow.html#what-fastml-optimizes-for",
+    "title": "C4. What fastml Deliberately Does Not Allow",
+    "section": "What fastml optimizes for",
+    "text": "What fastml optimizes for\nfastml is not designed to optimize for:\n\nmaximal procedural flexibility,\nunrestricted pipeline experimentation,\ninteractive trial-and-error workflow assembly.\n\nIt is designed to prioritize:\n\nevaluation correctness,\nreproducibility,\ncomparability across models,\ndefensible performance estimation.",
+    "crumbs": [
+      "Concepts",
+      "C4. What fastml Deliberately Does Not Allow"
+    ]
+  },
+  {
+    "objectID": "C4-what-fastml-does-not-allow.html#when-fastml-may-not-be-appropriate",
+    "href": "C4-what-fastml-does-not-allow.html#when-fastml-may-not-be-appropriate",
+    "title": "C4. What fastml Deliberately Does Not Allow",
+    "section": "When fastml may not be appropriate",
+    "text": "When fastml may not be appropriate\nfastml may not be well suited when:\n\nexploratory pipeline experimentation is the primary objective,\nhighly nonstandard evaluation schemes are required,\nfine-grained procedural control is essential.\n\nIn such settings, lower-level or more permissive frameworks may be more appropriate.",
+    "crumbs": [
+      "Concepts",
+      "C4. What fastml Deliberately Does Not Allow"
+    ]
+  },
+  {
+    "objectID": "C4-what-fastml-does-not-allow.html#summary",
+    "href": "C4-what-fastml-does-not-allow.html#summary",
+    "title": "C4. What fastml Deliberately Does Not Allow",
+    "section": "Summary",
+    "text": "Summary\n\nfastml is restrictive by design.\nRestrictions follow directly from guarded resampling principles.\nFlexibility is traded for methodological validity.\nIf a workflow feels constrained, the guard is functioning as intended.",
+    "crumbs": [
+      "Concepts",
+      "C4. What fastml Deliberately Does Not Allow"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "fastml Tutorials",
+    "section": "",
+    "text": "This site provides a structured introduction to fastml, an R package for training, evaluating, and comparing machine learning models under architecturally constrained, leakage-aware resampling.\nThe emphasis is not on developing new modeling techniques or maximizing predictive performance. Instead, the focus is on methodologically sound performance evaluation under clearly defined assumptions.",
+    "crumbs": [
+      "fastml Tutorials"
+    ]
+  },
+  {
+    "objectID": "index.html#what-this-site-is-about",
+    "href": "index.html#what-this-site-is-about",
+    "title": "fastml Tutorials",
+    "section": "",
+    "text": "This site provides a structured introduction to fastml, an R package for training, evaluating, and comparing machine learning models under architecturally constrained, leakage-aware resampling.\nThe emphasis is not on developing new modeling techniques or maximizing predictive performance. Instead, the focus is on methodologically sound performance evaluation under clearly defined assumptions.",
+    "crumbs": [
+      "fastml Tutorials"
+    ]
+  },
+  {
+    "objectID": "index.html#why-this-matters",
+    "href": "index.html#why-this-matters",
+    "title": "fastml Tutorials",
+    "section": "Why this matters",
+    "text": "Why this matters\nIn applied machine learning, reported performance estimates are frequently optimistic due to subtle forms of data leakage and unsafe evaluation workflows.\nfastml is designed to reduce this risk by treating Guarded Resampling as a core design principle rather than as an optional recommendation.",
+    "crumbs": [
+      "fastml Tutorials"
+    ]
+  },
+  {
+    "objectID": "index.html#how-to-read-this-site",
+    "href": "index.html#how-to-read-this-site",
+    "title": "fastml Tutorials",
+    "section": "How to read this site",
+    "text": "How to read this site\nThe material is organized into four sections.\n\nConcepts\nThese sections introduce the ideas that motivate fastml, including:\n\nwhat data leakage is,\nwhy many ML pipelines are unsafe by default,\nwhat guarded resampling entails,\nwhich classes of workflow configurations fastml deliberately restricts.\n\nThe concepts establish the assumptions required to interpret the tutorials correctly.\n\n\nTutorials\nThe tutorials apply the conceptual framework to concrete modeling tasks.\nThey assume familiarity with the Concepts section and focus on demonstrating evaluation workflows rather than reintroducing theoretical material.\n\n\nAdvanced\nAdvanced sections extend the framework to more complex settings, such as:\n\nhandling missing data,\nsurvival analysis,\nmodel interpretation and diagnostics.\n\nThese sections build on the same evaluation principles under additional modeling constraints.\n\n\nComparisons\nComparative sections discuss fastml in relation to other frameworks and common workflows, highlighting differences in design philosophy and evaluation guarantees.",
+    "crumbs": [
+      "fastml Tutorials"
+    ]
+  },
+  {
+    "objectID": "index.html#where-to-start",
+    "href": "index.html#where-to-start",
+    "title": "fastml Tutorials",
+    "section": "Where to start",
+    "text": "Where to start\nReaders should begin with the Concepts section (C1–C4).\nThe first hands-on example is Tutorial 01: Basic Cl",
+    "crumbs": [
+      "fastml Tutorials"
+    ]
+  },
+  {
+    "objectID": "C3-guarded-resampling.html",
+    "href": "C3-guarded-resampling.html",
+    "title": "C3. Guarded Resampling",
+    "section": "",
+    "text": "C1 established that data leakage is a structural timing error.\nC2 showed that many machine learning pipelines permit such errors by default.\nA direct consequence is that methodological correctness cannot rely on user discipline alone.\nGuarded Resampling is an architectural response to this limitation.",
+    "crumbs": [
+      "Concepts",
+      "C3. Guarded Resampling"
+    ]
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#from-advice-to-enforcement",
+    "href": "C3-guarded-resampling.html#from-advice-to-enforcement",
+    "title": "C3. Guarded Resampling",
+    "section": "",
+    "text": "C1 established that data leakage is a structural timing error.\nC2 showed that many machine learning pipelines permit such errors by default.\nA direct consequence is that methodological correctness cannot rely on user discipline alone.\nGuarded Resampling is an architectural response to this limitation.",
+    "crumbs": [
+      "Concepts",
+      "C3. Guarded Resampling"
+    ]
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#what-guarded-means",
+    "href": "C3-guarded-resampling.html#what-guarded-means",
+    "title": "C3. Guarded Resampling",
+    "section": "What “Guarded” means",
+    "text": "What “Guarded” means\nIn guarded resampling, resampling is not treated as a downstream step in a workflow. Instead, it provides the enclosing structure for all operations that learn parameters from the data.\nUnder this design, any operation whose results depend on estimated quantities is executed separately within each resampling split, including:\n\npreprocessing steps that estimate statistics from the data,\nmodel fitting,\nhyperparameter selection,\nperformance metric computation.\n\nOperations that would require access to information outside the analysis set, or that would induce backward information flow from assessment data, are restricted along the default execution path.\nThis is not a usage convention. It is a structural constraint.",
+    "crumbs": [
+      "Concepts",
+      "C3. Guarded Resampling"
+    ]
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#resampling-as-the-primary-object",
+    "href": "C3-guarded-resampling.html#resampling-as-the-primary-object",
+    "title": "C3. Guarded Resampling",
+    "section": "Resampling as the primary object",
+    "text": "Resampling as the primary object\nIn many applied machine learning workflows, resampling is effectively treated as an external evaluation step, rather than as a structural component of the learning procedure. A common pattern is:\n\nprepare data,\nfit a model,\nevaluate performance using resampling.\n\nAlthough widely used, this organization obscures the fact that valid performance estimation requires strict separation between training and assessment data at all stages of model construction.\nGuarded resampling reverses this relationship. Instead of attaching resampling post hoc, the workflow is defined by the resampling scheme itself:\n\ndefine a resampling plan,\nfor each split:\n\nestimate preprocessing steps,\nfit the model,\ngenerate predictions,\n\naggregate results across splits.\n\nUnder this formulation, resampling defines the experimental structure, and all learning steps operate conditionally within it.",
+    "crumbs": [
+      "Concepts",
+      "C3. Guarded Resampling"
+    ]
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#why-enclosure-matters",
+    "href": "C3-guarded-resampling.html#why-enclosure-matters",
+    "title": "C3. Guarded Resampling",
+    "section": "Why enclosure matters",
+    "text": "Why enclosure matters\nBy enclosing learning within resampling splits, guarded resampling ensures that:\n\nassessment data are isolated from training within each split,\npreprocessing parameters are estimated separately for each training set,\nmodel comparisons are conducted using identical resampling splits,\nperformance estimates correspond to resampling-based out-of-sample evaluation.\n\nThese properties do not depend on remembering rules or following best practices.\nThey arise from how the workflow is constructed.",
+    "crumbs": [
+      "Concepts",
+      "C3. Guarded Resampling"
+    ]
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#guards-are-not-warnings",
+    "href": "C3-guarded-resampling.html#guards-are-not-warnings",
+    "title": "C3. Guarded Resampling",
+    "section": "Guards are not warnings",
+    "text": "Guards are not warnings\nGuarded resampling does not attempt to identify leakage after it has occurred.\nInstead, it restricts the construction of workflows in which leakage-prone configurations would arise along the standard execution path.\nThis distinction is important:\n\nwarnings are advisory and can be ignored,\nstructural constraints limit what can be expressed.\n\nWorkflows that violate the principles of guarded resampling are therefore not part of the default design space.",
+    "crumbs": [
+      "Concepts",
+      "C3. Guarded Resampling"
+    ]
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#what-this-enables",
+    "href": "C3-guarded-resampling.html#what-this-enables",
+    "title": "C3. Guarded Resampling",
+    "section": "What this enables",
+    "text": "What this enables\nBecause resampling is treated as an enclosing structure:\n\npreprocessing is resampling-aware by default,\nresampling splits are applied consistently across models,\nevaluation remains coupled to model fitting,\nreported metrics reflect resampling-based estimates.\n\nThese properties hold independently of model class, algorithmic complexity, or user expertise, subject to the assumptions of the resampling procedure.\nMethodological correctness becomes a property of system design rather than of individual user choices.",
+    "crumbs": [
+      "Concepts",
+      "C3. Guarded Resampling"
+    ]
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#what-this-does-not-do",
+    "href": "C3-guarded-resampling.html#what-this-does-not-do",
+    "title": "C3. Guarded Resampling",
+    "section": "What this does not do",
+    "text": "What this does not do\nGuarded resampling does not:\n\nguarantee strong predictive performance,\nidentify a statistically optimal model,\nreplace careful study design or domain expertise,\neliminate all possible sources of bias.\n\nIt addresses a specific and well-defined failure mode: invalid evaluation arising from data leakage.",
+    "crumbs": [
+      "Concepts",
+      "C3. Guarded Resampling"
+    ]
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#why-this-is-restrictive-by-design",
+    "href": "C3-guarded-resampling.html#why-this-is-restrictive-by-design",
+    "title": "C3. Guarded Resampling",
+    "section": "Why this is restrictive by design",
+    "text": "Why this is restrictive by design\nEnforcing structural guards necessarily reduces flexibility.\nCertain actions that are technically possible in more permissive frameworks are intentionally restricted along the default execution path.\nThis is not a limitation to be worked around.\nIt is a deliberate design choice.\nThe consequences of this choice are addressed in the next concept.",
+    "crumbs": [
+      "Concepts",
+      "C3. Guarded Resampling"
+    ]
+  },
+  {
+    "objectID": "C3-guarded-resampling.html#summary",
+    "href": "C3-guarded-resampling.html#summary",
+    "title": "C3. Guarded Resampling",
+    "section": "Summary",
+    "text": "Summary\n\nGuarded resampling treats resampling as the enclosing structure.\nData-dependent learning occurs within resampling splits.\nLeakage-prone configurations are restricted by design.\nEnforcement replaces advisory guidance.\n\nThis is the core idea behind fastml.\nNext: C4 — What fastml Deliberately Does Not Allow",
+    "crumbs": [
+      "Concepts",
+      "C3. Guarded Resampling"
+    ]
+  },
+  {
+    "objectID": "03-metrics-variability-and-uncertainty.html",
+    "href": "03-metrics-variability-and-uncertainty.html",
+    "title": "03. Metrics, Variability, and Uncertainty",
+    "section": "",
+    "text": "Machine learning results are often summarized by a single number.\nThis practice is convenient, but it is rarely sufficient.\nPerformance metrics are random variables, not fixed properties of a model.\nThey depend on how data are split, how models are trained, and how evaluation is conducted.\nAs shown in Tutorials 01–02, fastml enforces valid evaluation.\nThis tutorial focuses on how to interpret the resulting metrics responsibly.",
+    "crumbs": [
+      "Tutorials",
+      "03. Metrics, Variability, and Uncertainty"
+    ]
+  },
+  {
+    "objectID": "03-metrics-variability-and-uncertainty.html#motivation",
+    "href": "03-metrics-variability-and-uncertainty.html#motivation",
+    "title": "03. Metrics, Variability, and Uncertainty",
+    "section": "",
+    "text": "Machine learning results are often summarized by a single number.\nThis practice is convenient, but it is rarely sufficient.\nPerformance metrics are random variables, not fixed properties of a model.\nThey depend on how data are split, how models are trained, and how evaluation is conducted.\nAs shown in Tutorials 01–02, fastml enforces valid evaluation.\nThis tutorial focuses on how to interpret the resulting metrics responsibly.",
+    "crumbs": [
+      "Tutorials",
+      "03. Metrics, Variability, and Uncertainty"
+    ]
+  },
+  {
+    "objectID": "03-metrics-variability-and-uncertainty.html#recreating-the-analysis",
+    "href": "03-metrics-variability-and-uncertainty.html#recreating-the-analysis",
+    "title": "03. Metrics, Variability, and Uncertainty",
+    "section": "Recreating the analysis",
+    "text": "Recreating the analysis\nEach tutorial in this series is designed to be fully self-contained.\nWe therefore recreate the analysis from Tutorials 01–02 before examining metric behavior.\n\nlibrary(fastml)\nlibrary(mlbench)\nlibrary(dplyr)\n\ndata(BreastCancer)\n\nbreastCancer &lt;- BreastCancer %&gt;%\n  select(-Id) %&gt;%\n  na.omit() %&gt;%\n  mutate(Class = factor(Class, levels = c(\"benign\", \"malignant\")))\n\nfit &lt;- fastml(\n  data       = breastCancer,\n  label      = \"Class\",\n  algorithms = c(\"rand_forest\", \"xgboost\"),\n)",
+    "crumbs": [
+      "Tutorials",
+      "03. Metrics, Variability, and Uncertainty"
+    ]
+  },
+  {
+    "objectID": "03-metrics-variability-and-uncertainty.html#metrics-are-estimates-not-truths",
+    "href": "03-metrics-variability-and-uncertainty.html#metrics-are-estimates-not-truths",
+    "title": "03. Metrics, Variability, and Uncertainty",
+    "section": "Metrics Are Estimates, Not Truths",
+    "text": "Metrics Are Estimates, Not Truths\nA performance metric such as accuracy or ROC AUC is an estimate of out-of-sample performance rather than a fixed quantity.\nIts value depends on:\n\nthe resampling scheme,\nthe specific data splits,\nrandom elements in model fitting.\n\nReporting only a single point estimate obscures this variability.",
+    "crumbs": [
+      "Tutorials",
+      "03. Metrics, Variability, and Uncertainty"
+    ]
+  },
+  {
+    "objectID": "03-metrics-variability-and-uncertainty.html#aggregated-metrics",
+    "href": "03-metrics-variability-and-uncertainty.html#aggregated-metrics",
+    "title": "03. Metrics, Variability, and Uncertainty",
+    "section": "Aggregated Metrics",
+    "text": "Aggregated Metrics\nfastml reports metrics aggregated across resampling folds.\n\nfit$resampling_results$`rand_forest (ranger)`$aggregated\n\n# A tibble: 7 × 3\n  .metric   .estimator .estimate\n  &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;\n1 accuracy  binary         0.962\n2 f_meas    binary         0.970\n3 kap       binary         0.916\n4 precision binary         0.975\n5 roc_auc   binary         0.991\n6 sens      binary         0.966\n7 spec      binary         0.953\n\n\nThese values summarize performance under guarded cross-validation.\nThey answer the question:\nWhat is the average performance of this model under this evaluation design?\nThey do not answer:\nHow stable is this performance?",
+    "crumbs": [
+      "Tutorials",
+      "03. Metrics, Variability, and Uncertainty"
+    ]
+  },
+  {
+    "objectID": "03-metrics-variability-and-uncertainty.html#fold-level-variability",
+    "href": "03-metrics-variability-and-uncertainty.html#fold-level-variability",
+    "title": "03. Metrics, Variability, and Uncertainty",
+    "section": "Fold-Level Variability",
+    "text": "Fold-Level Variability\nTo assess performance stability, fold-level results must be examined.\n\nfit$resampling_results$`rand_forest (ranger)`$folds\n\n# A tibble: 70 × 4\n   fold  .metric   .estimator .estimate\n   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;\n 1 1     accuracy  binary         0.929\n 2 1     kap       binary         0.844\n 3 1     sens      binary         0.944\n 4 1     spec      binary         0.9  \n 5 1     precision binary         0.944\n 6 1     f_meas    binary         0.944\n 7 1     roc_auc   binary         0.968\n 8 2     accuracy  binary         0.964\n 9 2     kap       binary         0.922\n10 2     sens      binary         0.944\n# ℹ 60 more rows\n\n\nFold-level metrics reveal:\n\nsensitivity to data partitioning,\nvariability across assessment sets,\noverlap between competing models.\n\nLarge variability indicates that small differences in average performance are unlikely to be meaningful.",
+    "crumbs": [
+      "Tutorials",
+      "03. Metrics, Variability, and Uncertainty"
+    ]
+  },
+  {
+    "objectID": "03-metrics-variability-and-uncertainty.html#variability-and-model-comparison",
+    "href": "03-metrics-variability-and-uncertainty.html#variability-and-model-comparison",
+    "title": "03. Metrics, Variability, and Uncertainty",
+    "section": "Variability and Model Comparison",
+    "text": "Variability and Model Comparison\nIn Tutorial 02, models were compared using shared resampling.\nEven under fair comparison, it is common to observe:\n\noverlapping fold-level performance,\ndifferent rankings across folds,\ninstability in “best model” selection.\n\nThis is not a flaw.\nIt reflects finite-sample uncertainty.",
+    "crumbs": [
+      "Tutorials",
+      "03. Metrics, Variability, and Uncertainty"
+    ]
+  },
+  {
+    "objectID": "03-metrics-variability-and-uncertainty.html#beyond-point-estimates",
+    "href": "03-metrics-variability-and-uncertainty.html#beyond-point-estimates",
+    "title": "03. Metrics, Variability, and Uncertainty",
+    "section": "Beyond Point Estimates",
+    "text": "Beyond Point Estimates\nPoint estimates encourage overinterpretation.\nTwo models with accuracies of 0.82 and 0.84 may appear different, but without information on variability, this difference is not interpretable.\nFor this reason, fastml supports uncertainty-aware performance summaries.",
+    "crumbs": [
+      "Tutorials",
+      "03. Metrics, Variability, and Uncertainty"
+    ]
+  },
+  {
+    "objectID": "03-metrics-variability-and-uncertainty.html#bootstrap-based-metric-uncertainty",
+    "href": "03-metrics-variability-and-uncertainty.html#bootstrap-based-metric-uncertainty",
+    "title": "03. Metrics, Variability, and Uncertainty",
+    "section": "Bootstrap-Based Metric Uncertainty",
+    "text": "Bootstrap-Based Metric Uncertainty\nWhen enabled, fastml computes bootstrap distributions of evaluation metrics.\n\nfit$performance$rand_forest\n\n$ranger\n# A tibble: 7 × 6\n  .metric   .estimator .estimate .lower .upper .n_boot\n  &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;\n1 accuracy  binary         0.978  0.949      1     500\n2 kap       binary         0.953  0.893      1     500\n3 sens      binary         0.966  0.920      1     500\n4 spec      binary         1      1          1     500\n5 precision binary         1      1          1     500\n6 f_meas    binary         0.983  0.958      1     500\n7 roc_auc   binary         0.996  0.990      1     500\n\nfit$performance$xgboost\n\n$xgboost\n# A tibble: 7 × 6\n  .metric   .estimator .estimate .lower .upper .n_boot\n  &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;\n1 accuracy  binary         0.978  0.949      1     500\n2 kap       binary         0.952  0.888      1     500\n3 sens      binary         0.978  0.942      1     500\n4 spec      binary         0.979  0.929      1     500\n5 precision binary         0.989  0.963      1     500\n6 f_meas    binary         0.983  0.959      1     500\n7 roc_auc   binary         0.997  0.992      1     500\n\n\nBootstrapping provides:\n\nempirical uncertainty estimates,\ninsight into metric dispersion,\na basis for interval-based reporting.\n\nThese intervals describe evaluation uncertainty rather than population-level inference.",
+    "crumbs": [
+      "Tutorials",
+      "03. Metrics, Variability, and Uncertainty"
+    ]
+  },
+  {
+    "objectID": "03-metrics-variability-and-uncertainty.html#what-fastml-does-not-claim",
+    "href": "03-metrics-variability-and-uncertainty.html#what-fastml-does-not-claim",
+    "title": "03. Metrics, Variability, and Uncertainty",
+    "section": "What fastml Does Not Claim",
+    "text": "What fastml Does Not Claim\nfastml does not:\n\nperform hypothesis testing between models,\nassign statistical significance to metric differences,\nprovide p-values for model superiority.\n\nSuch procedures require additional assumptions and lie outside the scope of guarded resampling.",
+    "crumbs": [
+      "Tutorials",
+      "03. Metrics, Variability, and Uncertainty"
+    ]
+  },
+  {
+    "objectID": "03-metrics-variability-and-uncertainty.html#responsible-reporting",
+    "href": "03-metrics-variability-and-uncertainty.html#responsible-reporting",
+    "title": "03. Metrics, Variability, and Uncertainty",
+    "section": "Responsible Reporting",
+    "text": "Responsible Reporting\nA defensible performance report should include:\n\nthe primary evaluation metric,\nthe resampling scheme,\naggregated performance estimates,\nfold-level variability or uncertainty intervals.\n\nSingle-number summaries are insufficient.",
+    "crumbs": [
+      "Tutorials",
+      "03. Metrics, Variability, and Uncertainty"
+    ]
+  },
+  {
+    "objectID": "03-metrics-variability-and-uncertainty.html#summary",
+    "href": "03-metrics-variability-and-uncertainty.html#summary",
+    "title": "03. Metrics, Variability, and Uncertainty",
+    "section": "Summary",
+    "text": "Summary\nMetrics are random variables.\nPoint estimates hide variability.\nFold-level results reveal stability and overlap.\nBootstrap methods provide uncertainty estimates.\nfastml emphasizes defensible interpretation over ranking.",
+    "crumbs": [
+      "Tutorials",
+      "03. Metrics, Variability, and Uncertainty"
+    ]
+  },
+  {
+    "objectID": "03-metrics-variability-and-uncertainty.html#what-comes-next",
+    "href": "03-metrics-variability-and-uncertainty.html#what-comes-next",
+    "title": "03. Metrics, Variability, and Uncertainty",
+    "section": "What comes next",
+    "text": "What comes next\n04. Missing Data and Guarded Imputation\nHandling missing data under guarded resampling.",
+    "crumbs": [
+      "Tutorials",
+      "03. Metrics, Variability, and Uncertainty"
+    ]
+  },
+  {
+    "objectID": "04-missing-data-and-guarded-imputation.html",
+    "href": "04-missing-data-and-guarded-imputation.html",
+    "title": "04. Missing Data and Guarded Imputation",
+    "section": "",
+    "text": "In the earlier tutorials, we restricted the analysis to complete cases using na.omit().\nThis choice was intentional and explicitly justified as a pedagogical simplification.\nHowever, complete-case analysis is rarely appropriate in applied biomedical settings.\nMissing data are the rule, not the exception.\nThis tutorial shows how missing data can be handled under guarded resampling, without re-introducing leakage.",
+    "crumbs": [
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
+    ]
+  },
+  {
+    "objectID": "04-missing-data-and-guarded-imputation.html#motivation",
+    "href": "04-missing-data-and-guarded-imputation.html#motivation",
+    "title": "04. Missing Data and Guarded Imputation",
+    "section": "",
+    "text": "In the earlier tutorials, we restricted the analysis to complete cases using na.omit().\nThis choice was intentional and explicitly justified as a pedagogical simplification.\nHowever, complete-case analysis is rarely appropriate in applied biomedical settings.\nMissing data are the rule, not the exception.\nThis tutorial shows how missing data can be handled under guarded resampling, without re-introducing leakage.",
+    "crumbs": [
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
+    ]
+  },
+  {
+    "objectID": "04-missing-data-and-guarded-imputation.html#why-missing-data-are-dangerous-for-evaluation",
+    "href": "04-missing-data-and-guarded-imputation.html#why-missing-data-are-dangerous-for-evaluation",
+    "title": "04. Missing Data and Guarded Imputation",
+    "section": "Why missing data are dangerous for evaluation",
+    "text": "Why missing data are dangerous for evaluation\nImputation is a data-dependent operation.\nIf imputation parameters (means, medians, model-based estimates) are learned using the full dataset before resampling, then information from assessment folds leaks into training folds.\nThis is a textbook example of the timing problem described in C1 — What Is Data Leakage.\nThe solution is not “better imputation”, but correct placement of imputation inside resampling.",
+    "crumbs": [
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
+    ]
+  },
+  {
+    "objectID": "04-missing-data-and-guarded-imputation.html#the-key-constraint",
+    "href": "04-missing-data-and-guarded-imputation.html#the-key-constraint",
+    "title": "04. Missing Data and Guarded Imputation",
+    "section": "The key constraint",
+    "text": "The key constraint\nUnder guarded resampling (C3):\n\nimputation must be learned within each resampling split\nimputation parameters must never be shared across folds\nassessment data must not influence imputation\n\nfastml enforces this automatically.",
+    "crumbs": [
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
+    ]
+  },
+  {
+    "objectID": "04-missing-data-and-guarded-imputation.html#data-with-missing-values",
+    "href": "04-missing-data-and-guarded-imputation.html#data-with-missing-values",
+    "title": "04. Missing Data and Guarded Imputation",
+    "section": "Data with missing values",
+    "text": "Data with missing values\nWe return to the original Breast Cancer dataset without removing incomplete rows.\n\nlibrary(fastml)\nlibrary(mlbench)\nlibrary(dplyr)\n\ndata(BreastCancer)\n\nbreastCancer &lt;- BreastCancer %&gt;%\n  select(-\"Id\") %&gt;%\n  mutate(Class = factor(Class, levels = c(\"benign\", \"malignant\")))\n\nhead(breastCancer)\n\n  Cl.thickness Cell.size Cell.shape Marg.adhesion Epith.c.size Bare.nuclei\n1            5         1          1             1            2           1\n2            5         4          4             5            7          10\n3            3         1          1             1            2           2\n4            6         8          8             1            3           4\n5            4         1          1             3            2           1\n6            8        10         10             8            7          10\n  Bl.cromatin Normal.nucleoli Mitoses     Class\n1           3               1       1    benign\n2           3               2       1    benign\n3           3               1       1    benign\n4           3               7       1    benign\n5           3               1       1    benign\n6           9               7       1 malignant\n\n\nAt this stage, missing values are present in several predictors.",
+    "crumbs": [
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
+    ]
+  },
+  {
+    "objectID": "04-missing-data-and-guarded-imputation.html#specifying-guarded-imputation",
+    "href": "04-missing-data-and-guarded-imputation.html#specifying-guarded-imputation",
+    "title": "04. Missing Data and Guarded Imputation",
+    "section": "Specifying guarded imputation",
+    "text": "Specifying guarded imputation\nImputation is specified declaratively.\nHere we use median imputation for numeric predictors.\n\nfit &lt;- fastml(\n  data          = breastCancer,\n  label         = \"Class\",\n  algorithms    = c(\"rand_forest\", \"xgboost\"),\n  impute_method = \"medianImpute\",\n)\n\nNo imputation is performed at this point.\nThe imputation strategy is recorded and applied inside each resampling split.",
+    "crumbs": [
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
+    ]
+  },
+  {
+    "objectID": "04-missing-data-and-guarded-imputation.html#what-happens-under-the-hood-conceptual",
+    "href": "04-missing-data-and-guarded-imputation.html#what-happens-under-the-hood-conceptual",
+    "title": "04. Missing Data and Guarded Imputation",
+    "section": "What Happens Under the Hood (Conceptual)",
+    "text": "What Happens Under the Hood (Conceptual)\nFor each resampling fold:\n\ntraining data are isolated,\nimputation parameters are estimated using the training data only,\nthe same parameters are applied to the corresponding assessment data,\nthe model is trained and evaluated within that fold.\n\nUnder the guarded resampling execution path, assessment observations are not used when estimating imputation parameters.\nThis behavior is not a convention assumed of the user.\nIt is implemented structurally within the guarded resampling workflow.",
+    "crumbs": [
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
+    ]
+  },
+  {
+    "objectID": "04-missing-data-and-guarded-imputation.html#examining-performance",
+    "href": "04-missing-data-and-guarded-imputation.html#examining-performance",
+    "title": "04. Missing Data and Guarded Imputation",
+    "section": "Examining performance",
+    "text": "Examining performance\n\nfit$resampling_results$`rand_forest (ranger)`$aggregated\n\n# A tibble: 7 × 3\n  .metric   .estimator .estimate\n  &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;\n1 accuracy  binary         0.959\n2 f_meas    binary         0.968\n3 kap       binary         0.911\n4 precision binary         0.981\n5 roc_auc   binary         0.989\n6 sens      binary         0.956\n7 spec      binary         0.963\n\n\nThese metrics are now based on:\n\nincomplete data\nfold-specific imputation\nleakage-safe evaluation\n\nPerformance differences relative to complete-case analysis are expected and interpretable.",
+    "crumbs": [
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
+    ]
+  },
+  {
+    "objectID": "04-missing-data-and-guarded-imputation.html#fold-level-behavior",
+    "href": "04-missing-data-and-guarded-imputation.html#fold-level-behavior",
+    "title": "04. Missing Data and Guarded Imputation",
+    "section": "Fold-level behavior",
+    "text": "Fold-level behavior\n\nfit$resampling_results$`rand_forest (ranger)`$folds\n\n# A tibble: 70 × 4\n   fold  .metric   .estimator .estimate\n   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;\n 1 1     accuracy  binary         0.965\n 2 1     kap       binary         0.925\n 3 1     sens      binary         0.946\n 4 1     spec      binary         1    \n 5 1     precision binary         1    \n 6 1     f_meas    binary         0.972\n 7 1     roc_auc   binary         0.989\n 8 2     accuracy  binary         0.912\n 9 2     kap       binary         0.818\n10 2     sens      binary         0.865\n# ℹ 60 more rows\n\n\nMissingness can increase variability across resampling folds.\nThis variability is expected under resampling-based evaluation and reflects uncertainty induced by incomplete data and finite sample size, rather than a failure of the modeling procedure.",
+    "crumbs": [
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
+    ]
+  },
+  {
+    "objectID": "04-missing-data-and-guarded-imputation.html#what-fastml-does-not-allow-here",
+    "href": "04-missing-data-and-guarded-imputation.html#what-fastml-does-not-allow-here",
+    "title": "04. Missing Data and Guarded Imputation",
+    "section": "What fastml Does Not Allow Here",
+    "text": "What fastml Does Not Allow Here\nConsistent with C4. What fastml Deliberately Does Not Allow, users cannot:\n\nimpute the full dataset prior to resampling,\nreuse imputation parameters across folds,\nmix imputation strategies across models,\ndetach imputation from evaluation.\n\nAny such workflow would invalidate the evaluation.",
+    "crumbs": [
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
+    ]
+  },
+  {
+    "objectID": "04-missing-data-and-guarded-imputation.html#what-this-tutorial-does-not-cover",
+    "href": "04-missing-data-and-guarded-imputation.html#what-this-tutorial-does-not-cover",
+    "title": "04. Missing Data and Guarded Imputation",
+    "section": "What This Tutorial Does Not Cover",
+    "text": "What This Tutorial Does Not Cover\nThis tutorial intentionally does not cover:\n\nmultiple imputation (MICE),\nmissing-not-at-random (MNAR) modeling,\nsensitivity analyses,\ncausal assumptions about missingness.\n\nThese require additional assumptions and belong to advanced workflows.",
+    "crumbs": [
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
+    ]
+  },
+  {
+    "objectID": "04-missing-data-and-guarded-imputation.html#responsible-interpretation",
+    "href": "04-missing-data-and-guarded-imputation.html#responsible-interpretation",
+    "title": "04. Missing Data and Guarded Imputation",
+    "section": "Responsible Interpretation",
+    "text": "Responsible Interpretation\nWhen missing data are present:\n\nperformance estimates typically decrease,\nvariability typically increases,\nsmall model differences become less meaningful.\n\nThese are not failures of the model or the framework.\nThey are consequences of reduced information.",
+    "crumbs": [
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
+    ]
+  },
+  {
+    "objectID": "04-missing-data-and-guarded-imputation.html#summary",
+    "href": "04-missing-data-and-guarded-imputation.html#summary",
+    "title": "04. Missing Data and Guarded Imputation",
+    "section": "Summary",
+    "text": "Summary\n\nMissing data handling is a common source of leakage.\n\nImputation must be learned within resampling splits.\n\nfastml enforces guarded imputation by design.\n\nIncreased uncertainty is expected and informative.\n\nComplete-case analysis is a convenience, not a default.",
+    "crumbs": [
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
+    ]
+  },
+  {
+    "objectID": "04-missing-data-and-guarded-imputation.html#what-comes-next",
+    "href": "04-missing-data-and-guarded-imputation.html#what-comes-next",
+    "title": "04. Missing Data and Guarded Imputation",
+    "section": "What comes next",
+    "text": "What comes next\n05. Survival Analysis and Time-to-Event Outcomes\nSurvival outcomes and time-to-event evaluation under guarded resampling.",
+    "crumbs": [
+      "Tutorials",
+      "04. Missing Data and Guarded Imputation"
+    ]
+  },
+  {
     "objectID": "01-basic-classification.html",
     "href": "01-basic-classification.html",
     "title": "01. Basic Classification",
@@ -352,581 +930,102 @@
     ]
   },
   {
-    "objectID": "04-missing-data-and-guarded-imputation.html",
-    "href": "04-missing-data-and-guarded-imputation.html",
-    "title": "04. Missing Data and Guarded Imputation",
+    "objectID": "05-survival-analysis-and-time-to-event-outcomes.html",
+    "href": "05-survival-analysis-and-time-to-event-outcomes.html",
+    "title": "05. Survival Analysis and Time-to-Event Outcomes",
     "section": "",
-    "text": "In the earlier tutorials, we restricted the analysis to complete cases using na.omit().\nThis choice was intentional and explicitly justified as a pedagogical simplification.\nHowever, complete-case analysis is rarely appropriate in applied biomedical settings.\nMissing data are the rule, not the exception.\nThis tutorial shows how missing data can be handled under guarded resampling, without re-introducing leakage.",
+    "text": "## Motivation\nTime-to-event outcomes introduce a new layer of complexity that is absent in standard classification and regression.\nIn survival analysis:\nThese properties make survival analysis especially vulnerable to evaluation errors and leakage.\n## Why survival analysis is different\nIn earlier tutorials, each observation contributed a fully observed outcome.\nIn survival settings, each observation consists of:\nIgnoring this structure leads to invalid evaluation.\nIn particular, treating survival outcomes as binary labels discards timing information and introduces bias.\n## Leakage risks unique to survival analysis\nSurvival workflows introduce additional leakage pathways:\nThese errors often go undetected and produce optimistic results.\nThe principles from C1–C3 apply here with greater force.\n## Data\nWe use a classical survival dataset with right censoring.\nlibrary(fastml)\nlibrary(censored)\nlibrary(survival)\nlibrary(dplyr)\n\ndata(lung, package = \"survival\")\n\nsurv_data &lt;- lung %&gt;%\n  filter(!is.na(time), !is.na(status)) %&gt;%\n  mutate(\n    status = ifelse(status == 2, 1, 0),  # 1 = event, 0 = censored\n    sex    = factor(sex, labels = c(\"male\", \"female\"))\n  )\n\nhead(surv_data)\n\n  inst time status age  sex ph.ecog ph.karno pat.karno meal.cal wt.loss\n1    3  306      1  74 male       1       90       100     1175      NA\n2    3  455      1  68 male       0       90        90     1225      15\n3    3 1010      0  56 male       0       90        90       NA      15\n4    5  210      1  57 male       1       90        60     1150      11\n5    1  883      1  60 male       0      100        90       NA       0\n6   12 1022      0  74 male       1       50        80      513       0\nThis dataset includes:",
     "crumbs": [
       "Tutorials",
-      "04. Missing Data and Guarded Imputation"
+      "05. Survival Analysis and Time-to-Event Outcomes"
     ]
   },
   {
-    "objectID": "04-missing-data-and-guarded-imputation.html#motivation",
-    "href": "04-missing-data-and-guarded-imputation.html#motivation",
-    "title": "04. Missing Data and Guarded Imputation",
-    "section": "",
-    "text": "In the earlier tutorials, we restricted the analysis to complete cases using na.omit().\nThis choice was intentional and explicitly justified as a pedagogical simplification.\nHowever, complete-case analysis is rarely appropriate in applied biomedical settings.\nMissing data are the rule, not the exception.\nThis tutorial shows how missing data can be handled under guarded resampling, without re-introducing leakage.",
+    "objectID": "05-survival-analysis-and-time-to-event-outcomes.html#defining-a-survival-task",
+    "href": "05-survival-analysis-and-time-to-event-outcomes.html#defining-a-survival-task",
+    "title": "05. Survival Analysis and Time-to-Event Outcomes",
+    "section": "Defining a survival task",
+    "text": "Defining a survival task\nIn fastml, survival analysis is specified explicitly.\n\nfit &lt;- fastml(\n  data       = surv_data,\n  label      = c(\"time\", \"status\"),\n  algorithms = c(\"cox_ph\", \"survreg\"),\n  impute_method = \"remove\"\n)\n\nThis declaration ensures that:\n\ncensoring is respected,\nmodels are trained under survival-specific assumptions,\nevaluation uses survival-appropriate metrics.",
     "crumbs": [
       "Tutorials",
-      "04. Missing Data and Guarded Imputation"
+      "05. Survival Analysis and Time-to-Event Outcomes"
     ]
   },
   {
-    "objectID": "04-missing-data-and-guarded-imputation.html#why-missing-data-are-dangerous-for-evaluation",
-    "href": "04-missing-data-and-guarded-imputation.html#why-missing-data-are-dangerous-for-evaluation",
-    "title": "04. Missing Data and Guarded Imputation",
-    "section": "Why missing data are dangerous for evaluation",
-    "text": "Why missing data are dangerous for evaluation\nImputation is a data-dependent operation.\nIf imputation parameters (means, medians, model-based estimates) are learned using the full dataset before resampling, then information from assessment folds leaks into training folds.\nThis is a textbook example of the timing problem described in C1 — What Is Data Leakage.\nThe solution is not “better imputation”, but correct placement of imputation inside resampling.",
+    "objectID": "05-survival-analysis-and-time-to-event-outcomes.html#guarded-resampling-for-survival-outcomes",
+    "href": "05-survival-analysis-and-time-to-event-outcomes.html#guarded-resampling-for-survival-outcomes",
+    "title": "05. Survival Analysis and Time-to-Event Outcomes",
+    "section": "Guarded Resampling for Survival Outcomes",
+    "text": "Guarded Resampling for Survival Outcomes\nUnder guarded resampling:\n\npreprocessing is learned within each training split,\nrisk sets are isolated by fold,\nevaluation uses only information available at assessment time.\n\nNo observation contributes future information to training.\nThis is essential for valid survival evaluation.",
     "crumbs": [
       "Tutorials",
-      "04. Missing Data and Guarded Imputation"
+      "05. Survival Analysis and Time-to-Event Outcomes"
     ]
   },
   {
-    "objectID": "04-missing-data-and-guarded-imputation.html#the-key-constraint",
-    "href": "04-missing-data-and-guarded-imputation.html#the-key-constraint",
-    "title": "04. Missing Data and Guarded Imputation",
-    "section": "The key constraint",
-    "text": "The key constraint\nUnder guarded resampling (C3):\n\nimputation must be learned within each resampling split\nimputation parameters must never be shared across folds\nassessment data must not influence imputation\n\nfastml enforces this automatically.",
+    "objectID": "05-survival-analysis-and-time-to-event-outcomes.html#survival-specific-metrics",
+    "href": "05-survival-analysis-and-time-to-event-outcomes.html#survival-specific-metrics",
+    "title": "05. Survival Analysis and Time-to-Event Outcomes",
+    "section": "Survival-Specific Metrics",
+    "text": "Survival-Specific Metrics\nSurvival models cannot be evaluated using accuracy or ROC AUC.\nInstead, fastml reports metrics such as:\n\nconcordance index (C-index),\ntime-dependent performance summaries,\nintegrated Brier score (when applicable).\n\n\nfit$resampling_results$`cox_ph (survival)`$aggregated\n\n# A tibble: 6 × 2\n  .metric   .estimate\n  &lt;chr&gt;         &lt;dbl&gt;\n1 brier_t1      0.276\n2 brier_t2      0.306\n3 c_index       0.612\n4 ibs           0.226\n5 rmst_diff    68.6  \n6 uno_c         0.591\n\n\nThese metrics account for censoring and timing.",
     "crumbs": [
       "Tutorials",
-      "04. Missing Data and Guarded Imputation"
+      "05. Survival Analysis and Time-to-Event Outcomes"
     ]
   },
   {
-    "objectID": "04-missing-data-and-guarded-imputation.html#data-with-missing-values",
-    "href": "04-missing-data-and-guarded-imputation.html#data-with-missing-values",
-    "title": "04. Missing Data and Guarded Imputation",
-    "section": "Data with missing values",
-    "text": "Data with missing values\nWe return to the original Breast Cancer dataset without removing incomplete rows.\n\nlibrary(fastml)\nlibrary(mlbench)\nlibrary(dplyr)\n\ndata(BreastCancer)\n\nbreastCancer &lt;- BreastCancer %&gt;%\n  select(-\"Id\") %&gt;%\n  mutate(Class = factor(Class, levels = c(\"benign\", \"malignant\")))\n\nhead(breastCancer)\n\n  Cl.thickness Cell.size Cell.shape Marg.adhesion Epith.c.size Bare.nuclei\n1            5         1          1             1            2           1\n2            5         4          4             5            7          10\n3            3         1          1             1            2           2\n4            6         8          8             1            3           4\n5            4         1          1             3            2           1\n6            8        10         10             8            7          10\n  Bl.cromatin Normal.nucleoli Mitoses     Class\n1           3               1       1    benign\n2           3               2       1    benign\n3           3               1       1    benign\n4           3               7       1    benign\n5           3               1       1    benign\n6           9               7       1 malignant\n\n\nAt this stage, missing values are present in several predictors.",
+    "objectID": "05-survival-analysis-and-time-to-event-outcomes.html#variability-across-folds",
+    "href": "05-survival-analysis-and-time-to-event-outcomes.html#variability-across-folds",
+    "title": "05. Survival Analysis and Time-to-Event Outcomes",
+    "section": "Variability across folds",
+    "text": "Variability across folds\nAs with earlier tutorials, fold-level variability matters.\n\nfit$resampling_results$`cox_ph (survival)`$folds\n\n# A tibble: 60 × 3\n   fold  .metric   .estimate\n   &lt;chr&gt; &lt;chr&gt;         &lt;dbl&gt;\n 1 1     c_index       0.730\n 2 1     uno_c         0.724\n 3 1     ibs           0.187\n 4 1     rmst_diff   263.   \n 5 1     brier_t1      0.231\n 6 1     brier_t2      0.169\n 7 2     c_index       0.415\n 8 2     uno_c         0.274\n 9 2     ibs           0.286\n10 2     rmst_diff  -145.   \n# ℹ 50 more rows\n\n\nSurvival metrics often exhibit higher variability due to:\n\ncensoring patterns,\nlimited numbers of events,\nheterogeneous follow-up times.\n\nThis variability is informative, not pathological.",
     "crumbs": [
       "Tutorials",
-      "04. Missing Data and Guarded Imputation"
+      "05. Survival Analysis and Time-to-Event Outcomes"
     ]
   },
   {
-    "objectID": "04-missing-data-and-guarded-imputation.html#specifying-guarded-imputation",
-    "href": "04-missing-data-and-guarded-imputation.html#specifying-guarded-imputation",
-    "title": "04. Missing Data and Guarded Imputation",
-    "section": "Specifying guarded imputation",
-    "text": "Specifying guarded imputation\nImputation is specified declaratively.\nHere we use median imputation for numeric predictors.\n\nfit &lt;- fastml(\n  data          = breastCancer,\n  label         = \"Class\",\n  algorithms    = c(\"rand_forest\", \"xgboost\"),\n  impute_method = \"medianImpute\",\n)\n\nNo imputation is performed at this point.\nThe imputation strategy is recorded and applied inside each resampling split.",
-    "crumbs": [
-      "Tutorials",
-      "04. Missing Data and Guarded Imputation"
-    ]
-  },
-  {
-    "objectID": "04-missing-data-and-guarded-imputation.html#what-happens-under-the-hood-conceptual",
-    "href": "04-missing-data-and-guarded-imputation.html#what-happens-under-the-hood-conceptual",
-    "title": "04. Missing Data and Guarded Imputation",
-    "section": "What Happens Under the Hood (Conceptual)",
-    "text": "What Happens Under the Hood (Conceptual)\nFor each resampling fold:\n\ntraining data are isolated,\nimputation parameters are estimated using the training data only,\nthe same parameters are applied to the corresponding assessment data,\nthe model is trained and evaluated within that fold.\n\nUnder the guarded resampling execution path, assessment observations are not used when estimating imputation parameters.\nThis behavior is not a convention assumed of the user.\nIt is implemented structurally within the guarded resampling workflow.",
-    "crumbs": [
-      "Tutorials",
-      "04. Missing Data and Guarded Imputation"
-    ]
-  },
-  {
-    "objectID": "04-missing-data-and-guarded-imputation.html#examining-performance",
-    "href": "04-missing-data-and-guarded-imputation.html#examining-performance",
-    "title": "04. Missing Data and Guarded Imputation",
-    "section": "Examining performance",
-    "text": "Examining performance\n\nfit$resampling_results$`rand_forest (ranger)`$aggregated\n\n# A tibble: 7 × 3\n  .metric   .estimator .estimate\n  &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;\n1 accuracy  binary         0.959\n2 f_meas    binary         0.968\n3 kap       binary         0.911\n4 precision binary         0.981\n5 roc_auc   binary         0.989\n6 sens      binary         0.956\n7 spec      binary         0.963\n\n\nThese metrics are now based on:\n\nincomplete data\nfold-specific imputation\nleakage-safe evaluation\n\nPerformance differences relative to complete-case analysis are expected and interpretable.",
-    "crumbs": [
-      "Tutorials",
-      "04. Missing Data and Guarded Imputation"
-    ]
-  },
-  {
-    "objectID": "04-missing-data-and-guarded-imputation.html#fold-level-behavior",
-    "href": "04-missing-data-and-guarded-imputation.html#fold-level-behavior",
-    "title": "04. Missing Data and Guarded Imputation",
-    "section": "Fold-level behavior",
-    "text": "Fold-level behavior\n\nfit$resampling_results$`rand_forest (ranger)`$folds\n\n# A tibble: 70 × 4\n   fold  .metric   .estimator .estimate\n   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;\n 1 1     accuracy  binary         0.965\n 2 1     kap       binary         0.925\n 3 1     sens      binary         0.946\n 4 1     spec      binary         1    \n 5 1     precision binary         1    \n 6 1     f_meas    binary         0.972\n 7 1     roc_auc   binary         0.989\n 8 2     accuracy  binary         0.912\n 9 2     kap       binary         0.818\n10 2     sens      binary         0.865\n# ℹ 60 more rows\n\n\nMissingness can increase variability across resampling folds.\nThis variability is expected under resampling-based evaluation and reflects uncertainty induced by incomplete data and finite sample size, rather than a failure of the modeling procedure.",
-    "crumbs": [
-      "Tutorials",
-      "04. Missing Data and Guarded Imputation"
-    ]
-  },
-  {
-    "objectID": "04-missing-data-and-guarded-imputation.html#what-fastml-does-not-allow-here",
-    "href": "04-missing-data-and-guarded-imputation.html#what-fastml-does-not-allow-here",
-    "title": "04. Missing Data and Guarded Imputation",
+    "objectID": "05-survival-analysis-and-time-to-event-outcomes.html#what-fastml-does-not-allow-here",
+    "href": "05-survival-analysis-and-time-to-event-outcomes.html#what-fastml-does-not-allow-here",
+    "title": "05. Survival Analysis and Time-to-Event Outcomes",
     "section": "What fastml Does Not Allow Here",
-    "text": "What fastml Does Not Allow Here\nConsistent with C4. What fastml Deliberately Does Not Allow, users cannot:\n\nimpute the full dataset prior to resampling,\nreuse imputation parameters across folds,\nmix imputation strategies across models,\ndetach imputation from evaluation.\n\nAny such workflow would invalidate the evaluation.",
+    "text": "What fastml Does Not Allow Here\nConsistent with C4. What fastml Deliberately Does Not Allow, fastml prevents users from:\n\nconverting survival outcomes to binary labels,\nevaluating survival models with classification metrics,\npreprocessing time-to-event data globally,\ndetaching evaluation from resampling.\n\nThese restrictions are necessary for validity.",
     "crumbs": [
       "Tutorials",
-      "04. Missing Data and Guarded Imputation"
+      "05. Survival Analysis and Time-to-Event Outcomes"
     ]
   },
   {
-    "objectID": "04-missing-data-and-guarded-imputation.html#what-this-tutorial-does-not-cover",
-    "href": "04-missing-data-and-guarded-imputation.html#what-this-tutorial-does-not-cover",
-    "title": "04. Missing Data and Guarded Imputation",
-    "section": "What This Tutorial Does Not Cover",
-    "text": "What This Tutorial Does Not Cover\nThis tutorial intentionally does not cover:\n\nmultiple imputation (MICE),\nmissing-not-at-random (MNAR) modeling,\nsensitivity analyses,\ncausal assumptions about missingness.\n\nThese require additional assumptions and belong to advanced workflows.",
+    "objectID": "05-survival-analysis-and-time-to-event-outcomes.html#interpretation-cautions",
+    "href": "05-survival-analysis-and-time-to-event-outcomes.html#interpretation-cautions",
+    "title": "05. Survival Analysis and Time-to-Event Outcomes",
+    "section": "Interpretation Cautions",
+    "text": "Interpretation Cautions\nSurvival metrics describe ranking or calibration under censoring, not absolute risk.\nThey should not be interpreted as:\n\nprobabilities of survival at specific times,\ncausal effects,\nguarantees of clinical utility.\n\nGuarded resampling ensures valid evaluation, not clinical validity.",
     "crumbs": [
       "Tutorials",
-      "04. Missing Data and Guarded Imputation"
+      "05. Survival Analysis and Time-to-Event Outcomes"
     ]
   },
   {
-    "objectID": "04-missing-data-and-guarded-imputation.html#responsible-interpretation",
-    "href": "04-missing-data-and-guarded-imputation.html#responsible-interpretation",
-    "title": "04. Missing Data and Guarded Imputation",
-    "section": "Responsible Interpretation",
-    "text": "Responsible Interpretation\nWhen missing data are present:\n\nperformance estimates typically decrease,\nvariability typically increases,\nsmall model differences become less meaningful.\n\nThese are not failures of the model or the framework.\nThey are consequences of reduced information.",
-    "crumbs": [
-      "Tutorials",
-      "04. Missing Data and Guarded Imputation"
-    ]
-  },
-  {
-    "objectID": "04-missing-data-and-guarded-imputation.html#summary",
-    "href": "04-missing-data-and-guarded-imputation.html#summary",
-    "title": "04. Missing Data and Guarded Imputation",
+    "objectID": "05-survival-analysis-and-time-to-event-outcomes.html#summary",
+    "href": "05-survival-analysis-and-time-to-event-outcomes.html#summary",
+    "title": "05. Survival Analysis and Time-to-Event Outcomes",
     "section": "Summary",
-    "text": "Summary\n\nMissing data handling is a common source of leakage.\n\nImputation must be learned within resampling splits.\n\nfastml enforces guarded imputation by design.\n\nIncreased uncertainty is expected and informative.\n\nComplete-case analysis is a convenience, not a default.",
+    "text": "Summary\n\nSurvival outcomes require task-specific evaluation.\n\nCensoring introduces new leakage risks.\n\nGuarded resampling is essential in survival analysis.\n\nVariability is expected and informative.\n\nfastml is designed to encourage survival-appropriate workflows by constraining how outcomes, preprocessing, resampling, and evaluation are coordinated under supported execution paths.",
     "crumbs": [
       "Tutorials",
-      "04. Missing Data and Guarded Imputation"
+      "05. Survival Analysis and Time-to-Event Outcomes"
     ]
   },
   {
-    "objectID": "04-missing-data-and-guarded-imputation.html#what-comes-next",
-    "href": "04-missing-data-and-guarded-imputation.html#what-comes-next",
-    "title": "04. Missing Data and Guarded Imputation",
+    "objectID": "05-survival-analysis-and-time-to-event-outcomes.html#what-comes-next",
+    "href": "05-survival-analysis-and-time-to-event-outcomes.html#what-comes-next",
+    "title": "05. Survival Analysis and Time-to-Event Outcomes",
     "section": "What comes next",
-    "text": "What comes next\n05. Survival Analysis and Time-to-Event Outcomes\nSurvival outcomes and time-to-event evaluation under guarded resampling.",
+    "text": "What comes next\n06 — Regression and Continuous Outcomes\nRegression and continuous outcomes under guarded resampling.",
     "crumbs": [
       "Tutorials",
-      "04. Missing Data and Guarded Imputation"
-    ]
-  },
-  {
-    "objectID": "03-metrics-variability-and-uncertainty.html",
-    "href": "03-metrics-variability-and-uncertainty.html",
-    "title": "03. Metrics, Variability, and Uncertainty",
-    "section": "",
-    "text": "Machine learning results are often summarized by a single number.\nThis practice is convenient, but it is rarely sufficient.\nPerformance metrics are random variables, not fixed properties of a model.\nThey depend on how data are split, how models are trained, and how evaluation is conducted.\nAs shown in Tutorials 01–02, fastml enforces valid evaluation.\nThis tutorial focuses on how to interpret the resulting metrics responsibly.",
-    "crumbs": [
-      "Tutorials",
-      "03. Metrics, Variability, and Uncertainty"
-    ]
-  },
-  {
-    "objectID": "03-metrics-variability-and-uncertainty.html#motivation",
-    "href": "03-metrics-variability-and-uncertainty.html#motivation",
-    "title": "03. Metrics, Variability, and Uncertainty",
-    "section": "",
-    "text": "Machine learning results are often summarized by a single number.\nThis practice is convenient, but it is rarely sufficient.\nPerformance metrics are random variables, not fixed properties of a model.\nThey depend on how data are split, how models are trained, and how evaluation is conducted.\nAs shown in Tutorials 01–02, fastml enforces valid evaluation.\nThis tutorial focuses on how to interpret the resulting metrics responsibly.",
-    "crumbs": [
-      "Tutorials",
-      "03. Metrics, Variability, and Uncertainty"
-    ]
-  },
-  {
-    "objectID": "03-metrics-variability-and-uncertainty.html#recreating-the-analysis",
-    "href": "03-metrics-variability-and-uncertainty.html#recreating-the-analysis",
-    "title": "03. Metrics, Variability, and Uncertainty",
-    "section": "Recreating the analysis",
-    "text": "Recreating the analysis\nEach tutorial in this series is designed to be fully self-contained.\nWe therefore recreate the analysis from Tutorials 01–02 before examining metric behavior.\n\nlibrary(fastml)\nlibrary(mlbench)\nlibrary(dplyr)\n\ndata(BreastCancer)\n\nbreastCancer &lt;- BreastCancer %&gt;%\n  select(-Id) %&gt;%\n  na.omit() %&gt;%\n  mutate(Class = factor(Class, levels = c(\"benign\", \"malignant\")))\n\nfit &lt;- fastml(\n  data       = breastCancer,\n  label      = \"Class\",\n  algorithms = c(\"rand_forest\", \"xgboost\"),\n)",
-    "crumbs": [
-      "Tutorials",
-      "03. Metrics, Variability, and Uncertainty"
-    ]
-  },
-  {
-    "objectID": "03-metrics-variability-and-uncertainty.html#metrics-are-estimates-not-truths",
-    "href": "03-metrics-variability-and-uncertainty.html#metrics-are-estimates-not-truths",
-    "title": "03. Metrics, Variability, and Uncertainty",
-    "section": "Metrics Are Estimates, Not Truths",
-    "text": "Metrics Are Estimates, Not Truths\nA performance metric such as accuracy or ROC AUC is an estimate of out-of-sample performance rather than a fixed quantity.\nIts value depends on:\n\nthe resampling scheme,\nthe specific data splits,\nrandom elements in model fitting.\n\nReporting only a single point estimate obscures this variability.",
-    "crumbs": [
-      "Tutorials",
-      "03. Metrics, Variability, and Uncertainty"
-    ]
-  },
-  {
-    "objectID": "03-metrics-variability-and-uncertainty.html#aggregated-metrics",
-    "href": "03-metrics-variability-and-uncertainty.html#aggregated-metrics",
-    "title": "03. Metrics, Variability, and Uncertainty",
-    "section": "Aggregated Metrics",
-    "text": "Aggregated Metrics\nfastml reports metrics aggregated across resampling folds.\n\nfit$resampling_results$`rand_forest (ranger)`$aggregated\n\n# A tibble: 7 × 3\n  .metric   .estimator .estimate\n  &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;\n1 accuracy  binary         0.962\n2 f_meas    binary         0.970\n3 kap       binary         0.916\n4 precision binary         0.975\n5 roc_auc   binary         0.991\n6 sens      binary         0.966\n7 spec      binary         0.953\n\n\nThese values summarize performance under guarded cross-validation.\nThey answer the question:\nWhat is the average performance of this model under this evaluation design?\nThey do not answer:\nHow stable is this performance?",
-    "crumbs": [
-      "Tutorials",
-      "03. Metrics, Variability, and Uncertainty"
-    ]
-  },
-  {
-    "objectID": "03-metrics-variability-and-uncertainty.html#fold-level-variability",
-    "href": "03-metrics-variability-and-uncertainty.html#fold-level-variability",
-    "title": "03. Metrics, Variability, and Uncertainty",
-    "section": "Fold-Level Variability",
-    "text": "Fold-Level Variability\nTo assess performance stability, fold-level results must be examined.\n\nfit$resampling_results$`rand_forest (ranger)`$folds\n\n# A tibble: 70 × 4\n   fold  .metric   .estimator .estimate\n   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;\n 1 1     accuracy  binary         0.929\n 2 1     kap       binary         0.844\n 3 1     sens      binary         0.944\n 4 1     spec      binary         0.9  \n 5 1     precision binary         0.944\n 6 1     f_meas    binary         0.944\n 7 1     roc_auc   binary         0.968\n 8 2     accuracy  binary         0.964\n 9 2     kap       binary         0.922\n10 2     sens      binary         0.944\n# ℹ 60 more rows\n\n\nFold-level metrics reveal:\n\nsensitivity to data partitioning,\nvariability across assessment sets,\noverlap between competing models.\n\nLarge variability indicates that small differences in average performance are unlikely to be meaningful.",
-    "crumbs": [
-      "Tutorials",
-      "03. Metrics, Variability, and Uncertainty"
-    ]
-  },
-  {
-    "objectID": "03-metrics-variability-and-uncertainty.html#variability-and-model-comparison",
-    "href": "03-metrics-variability-and-uncertainty.html#variability-and-model-comparison",
-    "title": "03. Metrics, Variability, and Uncertainty",
-    "section": "Variability and Model Comparison",
-    "text": "Variability and Model Comparison\nIn Tutorial 02, models were compared using shared resampling.\nEven under fair comparison, it is common to observe:\n\noverlapping fold-level performance,\ndifferent rankings across folds,\ninstability in “best model” selection.\n\nThis is not a flaw.\nIt reflects finite-sample uncertainty.",
-    "crumbs": [
-      "Tutorials",
-      "03. Metrics, Variability, and Uncertainty"
-    ]
-  },
-  {
-    "objectID": "03-metrics-variability-and-uncertainty.html#beyond-point-estimates",
-    "href": "03-metrics-variability-and-uncertainty.html#beyond-point-estimates",
-    "title": "03. Metrics, Variability, and Uncertainty",
-    "section": "Beyond Point Estimates",
-    "text": "Beyond Point Estimates\nPoint estimates encourage overinterpretation.\nTwo models with accuracies of 0.82 and 0.84 may appear different, but without information on variability, this difference is not interpretable.\nFor this reason, fastml supports uncertainty-aware performance summaries.",
-    "crumbs": [
-      "Tutorials",
-      "03. Metrics, Variability, and Uncertainty"
-    ]
-  },
-  {
-    "objectID": "03-metrics-variability-and-uncertainty.html#bootstrap-based-metric-uncertainty",
-    "href": "03-metrics-variability-and-uncertainty.html#bootstrap-based-metric-uncertainty",
-    "title": "03. Metrics, Variability, and Uncertainty",
-    "section": "Bootstrap-Based Metric Uncertainty",
-    "text": "Bootstrap-Based Metric Uncertainty\nWhen enabled, fastml computes bootstrap distributions of evaluation metrics.\n\nfit$performance$rand_forest\n\n$ranger\n# A tibble: 7 × 6\n  .metric   .estimator .estimate .lower .upper .n_boot\n  &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;\n1 accuracy  binary         0.978  0.949      1     500\n2 kap       binary         0.953  0.893      1     500\n3 sens      binary         0.966  0.920      1     500\n4 spec      binary         1      1          1     500\n5 precision binary         1      1          1     500\n6 f_meas    binary         0.983  0.958      1     500\n7 roc_auc   binary         0.996  0.990      1     500\n\nfit$performance$xgboost\n\n$xgboost\n# A tibble: 7 × 6\n  .metric   .estimator .estimate .lower .upper .n_boot\n  &lt;chr&gt;     &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;\n1 accuracy  binary         0.978  0.949      1     500\n2 kap       binary         0.952  0.888      1     500\n3 sens      binary         0.978  0.942      1     500\n4 spec      binary         0.979  0.929      1     500\n5 precision binary         0.989  0.963      1     500\n6 f_meas    binary         0.983  0.959      1     500\n7 roc_auc   binary         0.997  0.992      1     500\n\n\nBootstrapping provides:\n\nempirical uncertainty estimates,\ninsight into metric dispersion,\na basis for interval-based reporting.\n\nThese intervals describe evaluation uncertainty rather than population-level inference.",
-    "crumbs": [
-      "Tutorials",
-      "03. Metrics, Variability, and Uncertainty"
-    ]
-  },
-  {
-    "objectID": "03-metrics-variability-and-uncertainty.html#what-fastml-does-not-claim",
-    "href": "03-metrics-variability-and-uncertainty.html#what-fastml-does-not-claim",
-    "title": "03. Metrics, Variability, and Uncertainty",
-    "section": "What fastml Does Not Claim",
-    "text": "What fastml Does Not Claim\nfastml does not:\n\nperform hypothesis testing between models,\nassign statistical significance to metric differences,\nprovide p-values for model superiority.\n\nSuch procedures require additional assumptions and lie outside the scope of guarded resampling.",
-    "crumbs": [
-      "Tutorials",
-      "03. Metrics, Variability, and Uncertainty"
-    ]
-  },
-  {
-    "objectID": "03-metrics-variability-and-uncertainty.html#responsible-reporting",
-    "href": "03-metrics-variability-and-uncertainty.html#responsible-reporting",
-    "title": "03. Metrics, Variability, and Uncertainty",
-    "section": "Responsible Reporting",
-    "text": "Responsible Reporting\nA defensible performance report should include:\n\nthe primary evaluation metric,\nthe resampling scheme,\naggregated performance estimates,\nfold-level variability or uncertainty intervals.\n\nSingle-number summaries are insufficient.",
-    "crumbs": [
-      "Tutorials",
-      "03. Metrics, Variability, and Uncertainty"
-    ]
-  },
-  {
-    "objectID": "03-metrics-variability-and-uncertainty.html#summary",
-    "href": "03-metrics-variability-and-uncertainty.html#summary",
-    "title": "03. Metrics, Variability, and Uncertainty",
-    "section": "Summary",
-    "text": "Summary\nMetrics are random variables.\nPoint estimates hide variability.\nFold-level results reveal stability and overlap.\nBootstrap methods provide uncertainty estimates.\nfastml emphasizes defensible interpretation over ranking.",
-    "crumbs": [
-      "Tutorials",
-      "03. Metrics, Variability, and Uncertainty"
-    ]
-  },
-  {
-    "objectID": "03-metrics-variability-and-uncertainty.html#what-comes-next",
-    "href": "03-metrics-variability-and-uncertainty.html#what-comes-next",
-    "title": "03. Metrics, Variability, and Uncertainty",
-    "section": "What comes next",
-    "text": "What comes next\n04. Missing Data and Guarded Imputation\nHandling missing data under guarded resampling.",
-    "crumbs": [
-      "Tutorials",
-      "03. Metrics, Variability, and Uncertainty"
-    ]
-  },
-  {
-    "objectID": "C3-guarded-resampling.html",
-    "href": "C3-guarded-resampling.html",
-    "title": "C3. Guarded Resampling",
-    "section": "",
-    "text": "C1 established that data leakage is a structural timing error.\nC2 showed that many machine learning pipelines permit such errors by default.\nA direct consequence is that methodological correctness cannot rely on user discipline alone.\nGuarded Resampling is an architectural response to this limitation.",
-    "crumbs": [
-      "Concepts",
-      "C3. Guarded Resampling"
-    ]
-  },
-  {
-    "objectID": "C3-guarded-resampling.html#from-advice-to-enforcement",
-    "href": "C3-guarded-resampling.html#from-advice-to-enforcement",
-    "title": "C3. Guarded Resampling",
-    "section": "",
-    "text": "C1 established that data leakage is a structural timing error.\nC2 showed that many machine learning pipelines permit such errors by default.\nA direct consequence is that methodological correctness cannot rely on user discipline alone.\nGuarded Resampling is an architectural response to this limitation.",
-    "crumbs": [
-      "Concepts",
-      "C3. Guarded Resampling"
-    ]
-  },
-  {
-    "objectID": "C3-guarded-resampling.html#what-guarded-means",
-    "href": "C3-guarded-resampling.html#what-guarded-means",
-    "title": "C3. Guarded Resampling",
-    "section": "What “Guarded” means",
-    "text": "What “Guarded” means\nIn guarded resampling, resampling is not treated as a downstream step in a workflow. Instead, it provides the enclosing structure for all operations that learn parameters from the data.\nUnder this design, any operation whose results depend on estimated quantities is executed separately within each resampling split, including:\n\npreprocessing steps that estimate statistics from the data,\nmodel fitting,\nhyperparameter selection,\nperformance metric computation.\n\nOperations that would require access to information outside the analysis set, or that would induce backward information flow from assessment data, are restricted along the default execution path.\nThis is not a usage convention. It is a structural constraint.",
-    "crumbs": [
-      "Concepts",
-      "C3. Guarded Resampling"
-    ]
-  },
-  {
-    "objectID": "C3-guarded-resampling.html#resampling-as-the-primary-object",
-    "href": "C3-guarded-resampling.html#resampling-as-the-primary-object",
-    "title": "C3. Guarded Resampling",
-    "section": "Resampling as the primary object",
-    "text": "Resampling as the primary object\nIn many applied machine learning workflows, resampling is effectively treated as an external evaluation step, rather than as a structural component of the learning procedure. A common pattern is:\n\nprepare data,\nfit a model,\nevaluate performance using resampling.\n\nAlthough widely used, this organization obscures the fact that valid performance estimation requires strict separation between training and assessment data at all stages of model construction.\nGuarded resampling reverses this relationship. Instead of attaching resampling post hoc, the workflow is defined by the resampling scheme itself:\n\ndefine a resampling plan,\nfor each split:\n\nestimate preprocessing steps,\nfit the model,\ngenerate predictions,\n\naggregate results across splits.\n\nUnder this formulation, resampling defines the experimental structure, and all learning steps operate conditionally within it.",
-    "crumbs": [
-      "Concepts",
-      "C3. Guarded Resampling"
-    ]
-  },
-  {
-    "objectID": "C3-guarded-resampling.html#why-enclosure-matters",
-    "href": "C3-guarded-resampling.html#why-enclosure-matters",
-    "title": "C3. Guarded Resampling",
-    "section": "Why enclosure matters",
-    "text": "Why enclosure matters\nBy enclosing learning within resampling splits, guarded resampling ensures that:\n\nassessment data are isolated from training within each split,\npreprocessing parameters are estimated separately for each training set,\nmodel comparisons are conducted using identical resampling splits,\nperformance estimates correspond to resampling-based out-of-sample evaluation.\n\nThese properties do not depend on remembering rules or following best practices.\nThey arise from how the workflow is constructed.",
-    "crumbs": [
-      "Concepts",
-      "C3. Guarded Resampling"
-    ]
-  },
-  {
-    "objectID": "C3-guarded-resampling.html#guards-are-not-warnings",
-    "href": "C3-guarded-resampling.html#guards-are-not-warnings",
-    "title": "C3. Guarded Resampling",
-    "section": "Guards are not warnings",
-    "text": "Guards are not warnings\nGuarded resampling does not attempt to identify leakage after it has occurred.\nInstead, it restricts the construction of workflows in which leakage-prone configurations would arise along the standard execution path.\nThis distinction is important:\n\nwarnings are advisory and can be ignored,\nstructural constraints limit what can be expressed.\n\nWorkflows that violate the principles of guarded resampling are therefore not part of the default design space.",
-    "crumbs": [
-      "Concepts",
-      "C3. Guarded Resampling"
-    ]
-  },
-  {
-    "objectID": "C3-guarded-resampling.html#what-this-enables",
-    "href": "C3-guarded-resampling.html#what-this-enables",
-    "title": "C3. Guarded Resampling",
-    "section": "What this enables",
-    "text": "What this enables\nBecause resampling is treated as an enclosing structure:\n\npreprocessing is resampling-aware by default,\nresampling splits are applied consistently across models,\nevaluation remains coupled to model fitting,\nreported metrics reflect resampling-based estimates.\n\nThese properties hold independently of model class, algorithmic complexity, or user expertise, subject to the assumptions of the resampling procedure.\nMethodological correctness becomes a property of system design rather than of individual user choices.",
-    "crumbs": [
-      "Concepts",
-      "C3. Guarded Resampling"
-    ]
-  },
-  {
-    "objectID": "C3-guarded-resampling.html#what-this-does-not-do",
-    "href": "C3-guarded-resampling.html#what-this-does-not-do",
-    "title": "C3. Guarded Resampling",
-    "section": "What this does not do",
-    "text": "What this does not do\nGuarded resampling does not:\n\nguarantee strong predictive performance,\nidentify a statistically optimal model,\nreplace careful study design or domain expertise,\neliminate all possible sources of bias.\n\nIt addresses a specific and well-defined failure mode: invalid evaluation arising from data leakage.",
-    "crumbs": [
-      "Concepts",
-      "C3. Guarded Resampling"
-    ]
-  },
-  {
-    "objectID": "C3-guarded-resampling.html#why-this-is-restrictive-by-design",
-    "href": "C3-guarded-resampling.html#why-this-is-restrictive-by-design",
-    "title": "C3. Guarded Resampling",
-    "section": "Why this is restrictive by design",
-    "text": "Why this is restrictive by design\nEnforcing structural guards necessarily reduces flexibility.\nCertain actions that are technically possible in more permissive frameworks are intentionally restricted along the default execution path.\nThis is not a limitation to be worked around.\nIt is a deliberate design choice.\nThe consequences of this choice are addressed in the next concept.",
-    "crumbs": [
-      "Concepts",
-      "C3. Guarded Resampling"
-    ]
-  },
-  {
-    "objectID": "C3-guarded-resampling.html#summary",
-    "href": "C3-guarded-resampling.html#summary",
-    "title": "C3. Guarded Resampling",
-    "section": "Summary",
-    "text": "Summary\n\nGuarded resampling treats resampling as the enclosing structure.\nData-dependent learning occurs within resampling splits.\nLeakage-prone configurations are restricted by design.\nEnforcement replaces advisory guidance.\n\nThis is the core idea behind fastml.\nNext: C4 — What fastml Deliberately Does Not Allow",
-    "crumbs": [
-      "Concepts",
-      "C3. Guarded Resampling"
-    ]
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "fastml Tutorials",
-    "section": "",
-    "text": "This site provides a structured introduction to fastml, an R package for training, evaluating, and comparing machine learning models under architecturally constrained, leakage-aware resampling.\nThe emphasis is not on developing new modeling techniques or maximizing predictive performance. Instead, the focus is on methodologically sound performance evaluation under clearly defined assumptions.",
-    "crumbs": [
-      "fastml Tutorials"
-    ]
-  },
-  {
-    "objectID": "index.html#what-this-site-is-about",
-    "href": "index.html#what-this-site-is-about",
-    "title": "fastml Tutorials",
-    "section": "",
-    "text": "This site provides a structured introduction to fastml, an R package for training, evaluating, and comparing machine learning models under architecturally constrained, leakage-aware resampling.\nThe emphasis is not on developing new modeling techniques or maximizing predictive performance. Instead, the focus is on methodologically sound performance evaluation under clearly defined assumptions.",
-    "crumbs": [
-      "fastml Tutorials"
-    ]
-  },
-  {
-    "objectID": "index.html#why-this-matters",
-    "href": "index.html#why-this-matters",
-    "title": "fastml Tutorials",
-    "section": "Why this matters",
-    "text": "Why this matters\nIn applied machine learning, reported performance estimates are frequently optimistic due to subtle forms of data leakage and unsafe evaluation workflows.\nfastml is designed to reduce this risk by treating Guarded Resampling as a core design principle rather than as an optional recommendation.",
-    "crumbs": [
-      "fastml Tutorials"
-    ]
-  },
-  {
-    "objectID": "index.html#how-to-read-this-site",
-    "href": "index.html#how-to-read-this-site",
-    "title": "fastml Tutorials",
-    "section": "How to read this site",
-    "text": "How to read this site\nThe material is organized into four sections.\n\nConcepts\nThese sections introduce the ideas that motivate fastml, including:\n\nwhat data leakage is,\nwhy many ML pipelines are unsafe by default,\nwhat guarded resampling entails,\nwhich classes of workflow configurations fastml deliberately restricts.\n\nThe concepts establish the assumptions required to interpret the tutorials correctly.\n\n\nTutorials\nThe tutorials apply the conceptual framework to concrete modeling tasks.\nThey assume familiarity with the Concepts section and focus on demonstrating evaluation workflows rather than reintroducing theoretical material.\n\n\nAdvanced\nAdvanced sections extend the framework to more complex settings, such as:\n\nhandling missing data,\nsurvival analysis,\nmodel interpretation and diagnostics.\n\nThese sections build on the same evaluation principles under additional modeling constraints.\n\n\nComparisons\nComparative sections discuss fastml in relation to other frameworks and common workflows, highlighting differences in design philosophy and evaluation guarantees.",
-    "crumbs": [
-      "fastml Tutorials"
-    ]
-  },
-  {
-    "objectID": "index.html#where-to-start",
-    "href": "index.html#where-to-start",
-    "title": "fastml Tutorials",
-    "section": "Where to start",
-    "text": "Where to start\nReaders should begin with the Concepts section (C1–C4).\nThe first hands-on example is Tutorial 01: Basic Cl",
-    "crumbs": [
-      "fastml Tutorials"
-    ]
-  },
-  {
-    "objectID": "C4-what-fastml-does-not-allow.html",
-    "href": "C4-what-fastml-does-not-allow.html",
-    "title": "C4. What fastml Deliberately Does Not Allow",
-    "section": "",
-    "text": "fastml adopts a deliberately constrained design.\nThese constraints are not the result of missing functionality or incomplete implementation.\nThey are a direct consequence of the guarantees described in C1–C3.\nTo support guarded resampling along the default execution path, certain classes of actions are intentionally restricted.",
-    "crumbs": [
-      "Concepts",
-      "C4. What fastml Deliberately Does Not Allow"
-    ]
-  },
-  {
-    "objectID": "C4-what-fastml-does-not-allow.html#constraints-as-a-design-decision",
-    "href": "C4-what-fastml-does-not-allow.html#constraints-as-a-design-decision",
-    "title": "C4. What fastml Deliberately Does Not Allow",
-    "section": "",
-    "text": "fastml adopts a deliberately constrained design.\nThese constraints are not the result of missing functionality or incomplete implementation.\nThey are a direct consequence of the guarantees described in C1–C3.\nTo support guarded resampling along the default execution path, certain classes of actions are intentionally restricted.",
-    "crumbs": [
-      "Concepts",
-      "C4. What fastml Deliberately Does Not Allow"
-    ]
-  },
-  {
-    "objectID": "C4-what-fastml-does-not-allow.html#no-global-preprocessing",
-    "href": "C4-what-fastml-does-not-allow.html#no-global-preprocessing",
-    "title": "C4. What fastml Deliberately Does Not Allow",
-    "section": "No global preprocessing",
-    "text": "No global preprocessing\nAlong the default execution path, fastml does not permit preprocessing steps to be estimated using the full dataset prior to resampling.\nUsers are not required—and are not encouraged—to:\n\nscale predictors globally,\nimpute missing values using global statistics,\nperform feature selection outside resampling,\nreuse preprocessing parameters across folds.\n\nInstead, preprocessing steps are estimated separately within each resampling split.\nThis design prevents backward information flow from assessment data into training by construction.",
-    "crumbs": [
-      "Concepts",
-      "C4. What fastml Deliberately Does Not Allow"
-    ]
-  },
-  {
-    "objectID": "C4-what-fastml-does-not-allow.html#no-detached-evaluation",
-    "href": "C4-what-fastml-does-not-allow.html#no-detached-evaluation",
-    "title": "C4. What fastml Deliberately Does Not Allow",
-    "section": "No detached evaluation",
-    "text": "No detached evaluation\nIn fastml, evaluation is not treated as a post hoc operation.\nUnder the standard execution model, users do not:\n\nfit a model once and later evaluate it using resampling,\nreuse a trained model across new or inconsistent folds,\ncompute performance metrics outside a resampling-aware context.\n\nModel fitting and evaluation are coupled within a single resampling-based procedure.",
-    "crumbs": [
-      "Concepts",
-      "C4. What fastml Deliberately Does Not Allow"
-    ]
-  },
-  {
-    "objectID": "C4-what-fastml-does-not-allow.html#no-manual-fold-reuse-across-models",
-    "href": "C4-what-fastml-does-not-allow.html#no-manual-fold-reuse-across-models",
-    "title": "C4. What fastml Deliberately Does Not Allow",
-    "section": "No manual fold reuse across models",
-    "text": "No manual fold reuse across models\nModel comparison in fastml is conducted using a shared resampling specification.\nUsers do not manually:\n\ndefine different folds for different models within the same comparison,\nselectively reuse folds,\nmix incompatible resampling schemes across models.\n\nThis ensures that observed performance differences arise from modeling choices rather than from differences in data partitioning.",
-    "crumbs": [
-      "Concepts",
-      "C4. What fastml Deliberately Does Not Allow"
-    ]
-  },
-  {
-    "objectID": "C4-what-fastml-does-not-allow.html#no-implicit-tuning-loops",
-    "href": "C4-what-fastml-does-not-allow.html#no-implicit-tuning-loops",
-    "title": "C4. What fastml Deliberately Does Not Allow",
-    "section": "No implicit tuning loops",
-    "text": "No implicit tuning loops\nWhen hyperparameter tuning is enabled, it is carried out within the resampling structure.\nUnder the default design, users do not:\n\ntune models on the full dataset and then evaluate them using resampling,\ntune once and reuse tuning results across folds,\ndecouple tuning from evaluation.\n\nThis restricts subtle leakage pathways that can arise when tuning is performed outside resampling.",
-    "crumbs": [
-      "Concepts",
-      "C4. What fastml Deliberately Does Not Allow"
-    ]
-  },
-  {
-    "objectID": "C4-what-fastml-does-not-allow.html#no-partial-control-over-pipeline-order",
-    "href": "C4-what-fastml-does-not-allow.html#no-partial-control-over-pipeline-order",
-    "title": "C4. What fastml Deliberately Does Not Allow",
-    "section": "No partial control over pipeline order",
-    "text": "No partial control over pipeline order\nfastml does not expose low-level hooks for rearranging the order of:\n\npreprocessing,\nmodel fitting,\nevaluation.\n\nThis ordering is fixed along the default execution path.\nUsers specify what is to be evaluated, not how the internal pipeline is assembled.",
-    "crumbs": [
-      "Concepts",
-      "C4. What fastml Deliberately Does Not Allow"
-    ]
-  },
-  {
-    "objectID": "C4-what-fastml-does-not-allow.html#why-these-restrictions-exist",
-    "href": "C4-what-fastml-does-not-allow.html#why-these-restrictions-exist",
-    "title": "C4. What fastml Deliberately Does Not Allow",
-    "section": "Why these restrictions exist",
-    "text": "Why these restrictions exist\nEach restriction removes a class of evaluation errors that are:\n\neasy to introduce,\ndifficult to detect,\nassociated with optimistic performance estimates,\nrarely flagged by software.\n\nReducing flexibility is the cost of enforcing methodological validity.",
-    "crumbs": [
-      "Concepts",
-      "C4. What fastml Deliberately Does Not Allow"
-    ]
-  },
-  {
-    "objectID": "C4-what-fastml-does-not-allow.html#what-fastml-optimizes-for",
-    "href": "C4-what-fastml-does-not-allow.html#what-fastml-optimizes-for",
-    "title": "C4. What fastml Deliberately Does Not Allow",
-    "section": "What fastml optimizes for",
-    "text": "What fastml optimizes for\nfastml is not designed to optimize for:\n\nmaximal procedural flexibility,\nunrestricted pipeline experimentation,\ninteractive trial-and-error workflow assembly.\n\nIt is designed to prioritize:\n\nevaluation correctness,\nreproducibility,\ncomparability across models,\ndefensible performance estimation.",
-    "crumbs": [
-      "Concepts",
-      "C4. What fastml Deliberately Does Not Allow"
-    ]
-  },
-  {
-    "objectID": "C4-what-fastml-does-not-allow.html#when-fastml-may-not-be-appropriate",
-    "href": "C4-what-fastml-does-not-allow.html#when-fastml-may-not-be-appropriate",
-    "title": "C4. What fastml Deliberately Does Not Allow",
-    "section": "When fastml may not be appropriate",
-    "text": "When fastml may not be appropriate\nfastml may not be well suited when:\n\nexploratory pipeline experimentation is the primary objective,\nhighly nonstandard evaluation schemes are required,\nfine-grained procedural control is essential.\n\nIn such settings, lower-level or more permissive frameworks may be more appropriate.",
-    "crumbs": [
-      "Concepts",
-      "C4. What fastml Deliberately Does Not Allow"
-    ]
-  },
-  {
-    "objectID": "C4-what-fastml-does-not-allow.html#summary",
-    "href": "C4-what-fastml-does-not-allow.html#summary",
-    "title": "C4. What fastml Deliberately Does Not Allow",
-    "section": "Summary",
-    "text": "Summary\n\nfastml is restrictive by design.\nRestrictions follow directly from guarded resampling principles.\nFlexibility is traded for methodological validity.\nIf a workflow feels constrained, the guard is functioning as intended.",
-    "crumbs": [
-      "Concepts",
-      "C4. What fastml Deliberately Does Not Allow"
+      "05. Survival Analysis and Time-to-Event Outcomes"
     ]
   },
   {

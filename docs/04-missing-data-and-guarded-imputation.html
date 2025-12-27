@@ -215,6 +215,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">04. Missing Data and Guarded Imputation</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-survival-analysis-and-time-to-event-outcomes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">05. Survival Analysis and Time-to-Event Outcomes</span></a>
+  </div>
+</li>
       </ul>
   </li>
     </ul>
@@ -278,7 +284,7 @@ Missing data are the rule, not the exception.</p>
 <h2 class="anchored" data-anchor-id="why-missing-data-are-dangerous-for-evaluation">Why missing data are dangerous for evaluation</h2>
 <p>Imputation is a data-dependent operation.</p>
 <p>If imputation parameters (means, medians, model-based estimates) are learned using the full dataset <strong>before resampling</strong>, then information from assessment folds leaks into training folds.</p>
-<p>This is a textbook example of the timing problem described in <strong>C1 — What Is Data Leakage</strong>.</p>
+<p>This is a textbook example of the timing problem described in <a href="./C1-what-is-data-leakage.html"><strong>C1 — What Is Data Leakage</strong></a>.</p>
 <p>The solution is not “better imputation”, but <strong>correct placement of imputation inside resampling</strong>.</p>
 <hr>
 </section>

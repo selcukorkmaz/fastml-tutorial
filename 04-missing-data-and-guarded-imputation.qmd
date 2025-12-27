@@ -24,7 +24,7 @@ Imputation is a data-dependent operation.
 
 If imputation parameters (means, medians, model-based estimates) are learned using the full dataset **before resampling**, then information from assessment folds leaks into training folds.
 
-This is a textbook example of the timing problem described in [**C1 — What Is Data Leakage**](C1-what-is-data-leakage.qmd).
+This is a textbook example of the timing problem described in [**C1. What Is Data Leakage**](C1-what-is-data-leakage.qmd).
 
 The solution is not “better imputation”, but **correct placement of imputation inside resampling**.
 
@@ -32,7 +32,7 @@ The solution is not “better imputation”, but **correct placement of imputati
 
 ## The key constraint
 
-Under **guarded resampling** (C3):
+Under **guarded resampling** ([C3](C3-guarded-resampling.qmd)):
 
 - imputation must be learned **within each resampling split**
 - imputation parameters must never be shared across folds

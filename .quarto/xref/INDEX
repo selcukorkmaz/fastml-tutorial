@@ -28,5 +28,8 @@
   },
   "04-missing-data-and-guarded-imputation.qmd": {
     "04-missing-data-and-guarded-imputation.html": "e8c5abce"
+  },
+  "05-survival-analysis-and-time-to-event-outcomes.qmd": {
+    "05-survival-analysis-and-time-to-event-outcomes.html": "240952f9"
   }
 }
